@@ -1,6 +1,9 @@
+#ifndef ADMINQ_IR_MAIN_H
+#define ADMINQ_IR_MAIN_H
+
+#include <stdio.h>
 #include "AdminQLog.h"
 #include "AdminQHeader.h"
-#include "stdio.h"
 
 /* ---------------- GLOBAL SHARED INTERFACE ---------------- */
 
@@ -10,11 +13,14 @@
 uint32_t API_VERSION;
 
 /* Error Code Definition Access */
-Errors* ERRORS;
+Errors *ERRORS;
 
 /* Command Definition Access */
-Commands* COMMANDS;
+Commands *COMMANDS;
 
 /* Retrieves a in-order representation of AdminQ entries within this log file */
-Entry** parse(FILE* log);
+Entry **parse(FILE *log);
+
+#endif /* ADMINQ_IR_MAIN_H */
+
 
