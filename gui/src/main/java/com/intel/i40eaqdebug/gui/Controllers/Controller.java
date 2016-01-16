@@ -1,24 +1,31 @@
-package com.intel.i40eaqdebug.gui;
+package com.intel.i40eaqdebug.gui.Controllers;
 
+import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.logs.LogEntry;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
 import java.applet.Applet;
 import java.io.File;
 import java.io.IOException;
+import java.util.Queue;
 
 public class Controller {
     @FXML
     private TabPane TabElement;
     @FXML
     private Parent RootPanel;
+    @FXML
+    private TableView TabTable;
+    @FXML
+    private TreeView DataArea;
+    @FXML
+    private TextArea RawArea;
 
     public Controller() {
     }
@@ -37,22 +44,32 @@ public class Controller {
         );
         File theFile = chooser.showOpenDialog(RootPanel.getScene().getWindow());
         if (theFile != null) {
-            //TODO: API File Load call.
+            //Queue<LogEntry> logs = APIEntryPoint.getCommandLogQueue(theFile);
 
             try {
-                ScrollPane test = FXMLLoader.load(getClass().getResource("/TabBase.fxml"));
+                GridPane test = FXMLLoader.load(getClass().getResource("/TabBase.fxml"));
                 Tab newTab = new Tab(theFile.getName());
                 newTab.setContent(test);
 
                 TabElement.getTabs().add(newTab);
             } catch (IOException Ex) {
-
+                DialogController.CreateDialog("An error occured!", "Some program files got corrupted!", true);
+                Platform.exit();
             }
+
+
+            /*for (LogEntry entry : logs) {
+
+            }*/
+
+
         }
     }
 
     @FXML
     public void OpenOptions() {
+        DialogController.CreateDialog("An error occured!", "Some program files got corrupted!", true);
+
         System.out.println("Options - NOT IMPLIMENTED");
     }
 

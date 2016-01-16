@@ -9,40 +9,25 @@
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <content>
-        <AnchorPane>
-            <children>
-                <TableView layoutX="38.0" layoutY="14.0" prefHeight="324.0"
-                           prefWidth="727.0">
-                    <columns>
-                        <TableColumn prefWidth="75.0" text="C1"/>
-                        <TableColumn prefWidth="75.0" text="C2"/>
-                    </columns>
-                </TableView>
-                <Separator layoutX="14.0" layoutY="352.0" prefHeight="5.0"
-                           prefWidth="765.0"/>
-                <TreeView layoutX="14.0" layoutY="365.0" prefHeight="200.0"
-                          prefWidth="357.0">
-                    <root>
-                        <TreeItem expanded="true" value="Root">
-                            <children>
-                                <TreeItem value="lol3">
-                                </TreeItem>
-                                <TreeItem value="lol4">
-                                    <children>
-                                        <TreeItem value="lmao"/>
-                                    </children>
-                                </TreeItem>
-                            </children>
-                        </TreeItem>
-                    </root>
-                </TreeView>
-                <TextArea layoutX="397.0" layoutY="365.0" prefHeight="200.0"
-                          prefWidth="372.0"/>
-                <Separator layoutX="381.0" layoutY="352.0" orientation="VERTICAL"
-                           prefHeight="200.0"/>
-            </children>
-        </AnchorPane>
-    </content>
-</ScrollPane>
+<GridPane prefHeight="501.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints percentHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+          <TableView GridPane.columnSpan="3">
+              <columns>
+                  <TableColumn prefWidth="100.0" text="Op Code" />
+                  <TableColumn prefWidth="100.0" text="Flags" />
+                  <TableColumn prefWidth="75.0" text="Error" />
+                  <TableColumn prefWidth="75.0" text="Return" />
+              </columns>
+          </TableView>
+          <TreeView GridPane.rowIndex="1" />
+          <TextArea GridPane.columnIndex="1" GridPane.rowIndex="1" />
+   </children>
+</GridPane>

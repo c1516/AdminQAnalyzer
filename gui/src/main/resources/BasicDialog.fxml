@@ -1,48 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-    <content>
-        <AnchorPane>
-            <children>
-                <TableView layoutX="38.0" layoutY="14.0" prefHeight="324.0"
-                           prefWidth="727.0">
-                    <columns>
-                        <TableColumn prefWidth="75.0" text="C1"/>
-                        <TableColumn prefWidth="75.0" text="C2"/>
-                    </columns>
-                </TableView>
-                <Separator layoutX="14.0" layoutY="352.0" prefHeight="5.0"
-                           prefWidth="765.0"/>
-                <TreeView layoutX="14.0" layoutY="365.0" prefHeight="200.0"
-                          prefWidth="357.0">
-                    <root>
-                        <TreeItem expanded="true" value="Root">
-                            <children>
-                                <TreeItem value="lol3">
-                                </TreeItem>
-                                <TreeItem value="lol4">
-                                    <children>
-                                        <TreeItem value="lmao"/>
-                                    </children>
-                                </TreeItem>
-                            </children>
-                        </TreeItem>
-                    </root>
-                </TreeView>
-                <TextArea layoutX="397.0" layoutY="365.0" prefHeight="200.0"
-                          prefWidth="372.0"/>
-                <Separator layoutX="381.0" layoutY="352.0" orientation="VERTICAL"
-                           prefHeight="200.0"/>
-            </children>
-        </AnchorPane>
-    </content>
-</ScrollPane>
+<AnchorPane fx:id="Dialog" maxHeight="150.0" maxWidth="350.0" minHeight="150.0" minWidth="350.0" prefHeight="150.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextArea fx:id="TextBox" editable="false" prefHeight="120.0" prefWidth="350.0" />
+      <Button fx:id="CancelButton" layoutX="280.0" layoutY="125.0" maxWidth="75.0" minHeight="25.0" minWidth="75.0" mnemonicParsing="false" onAction="#Cancel" text="Cancel" textOverrun="CLIP" />
+      <Button layoutX="196.0" layoutY="125.0" maxWidth="75.0" minHeight="25.0" minWidth="75.0" mnemonicParsing="false" onAction="#Ok" text="OK" textOverrun="CLIP" />
+   </children>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
+</AnchorPane>

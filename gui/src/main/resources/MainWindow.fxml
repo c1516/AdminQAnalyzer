@@ -11,7 +11,7 @@
 
 <?import com.sun.javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.intel.i40eaqdebug.gui.Controller" fx:id="RootPanel">
+            fx:controller="com.intel.i40eaqdebug.gui.Controllers.Controller" fx:id="RootPanel">
     <children>
         <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                   AnchorPane.topAnchor="0.0">
