@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
+<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
+<?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
+
+<?import com.sun.javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.intel.i40eaqdebug.gui.Controller" fx:id="RootPanel">
+    <children>
+        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
+
+            <padding>
+                <Insets bottom="0" left="0" right="0" top="0"/>
+            </padding>
+            <columnConstraints>
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints prefHeight="20" vgrow="NEVER"/>
+                <RowConstraints fillHeight="true" vgrow="ALWAYS"/>
+            </rowConstraints>
+            <children>
+                <MenuBar GridPane.rowIndex="0">
+                    <menus>
+                        <Menu text="File">
+                            <items>
+                                <MenuItem text="Open" onAction="#OpenFile"/>
+                                <MenuItem text="Options" onAction="#OpenOptions"/>
+                                <SeparatorMenuItem/>
+                                <MenuItem text="Exit" onAction="#Exit"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <TabPane tabClosingPolicy="ALL_TABS" GridPane.rowIndex="1" fx:id="TabElement">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <Menu mnemonicParsing="false" text="Open File">
+                                   </Menu>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                    <tabs>
+                    </tabs>
+                </TabPane>
+            </children>
+        </GridPane>
+
+    </children>
+</AnchorPane>

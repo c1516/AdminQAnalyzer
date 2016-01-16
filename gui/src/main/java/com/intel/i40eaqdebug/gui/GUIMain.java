@@ -6,8 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.net.URL;
-
 /**
  * Entry point to starting the GUI: API Calls should be called via the APIEntryPoint static methods
  */
@@ -16,9 +14,9 @@ public class GUIMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        System.out.println(getClass().getResource("/sample.fxml"));
+        System.out.println(getClass().getResource("/MainWindow.fxml"));
 
-        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.setResizable(true);
