@@ -4,4 +4,10 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.GUIMain" />
+<Pane id="" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.Controller">
+   <children>
+      <Button layoutX="764.0" layoutY="24.0" mnemonicParsing="false" onAction="#OpenFile" prefHeight="48.0" prefWidth="204.0" text="Open Log" />
+      <ScrollPane layoutX="14.0" layoutY="24.0" prefHeight="592.0" prefWidth="713.0" />
+      <Accordion />
+   </children>
+</Pane>
