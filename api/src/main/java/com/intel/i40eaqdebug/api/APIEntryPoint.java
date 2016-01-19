@@ -93,7 +93,7 @@ public final class APIEntryPoint {
             this.buf = buf;
         }
 
-        public String getValueAsString() {
+        public String getValueAsString(byte[] buf) {
             return Util.bytesToHex(buf);
         }
 
