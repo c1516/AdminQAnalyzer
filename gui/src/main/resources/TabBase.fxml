@@ -9,7 +9,7 @@
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
 
-<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.Controllers.TableController">
    <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
       <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
@@ -20,12 +20,12 @@
       <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0" prefHeight="124.60000000000002" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-          <TableView prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
+          <TableView fx:id="TableTest"  prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
               <columns>
-                  <TableColumn prefWidth="100.0" text="Op Code" />
-                  <TableColumn prefWidth="100.0" text="Flags" />
-                  <TableColumn prefWidth="75.0" text="Error" />
-                  <TableColumn prefWidth="75.0" text="Return" />
+                  <TableColumn prefWidth="200.0" text="Op Code" fx:id="opColumn"/>
+                  <TableColumn prefWidth="200.0" text="Flags" fx:id="flagColumn"/>
+                  <TableColumn prefWidth="100.0" text="Error" fx:id="errColumn"/>
+                  <TableColumn prefWidth="10.0" text="Return" fx:id="retColumn"/>
               </columns>
           </TableView>
           <TreeView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1" />
