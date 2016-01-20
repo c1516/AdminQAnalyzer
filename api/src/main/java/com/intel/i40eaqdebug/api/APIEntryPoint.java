@@ -8,6 +8,7 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
 
@@ -77,9 +78,9 @@ public final class APIEntryPoint {
             return "UNKNOWN";
         }
 
-        public Map<String, CommandField> getFieldsFromBuf(byte[] buff) {
-            HashMap<String, CommandField> fieldMap = new HashMap<String, CommandField>();
-            fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField(buff));
+        public LinkedHashMap<String, CommandField> getFields() {
+            LinkedHashMap<String, CommandField> fieldMap = new LinkedHashMap<String, CommandField>();
+            fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField());
             return fieldMap;
         }
     }
@@ -87,13 +88,9 @@ public final class APIEntryPoint {
 
     private static class UnknownCommandField implements CommandField {
 
-        private final byte[] buf;
+        public UnknownCommandField() {}
 
-        public UnknownCommandField(byte[] buf) {
-            this.buf = buf;
-        }
-
-        public String getValueAsString() {
+        public String getValueAsString(byte[] buf) {
             return Util.bytesToHex(buf);
         }
 
@@ -102,8 +99,8 @@ public final class APIEntryPoint {
         }
 
         public int getEndPos() {
-            return buf.length - 1;
-        }
+            return Integer.MAX_VALUE;
+        } // Impossible to know length here
 
         public EndianState getEndianness() {
             return EndianState.BIG;
