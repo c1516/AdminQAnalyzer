@@ -56,6 +56,9 @@ public class HeaderParser {
         Map<Short, CommandStruct> ret = new HashMap<Short, CommandStruct>();
         while ((ln = reader.readLine()) != null) {
             String[] parse = ln.split(",");
+            if (parse.length < 2) {
+                continue;
+            }
             String opcName = parse[0];
             String structName = parse[1];
             ret.put(invert.get(opcName), structs.get(structName));
