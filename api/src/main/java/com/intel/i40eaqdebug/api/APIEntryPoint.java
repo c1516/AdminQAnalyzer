@@ -8,6 +8,7 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
 
@@ -77,8 +78,8 @@ public final class APIEntryPoint {
             return "UNKNOWN";
         }
 
-        public Map<String, CommandField> getFields() {
-            HashMap<String, CommandField> fieldMap = new HashMap<String, CommandField>();
+        public LinkedHashMap<String, CommandField> getFields() {
+            LinkedHashMap<String, CommandField> fieldMap = new LinkedHashMap<String, CommandField>();
             fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField());
             return fieldMap;
         }
