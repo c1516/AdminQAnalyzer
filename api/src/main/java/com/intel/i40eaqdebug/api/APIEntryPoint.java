@@ -77,9 +77,9 @@ public final class APIEntryPoint {
             return "UNKNOWN";
         }
 
-        public Map<String, CommandField> getFieldsFromBuf(byte[] buff) {
+        public Map<String, CommandField> getFields() {
             HashMap<String, CommandField> fieldMap = new HashMap<String, CommandField>();
-            fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField(buff));
+            fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField());
             return fieldMap;
         }
     }
@@ -87,11 +87,7 @@ public final class APIEntryPoint {
 
     private static class UnknownCommandField implements CommandField {
 
-        private final byte[] buf;
-
-        public UnknownCommandField(byte[] buf) {
-            this.buf = buf;
-        }
+        public UnknownCommandField() {}
 
         public String getValueAsString(byte[] buf) {
             return Util.bytesToHex(buf);
@@ -102,8 +98,8 @@ public final class APIEntryPoint {
         }
 
         public int getEndPos() {
-            return buf.length - 1;
-        }
+            return Integer.MAX_VALUE;
+        } // Impossible to know length here
 
         public EndianState getEndianness() {
             return EndianState.BIG;

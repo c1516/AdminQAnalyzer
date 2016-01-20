@@ -10,5 +10,5 @@ public interface CommandStruct {
     @Deprecated
     String getName();
 
-    Map<String, CommandField> getFieldsFromBuf(byte[] buff);
+    Map<String, CommandField> getFields();
 }
