@@ -1,13 +1,12 @@
 package com.intel.i40eaqdebug.api;
 
-import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.header.CommandField;
+import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.header.Errors;
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -72,6 +71,7 @@ public final class APIEntryPoint {
 
     // Stuff that allows us to return an unknown match without returning null/still be able to display raw bytes
 
+
     private static class UnknownCommandStruct implements CommandStruct {
 
         public String getName() {
@@ -88,7 +88,8 @@ public final class APIEntryPoint {
 
     private static class UnknownCommandField implements CommandField {
 
-        public UnknownCommandField() {}
+        public UnknownCommandField() {
+        }
 
         public String getValueAsString(byte[] buf) {
             return Util.bytesToHex(buf);

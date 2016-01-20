@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class HeaderParser {
 
+    static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
     static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{\\n(.+\\n)+};");
     static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+));");
     static Pattern ARRAYPATTERN = Pattern.compile("(([\\w\\d]+)\\[([\\d]+)])");
@@ -31,6 +32,36 @@ public class HeaderParser {
         TYPETOENDIAN.put("__le32", CommandField.EndianState.LITTLE);
     }
 
+
+    public static Map<Short, String> constructShortToOPC(File headerFile) throws IOException {
+        String header = readFile(headerFile);
+        Matcher m = OPCODEPATTERN.matcher(header);
+        Map<Short, String> ret = new HashMap<Short, String>();
+        while (m.find()) {
+            String opcName = m.group(1);
+            short opcVal = Short.valueOf(m.group(2), 16);
+            ret.put(opcVal, opcName);
+        }
+        return ret;
+    }
+
+    public static Map<Short, CommandStruct> constructOPCShortToStruct(Map<Short, String> opcShortToString, File opcodesFile,
+        Map<String, CommandStruct> structs) throws IOException {
+        Map<String, Short> invert = new HashMap<String, Short>();
+        for (Map.Entry<Short, String> e : opcShortToString.entrySet()) {
+            invert.put(e.getValue(), e.getKey());
+        }
+        BufferedReader reader = new BufferedReader(new FileReader(opcodesFile));
+        String ln;
+        Map<Short, CommandStruct> ret = new HashMap<Short, CommandStruct>();
+        while ((ln = reader.readLine()) != null) {
+            String[] parse = ln.split(",");
+            String opcName = parse[0];
+            String structName = parse[1];
+            ret.put(invert.get(opcName), structs.get(structName));
+        }
+        return ret;
+    }
 
     public static Map<String, CommandStruct> parseCommandStructs(File headerFile) throws IOException {
         Map<String, CommandStruct> ret = new HashMap<String, CommandStruct>();
