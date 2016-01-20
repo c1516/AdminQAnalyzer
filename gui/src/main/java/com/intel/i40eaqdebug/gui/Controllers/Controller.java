@@ -58,6 +58,8 @@ public class Controller {
             }
 
 
+            //newTab.
+
             /*for (LogEntry entry : logs) {
 
             }*/

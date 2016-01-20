@@ -9,17 +9,18 @@
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
 
-<GridPane prefHeight="501.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
       <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+      <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints percentHeight="70.0" vgrow="SOMETIMES" />
-      <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0" prefHeight="124.60000000000002" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-          <TableView GridPane.columnSpan="3">
+          <TableView prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
               <columns>
                   <TableColumn prefWidth="100.0" text="Op Code" />
                   <TableColumn prefWidth="100.0" text="Flags" />
@@ -27,7 +28,7 @@
                   <TableColumn prefWidth="75.0" text="Return" />
               </columns>
           </TableView>
-          <TreeView GridPane.rowIndex="1" />
-          <TextArea GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <TreeView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1" />
+          <TextArea prefHeight="173.0" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>
