@@ -38,13 +38,13 @@ public class BackendMain {
         // Check for files
         if (!HEADER_FILE.exists()) {
             BufferedReader reader =
-                new BufferedReader(new InputStreamReader(BackendMain.class.getResourceAsStream("./i40e_adminq_cmd.h")));
+                new BufferedReader(new InputStreamReader(BackendMain.class.getResourceAsStream("/i40e_adminq_cmd.h")));
             copy(HEADER_FILE, reader);
         }
         // Check for files
         if (!OPC_DEF_FILE.exists()) {
             BufferedReader reader = new BufferedReader(
-                new InputStreamReader(BackendMain.class.getResourceAsStream("./opcode_to_struct.txt")));
+                new InputStreamReader(BackendMain.class.getResourceAsStream("/opcode_to_struct.txt")));
             copy(OPC_DEF_FILE, reader);
         }
     }
