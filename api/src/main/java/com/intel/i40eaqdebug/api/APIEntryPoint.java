@@ -17,8 +17,8 @@ import java.util.Queue;
 public final class APIEntryPoint {
     private static boolean INIT;
     private static Errors ERRORS;
-    private static Map<Short, String> COMMANDNAMES;
-    private static Map<Short, CommandStruct> COMMANDSTRUCTS;
+    private static Map<Integer, String> COMMANDNAMES;
+    private static Map<Integer, CommandStruct> COMMANDSTRUCTS;
     private static LogAdapter ADAPTER;
     private static CommandStruct UNKNOWN_COMMAND_STRUCT;
 
@@ -33,7 +33,7 @@ public final class APIEntryPoint {
      * @param errors
      * @param commands
      */
-    static void init(Errors errors, Map<Short, String> names, Map<Short, CommandStruct> commands, LogAdapter adapter) {
+    static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
         INIT = true;
         ERRORS = errors;
         COMMANDNAMES = names;
@@ -48,14 +48,14 @@ public final class APIEntryPoint {
         return ERRORS.getByByte(errFlag);
     }
 
-    public static String getCommandName(short opcode) {
+    public static String getCommandName(Integer opcode) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
         return COMMANDNAMES.getOrDefault(opcode, "UNKNOWN");
     }
 
-    public static CommandStruct getCommandStruct(short opcode) {
+    public static CommandStruct getCommandStruct(Integer opcode) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }

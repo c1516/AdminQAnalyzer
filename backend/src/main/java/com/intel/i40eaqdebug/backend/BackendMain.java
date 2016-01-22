@@ -24,13 +24,13 @@ public class BackendMain {
         throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         copyResources();
         Map<String, CommandStruct> structs = HeaderParser.parseCommandStructs(HEADER_FILE);
-        Map<Short, String> opcShortToString = HeaderParser.constructShortToOPC(HEADER_FILE);
-        Map<Short, CommandStruct> opcShortToStruct = HeaderParser.constructOPCShortToStruct(opcShortToString, OPC_DEF_FILE, structs);
+        Map<Integer, String> opcIntToString = HeaderParser.constructShortToOPC(HEADER_FILE);
+        Map<Integer, CommandStruct> opcIntToStruct = HeaderParser.constructOPCShortToStruct(opcIntToString, OPC_DEF_FILE, structs);
 
         // Some reflection to bypass private access to method
         Method m = APIEntryPoint.class.getDeclaredMethod("init", Errors.class, Map.class, Map.class, LogAdapter.class);
         m.setAccessible(true);
-        m.invoke(null, null, opcShortToString, opcShortToStruct, null); // TODO
+        m.invoke(null, null, opcIntToString, opcIntToStruct, null); // TODO
 
     }
 

@@ -33,27 +33,27 @@ public class HeaderParser {
     }
 
 
-    public static Map<Short, String> constructShortToOPC(File headerFile) throws IOException {
+    public static Map<Integer, String> constructShortToOPC(File headerFile) throws IOException {
         String header = readFile(headerFile);
         Matcher m = OPCODEPATTERN.matcher(header);
-        Map<Short, String> ret = new HashMap<Short, String>();
+        Map<Integer, String> ret = new HashMap<Integer, String>();
         while (m.find()) {
             String opcName = m.group(1);
-            short opcVal = Short.valueOf(m.group(2), 16);
+            Integer opcVal = Integer.valueOf(m.group(2).replace("0x", ""), 16);
             ret.put(opcVal, opcName);
         }
         return ret;
     }
 
-    public static Map<Short, CommandStruct> constructOPCShortToStruct(Map<Short, String> opcShortToString, File opcodesFile,
+    public static Map<Integer, CommandStruct> constructOPCShortToStruct(Map<Integer, String> opcShortToString, File opcodesFile,
         Map<String, CommandStruct> structs) throws IOException {
-        Map<String, Short> invert = new HashMap<String, Short>();
-        for (Map.Entry<Short, String> e : opcShortToString.entrySet()) {
+        Map<String, Integer> invert = new HashMap<String, Integer>();
+        for (Map.Entry<Integer, String> e : opcShortToString.entrySet()) {
             invert.put(e.getValue(), e.getKey());
         }
         BufferedReader reader = new BufferedReader(new FileReader(opcodesFile));
         String ln;
-        Map<Short, CommandStruct> ret = new HashMap<Short, CommandStruct>();
+        Map<Integer, CommandStruct> ret = new HashMap<Integer, CommandStruct>();
         while ((ln = reader.readLine()) != null) {
             String[] parse = ln.split(",");
             if (parse.length < 2) {
