@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -8,27 +9,45 @@
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
 <?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
+<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.TableController"-->
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0" prefHeight="124.60000000000002" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <TableView fx:id="TableTest" prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
+            <columns>
+                <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code" />
+                <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags" />
+                <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error" />
+                <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return" />
+            </columns>
+        </TableView>
+        <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                   <HBox>
+                      <children>
+                          <Label text="Op Code: " />
+                          <Label onMouseEntered="#MouseEnter" onMouseExited="#MouseLeft" style="-fx-background-color: lightblue" text="i40e_aqc_opc_get_cee_dcb_cfg" />
+                      </children>
+                   </HBox>
+                   <HBox>
+                      <children>
+                          <Label text="Flags: " />
+                          <Label style=" -fx-background-color: yellow" text="I40E_AQ_FLAG_ERR, I40E_AQ_FLAG_VFE" />
+                      </children>
+                   </HBox>
+               </FXCollections>
+           </items>
+        </ListView>
 
-<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.Controllers.TableController">
-   <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-      <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0" prefHeight="124.60000000000002" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-          <TableView fx:id="TableTest"  prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
-              <columns>
-                  <TableColumn prefWidth="200.0" text="Op Code" fx:id="opColumn"/>
-                  <TableColumn prefWidth="200.0" text="Flags" fx:id="flagColumn"/>
-                  <TableColumn prefWidth="100.0" text="Error" fx:id="errColumn"/>
-                  <TableColumn prefWidth="10.0" text="Return" fx:id="retColumn"/>
-              </columns>
-          </TableView>
-          <TreeView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1" />
-          <TextArea prefHeight="173.0" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-   </children>
+        <TextArea fx:id="RawArea" editable="false" prefHeight="173.0" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    </children>
 </GridPane>

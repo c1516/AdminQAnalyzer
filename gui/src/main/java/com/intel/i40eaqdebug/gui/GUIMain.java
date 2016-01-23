@@ -20,6 +20,7 @@ public class GUIMain extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.setResizable(true);
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/highlightingTable.css").toExternalForm());
         primaryStage.show();
     }
 

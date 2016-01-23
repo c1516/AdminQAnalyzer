@@ -1,18 +1,22 @@
 package com.intel.i40eaqdebug.gui.Controllers;
 
-import com.intel.i40eaqdebug.api.APIEntryPoint;
-import com.intel.i40eaqdebug.api.logs.LogEntry;
+
 import javafx.application.Platform;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 
 import java.applet.Applet;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Controller {
@@ -20,19 +24,49 @@ public class Controller {
     private TabPane TabElement;
     @FXML
     private Parent RootPanel;
-    @FXML
-    private TableView TabTable;
-    @FXML
-    private TreeView DataArea;
-    @FXML
-    private TextArea RawArea;
+
+    private List<TableController> controllers = new LinkedList<TableController>();
+
 
     public Controller() {
     }
 
+    @FXML
     public void initialize(){
 
     }
+
+    @FXML
+    public void filterClicked(MouseEvent event) {
+        int selected = TabElement.getSelectionModel().getSelectedIndex();
+        Button temp = ((Button)event.getSource());
+        if (!temp.getStyle().contains("gray")) {
+            temp.setStyle("-fx-background-color: gray");
+
+            if (temp.getId().equals("ErrorFilter")){
+                controllers.get(selected).UpdateTable(1);
+            } else if (temp.getId().equals("SuccessFilter")){
+                controllers.get(selected).UpdateTable(2);
+            } else if (temp.getId().equals("SometingFilter")){
+                controllers.get(selected).UpdateTable(3);
+            } else if (temp.getId().equals("Something2Filter")){
+                controllers.get(selected).UpdateTable(4);
+            }
+        } else {
+            controllers.get(selected).UpdateTable(0);
+
+            if (temp.getId().equals("ErrorFilter")){
+                temp.setStyle("-fx-background-color: red");
+            } else if (temp.getId().equals("SuccessFilter")){
+                temp.setStyle("-fx-background-color: limegreen");
+            } else if (temp.getId().equals("SometingFilter")){
+                temp.setStyle("-fx-background-color: cyan");
+            } else if (temp.getId().equals("Something2Filter")){
+                temp.setStyle("-fx-background-color: yellow");
+            }
+        }
+    }
+
 
     @FXML
     public void OpenFile() {
@@ -47,9 +81,12 @@ public class Controller {
             //Queue<LogEntry> logs = APIEntryPoint.getCommandLogQueue(theFile);
 
             try {
-                GridPane test = FXMLLoader.load(getClass().getResource("/TabBase.fxml"));
+                FXMLLoader test = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+                TableController temp = new TableController();
+                controllers.add(temp);
+                test.setController(temp);
                 Tab newTab = new Tab(theFile.getName());
-                newTab.setContent(test);
+                newTab.setContent(test.load());
 
                 TabElement.getTabs().add(newTab);
             } catch (IOException Ex) {
@@ -80,3 +117,4 @@ public class Controller {
         Platform.exit();
     }
 }
+
