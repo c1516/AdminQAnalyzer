@@ -53,7 +53,7 @@ public class BackendMain {
         FileWriter copyWriter = new FileWriter(file);
         String s;
         while ((s = reader.readLine()) != null) {
-            copyWriter.append(s);
+            copyWriter.append(s).append("\n");
         }
         copyWriter.flush();
     }
