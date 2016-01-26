@@ -14,7 +14,7 @@ public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
     static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
-    static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+));");
+    static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d\\[\\]]+));");
     static Pattern ARRAYPATTERN = Pattern.compile("(([\\w\\d]+)\\[([\\d]+)])");
 
     static Map<String, Integer> TYPETOSIZE;
