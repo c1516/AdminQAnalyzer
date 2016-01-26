@@ -14,8 +14,7 @@ public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
     static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
-    static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d\\[\\]]+));");
-    static Pattern ARRAYPATTERN = Pattern.compile("(([\\w\\d]+)\\[([\\d]+)])");
+    static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);\\n");
 
     static Map<String, Integer> TYPETOSIZE;
     static Map<String, CommandField.EndianState> TYPETOENDIAN;
@@ -92,10 +91,8 @@ public class HeaderParser {
                 String name = m.group(6);
                 // Figure out if this is an array
                 int mult;
-                Matcher am = ARRAYPATTERN.matcher(name);
-                if (am.find()) {
-                    name = am.group(1);
-                    mult = Integer.valueOf(am.group(2));
+                if (m.group(7) != null) {
+                    mult = Integer.valueOf(m.group(7));
                 } else {
                     mult = 1;
                 }
