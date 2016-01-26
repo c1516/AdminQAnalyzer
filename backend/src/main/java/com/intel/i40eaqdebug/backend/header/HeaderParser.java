@@ -3,7 +3,10 @@ package com.intel.i40eaqdebug.backend.header;
 import com.intel.i40eaqdebug.api.header.CommandField;
 import com.intel.i40eaqdebug.api.header.CommandStruct;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,7 +17,9 @@ public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
     static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
-    static Pattern FIELDPARSEPATTERN = Pattern.compile("(/\\*(?:[\\w\\s+=;\\n])+\\*/)|(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);");
+    static Pattern FIELDPARSEPATTERN = Pattern.compile(
+        "(/\\*(?:[\\w\\s+=;\\n])+\\*/)|(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);");
+    // Can't match #defines with shifted values, might look into implementations of that (perhaps by building a value table?)
 
     static Map<String, Integer> TYPETOSIZE;
     static Map<String, CommandField.EndianState> TYPETOENDIAN;
@@ -44,8 +49,8 @@ public class HeaderParser {
         return ret;
     }
 
-    public static Map<Integer, CommandStruct> constructOPCShortToStruct(Map<Integer, String> opcShortToString, File opcodesFile,
-        Map<String, CommandStruct> structs) throws IOException {
+    public static Map<Integer, CommandStruct> constructOPCShortToStruct(Map<Integer, String> opcShortToString,
+        File opcodesFile, Map<String, CommandStruct> structs) throws IOException {
         Map<String, Integer> invert = new HashMap<String, Integer>();
         for (Map.Entry<Integer, String> e : opcShortToString.entrySet()) {
             invert.put(e.getValue(), e.getKey());
