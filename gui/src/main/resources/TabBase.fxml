@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
+<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.SingleTabControllerller"-->
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
-<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.TableController"-->
 <GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-        <ColumnConstraints />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES" />
@@ -47,7 +39,5 @@
                </FXCollections>
            </items>
         </ListView>
-
-        <TextArea fx:id="RawArea" editable="false" prefHeight="173.0" prefWidth="244.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     </children>
 </GridPane>

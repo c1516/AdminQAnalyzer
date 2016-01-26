@@ -18,9 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Queue;
 
-//TODO: make this actually work
-//TODO: bind to properties instead of direct setting.
-//TODO: return OK or cancel press.
 public class DialogController {
     @FXML
     private Parent Dialog;

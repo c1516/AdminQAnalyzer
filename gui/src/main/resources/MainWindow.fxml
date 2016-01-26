@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuBox?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.MenuLabel?>
-<?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
-<?import com.sun.javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
-
 <AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.Controllers.Controller">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.intel.i40eaqdebug.gui.Controllers.MainWindowController">
     <children>
         <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                   AnchorPane.topAnchor="0.0">
@@ -40,8 +33,9 @@
                         </Menu>
                     </menus>
                 </MenuBar>
-                <ToolBar maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
+                <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
                     <items>
+                        <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
                         <Button fx:id="ErrorFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" onMouseClicked="#filterClicked"
                                 mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0"
                                 style="-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;">

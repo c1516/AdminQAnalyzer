@@ -1,15 +1,7 @@
 package com.intel.i40eaqdebug.gui.DataModels;
 
-import com.intel.i40eaqdebug.api.logs.LogEntry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-/**
- * Created by andrey on 1/19/2016.
- */
-
 
 public class TableModel {
     private final StringProperty OpCode;
