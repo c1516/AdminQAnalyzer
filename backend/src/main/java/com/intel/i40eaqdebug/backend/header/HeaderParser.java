@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
-    static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{\\n(.+\\n)+};");
+    static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
     static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+));");
     static Pattern ARRAYPATTERN = Pattern.compile("(([\\w\\d]+)\\[([\\d]+)])");
 
@@ -99,10 +99,18 @@ public class HeaderParser {
                 } else {
                     mult = 1;
                 }
+                int size;
                 if (!TYPETOSIZE.containsKey(type)) {
-                    throw new RuntimeException("UNDEFINED TYPE " + type);
+                    if (type.startsWith("i40e_aqc_")) { // Is a defined command structure
+                        size = 16;
+                    } else {
+                        System.out.println(m.group());
+                        throw new RuntimeException("UNDEFINED TYPE " + type);
+                    }
+                } else {
+                    size = TYPETOSIZE.get(type);
                 }
-                int size = TYPETOSIZE.get(type);
+
                 CommandField.EndianState endianness = TYPETOENDIAN.get(type);
                 start = offset;
                 end = start + size * mult; // Exclusive
@@ -115,7 +123,7 @@ public class HeaderParser {
                     definedValues = new HashMap<Integer, String>();
                 }
                 String valueDef = m.group(2);
-                Integer value = Integer.valueOf(m.group(3), 16);
+                Integer value = Integer.valueOf(m.group(3).replace("0x", ""), 16);
                 definedValues.put(value, valueDef);
             }
         }
