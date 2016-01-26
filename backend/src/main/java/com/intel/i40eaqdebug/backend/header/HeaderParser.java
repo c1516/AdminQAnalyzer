@@ -14,7 +14,7 @@ public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
     static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
-    static Pattern FIELDPARSEPATTERN = Pattern.compile("(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);\\n");
+    static Pattern FIELDPARSEPATTERN = Pattern.compile("(/\\*(?:[\\w\\s+=;\\n])+\\*/)|(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);");
 
     static Map<String, Integer> TYPETOSIZE;
     static Map<String, CommandField.EndianState> TYPETOENDIAN;
@@ -86,13 +86,16 @@ public class HeaderParser {
         // If not null then the field we are currently constructing values for has defined values
         Map<Integer, String> definedValues = null;
         while (m.find()) {
-            if (m.group(1) == null) { // Not a #define, so this is a field
-                String type = m.group(5);
-                String name = m.group(6);
+            if (m.group(1) != null) {
+                continue; // comment
+            }
+            if (m.group(2) == null) { // Not a #define, so this is a field
+                String type = m.group(6);
+                String name = m.group(7);
                 // Figure out if this is an array
                 int mult;
-                if (m.group(7) != null) {
-                    mult = Integer.valueOf(m.group(7));
+                if (m.group(8) != null) {
+                    mult = Integer.valueOf(m.group(8));
                 } else {
                     mult = 1;
                 }
@@ -119,8 +122,8 @@ public class HeaderParser {
                 if (definedValues == null) {
                     definedValues = new HashMap<Integer, String>();
                 }
-                String valueDef = m.group(2);
-                Integer value = Integer.valueOf(m.group(3).replace("0x", ""), 16);
+                String valueDef = m.group(3);
+                Integer value = Integer.valueOf(m.group(4).replace("0x", ""), 16);
                 definedValues.put(value, valueDef);
             }
         }
