@@ -6,9 +6,14 @@ import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -17,16 +22,6 @@ public class SingleTabController {
     //region FXML properties.
     @FXML
     private TableView<TableModel> TabTable;
-    @FXML
-    private TreeView DataArea;
-    @FXML
-    private TableColumn<TableModel, String> opColumn;
-    @FXML
-    private TableColumn<TableModel, String> flagColumn;
-    @FXML
-    private TableColumn<TableModel, String> errColumn;
-    @FXML
-    private TableColumn<TableModel, String> retColumn;
     //endregion
 
     private GUIMain Application;
@@ -69,21 +64,30 @@ public class SingleTabController {
     @FXML
     public void initialize() {
 
-        /*opColumn.setCellValueFactory(cellData -> cellData.getValue().getOpCodeProperty());
-        opColumn.setCellValueFactory(cellData -> cellData.getValue().getOpCodeProperty());
-        flagColumn.setCellValueFactory(cellData -> cellData.getValue().getFlagsProperty());
-        errColumn.setCellValueFactory(cellData -> cellData.getValue().getErrorCodeProperty());
-        retColumn.setCellValueFactory(cellData -> cellData.getValue().getReturnCodeProperty());*/
-
-
-        /*TableTest.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        //TODO: there's gonna be a better way of handling this instead of this massive lambada.
+        TabTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                System.out.println("Selection Changed!");
+                Stage tempStage = new Stage();
+                tempStage.initModality(Modality.APPLICATION_MODAL);
+                tempStage.initOwner(Application.getMainStage());
+
+                FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+                tabFXML.setController(new DetailsPaneController(Application, (TableModel)newSelection));
+                //TODO: determine good size.
+                Scene tempScene = null;
+                try {
+                    tempScene = new Scene(tabFXML.load(), 300, 200);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                tempStage.setScene(tempScene);
+                tempStage.show();
             }
-        });*/
+        });
         fillTable();
         //new Thread(new DelaySearch(this)).start();
     }
+
 
     private void fillTable() {
         ObservableList<TableModel> data = TabTable.getItems();

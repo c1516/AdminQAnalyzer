@@ -10,12 +10,10 @@
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0"
-                        prefHeight="124.60000000000002" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
+        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0">
             <columns>
                 <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
                     <cellValueFactory><PropertyValueFactory property="OpCode"/></cellValueFactory>
@@ -31,8 +29,8 @@
                 </TableColumn>
             </columns>
         </TableView>
+        <!--             This is how the binding should happen
         <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
-            <!-- This is how the binding should happen
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <HBox>
@@ -49,7 +47,8 @@
                    </HBox>
                </FXCollections>
            </items>
-           -->
         </ListView>
+                   -->
+
     </children>
 </GridPane>
