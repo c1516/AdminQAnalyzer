@@ -4,24 +4,35 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0" prefHeight="124.60000000000002" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="387.4" minHeight="314.4" percentHeight="70.0" prefHeight="387.4" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="197.60000000000002" minHeight="124.60000000000002" percentHeight="30.0"
+                        prefHeight="124.60000000000002" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <TableView fx:id="TableTest" prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
+        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.columnSpan="3">
             <columns>
-                <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code" />
-                <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags" />
-                <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error" />
-                <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return" />
+                <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
+                    <cellValueFactory><PropertyValueFactory property="OpCode"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags">
+                    <cellValueFactory><PropertyValueFactory property="Flags"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error">
+                    <cellValueFactory><PropertyValueFactory property="ErrorCode"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return">
+                    <cellValueFactory><PropertyValueFactory property="ReturnCode"/></cellValueFactory>
+                </TableColumn>
             </columns>
         </TableView>
         <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
+            <!-- This is how the binding should happen
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <HBox>
@@ -38,6 +49,7 @@
                    </HBox>
                </FXCollections>
            </items>
+           -->
         </ListView>
     </children>
 </GridPane>

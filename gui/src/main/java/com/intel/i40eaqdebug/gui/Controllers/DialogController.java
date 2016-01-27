@@ -43,7 +43,7 @@ public class DialogController {
         try {
             stage.setScene(new Scene((Pane) loader.load(), 350, 150));
         } catch (Exception e) {
-            //TODO: try to rebuild the controller manually here.
+            //TODO: try to rebuild the fxml manually here.
             return;
         }
         stage.setResizable(false);

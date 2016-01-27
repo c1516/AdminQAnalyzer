@@ -20,6 +20,16 @@ public class TableModel {
         this.ReturnCode = new SimpleStringProperty(Return);
     }
 
+    public boolean hasPartialValue(String val) {
+        if (val == null) return false;
+
+        if (OpCode.get().contains(val) || Flags.get().contains(val)
+                || ErrorCode.get().contains(val) || ReturnCode.get().contains(val))
+             return true;
+        else
+            return false;
+    }
+
     public String getOpCode() {return OpCode.get();}
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}

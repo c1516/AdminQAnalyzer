@@ -1,5 +1,7 @@
 package com.intel.i40eaqdebug.gui;
 
+import com.intel.i40eaqdebug.gui.Controllers.MainWindowController;
+import com.sun.javaws.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,15 +14,25 @@ import javafx.stage.Stage;
 
 public class GUIMain extends Application {
 
+    private Stage MainStage;
+
+    public Stage getMainStage() { return MainStage; }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        System.out.println(getClass().getResource("/MainWindow.fxml"));
+        MainStage = primaryStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 500, 500));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
+        root.setController(new MainWindowController(this));
+        primaryStage.setTitle("Admin Que Log Analyzer");
+        primaryStage.setScene(new Scene(root.load(), 500, 500));
+        primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
+
+        //How to load External CSS files.
+        //We should load all of them here.
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/highlightingTable.css").toExternalForm());
+
         primaryStage.show();
     }
 
