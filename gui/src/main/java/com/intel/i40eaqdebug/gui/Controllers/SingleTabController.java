@@ -1,5 +1,7 @@
 package com.intel.i40eaqdebug.gui.Controllers;
 
+import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.Util;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
@@ -71,7 +73,7 @@ public class SingleTabController {
                 tempStage.initModality(Modality.APPLICATION_MODAL);
                 tempStage.initOwner(Application.getMainStage());
 
-                FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+                FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
                 tabFXML.setController(new DetailsPaneController(Application, (TableModel)newSelection));
                 //TODO: determine good size.
                 Scene tempScene = null;
@@ -90,14 +92,21 @@ public class SingleTabController {
 
 
     private void fillTable() {
+
+
         ObservableList<TableModel> data = TabTable.getItems();
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
         while (test.size() > 0) {
             LogEntry temp = test.remove();
-            //TODO: this needs to be diffrent and must fetch the strings from the mappings in the API
-            data.add(new TableModel(Short.toString(temp.getOpCode()), Short.toString(temp.getFlags()),
-                    Byte.toString(temp.getErr()), Short.toString(temp.getRetVal())));
+            //TODO: this needs to be different and must fetch the strings from the mappings in the API
+            String OpCode = APIEntryPoint.getCommandName(temp.getOpCode());
+            String Error = APIEntryPoint.getErrorString(temp.getErr());
+
+            //TODO: this needs to be broken up and we need info on this.
+            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
+
+            data.add(new TableModel(OpCode, Flags,  Error, Short.toString(temp.getRetVal())));
         }
 
     }

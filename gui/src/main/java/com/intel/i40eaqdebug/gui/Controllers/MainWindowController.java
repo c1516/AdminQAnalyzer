@@ -3,6 +3,7 @@ package com.intel.i40eaqdebug.gui.Controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.FakeAPIInitilizer;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
 
@@ -81,16 +82,8 @@ public class MainWindowController {
     }
 
     private Queue<LogEntry> LoadData(File filePath) {
-        //TODO: Call API functions here, and load data.
-        //Queue<LogEntry> logs = APIEntryPoint.getCommandLogQueue(filePath);
-        Queue<LogEntry> logs = new LinkedList<LogEntry>();
-
-        for (int i = 0; i < 20; i++) {
-            logs.add(new ALogLine());
-        }
-
-
-        return logs;
+        FakeAPIInitilizer.InitApi();
+        return APIEntryPoint.getCommandLogQueue(filePath);
     }
 
     @FXML
@@ -102,65 +95,6 @@ public class MainWindowController {
         Platform.exit();
     }
 
-    private class ALogLine implements LogEntry {
-        private Random rand = new Random();
 
-        private byte Error;
-        private short Flags;
-        private short OpCode;
-        private short RetVal;
-        private int CookieH;
-        private int CookieL;
-
-        public ALogLine() {
-            Error = (byte)rand.nextInt(15);
-            Flags = (short)rand.nextInt(255);
-            if (rand.nextBoolean()) {
-                OpCode = 0x0A00;
-            } else {
-                OpCode = 0x0A07;
-            }
-
-            RetVal = (short)rand.nextInt(255);
-            CookieH = rand.nextInt();
-            CookieL = rand.nextInt();
-        }
-
-        @Override
-        public byte getErr() {
-            return Error;
-        }
-
-        @Override
-        public short getFlags() {
-            return Flags;
-        }
-
-        @Override
-        public short getOpCode() {
-
-            return OpCode;
-        }
-
-        @Override
-        public short getRetVal() {
-            return RetVal;
-        }
-
-        @Override
-        public int getCookieHigh() {
-            return CookieH;
-        }
-
-        @Override
-        public int getCookieLow() {
-            return CookieL;
-        }
-
-        @Override
-        public byte[] getBuffer() {
-            return new byte[0];
-        }
-    }
 }
 

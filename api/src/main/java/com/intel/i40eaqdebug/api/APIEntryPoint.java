@@ -34,7 +34,7 @@ public final class APIEntryPoint {
      * @param errors
      * @param commands
      */
-    static void init(Errors errors, Map<Short, String> names, Map<Short, CommandStruct> commands, LogAdapter adapter) {
+    public static void init(Errors errors, Map<Short, String> names, Map<Short, CommandStruct> commands, LogAdapter adapter) {
         INIT = true;
         ERRORS = errors;
         COMMANDNAMES = names;
