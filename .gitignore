@@ -132,3 +132,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+### Project-Specific Stuff ###
+/i40e_adminq_cmd.h
+/opcode_to_struct.txt
