@@ -1,5 +1,6 @@
 package com.intel.i40eaqdebug.api.header;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface CommandStruct {
@@ -10,5 +11,5 @@ public interface CommandStruct {
     @Deprecated
     String getName();
 
-    Map<String, CommandField> getFieldsFromBuf(byte[] buff);
+    LinkedHashMap<String, CommandField> getFields();
 }

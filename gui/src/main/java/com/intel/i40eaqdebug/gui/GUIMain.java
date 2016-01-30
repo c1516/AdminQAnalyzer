@@ -1,13 +1,12 @@
 package com.intel.i40eaqdebug.gui;
 
+import com.intel.i40eaqdebug.gui.Controllers.MainWindowController;
+import com.sun.javaws.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.stage.Stage;
-import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
-
-import java.io.IOException;
+import javafx.stage.Stage;
 
 /**
  * Entry point to starting the GUI: API Calls should be called via the APIEntryPoint static methods
@@ -15,15 +14,28 @@ import java.io.IOException;
 
 public class GUIMain extends Application {
 
-    @Override public void start(Stage primaryStage) throws IOException {
-        System.out.println(getClass().getResource("/GUIMain.fxml"));
+    private Stage MainStage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("/GUIMain.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 500, 500));
+    public Stage getMainStage() { return MainStage; }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        MainStage = primaryStage;
+
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
+        root.setController(new MainWindowController(this));
+        primaryStage.setTitle("Admin Que Log Analyzer");
+        primaryStage.setScene(new Scene(root.load(), 500, 500));
+        primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
+
+        //How to load External CSS files.
+        //We should load all of them here.
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/highlightingTable.css").toExternalForm());
+
         primaryStage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
