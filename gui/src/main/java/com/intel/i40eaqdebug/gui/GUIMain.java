@@ -25,8 +25,8 @@ public class GUIMain extends Application {
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         root.setController(new MainWindowController(this));
         primaryStage.setTitle("Admin Que Log Analyzer");
-        primaryStage.setScene(new Scene(root.load(), 500, 500));
-        primaryStage.setMaximized(false);
+        primaryStage.setScene(new Scene(root.load(), 1024, 768));
+        primaryStage.setMaximized(true);
         primaryStage.setResizable(true);
 
         //How to load External CSS files.
