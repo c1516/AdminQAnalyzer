@@ -49,7 +49,7 @@ public class MainWindowController {
     @FXML
     public void OpenFile() {
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File(System.getProperty("user.home") + "\\Desktop"));
+        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         chooser.setTitle("Select Log File");
         chooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Log Files", "*.log"),
