@@ -62,11 +62,11 @@ public final class APIEntryPoint {
         return COMMANDSTRUCTS.getOrDefault(opcode, UNKNOWN_COMMAND_STRUCT);
     }
 
-    public static Queue<LogEntry> getCommandLogQueue(File file) {
+    public static Queue<LogEntry> getCommandLogQueue(File file, int startIndex, int count) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
-        return ADAPTER.getEntriesSequential(file);
+        return ADAPTER.getEntriesSequential(file, startIndex, count);
     }
 
     // Stuff that allows us to return an unknown match without returning null/still be able to display raw bytes

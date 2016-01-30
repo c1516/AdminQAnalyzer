@@ -1,21 +1,33 @@
 package com.intel.i40eaqdebug.backend.header;
 
+import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LogParser {
+public class LogParser implements LogAdapter {
 
     Pattern BEGIN = Pattern.compile("desc and buffer");
     Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
 
-    public Collection<LogEntry> readDiscreteEntries(int startIdx, int count, BufferedReader reader) throws IOException {
+    public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
+        try {
+            return readDiscreteEntries(startIdx, endIdx, );
+        } catch (Exception e) {
+            e.printStackTrace(); // TODO
+        }
+    }
+
+    public Queue<LogEntry> readDiscreteEntries(int startIdx, int count, BufferedReader reader) throws IOException {
         // Conditions Check
         if (startIdx < 0) {
             throw new IllegalArgumentException("Cannot read a negative entry index!");

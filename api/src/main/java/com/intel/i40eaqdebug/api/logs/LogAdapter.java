@@ -4,5 +4,5 @@ import java.io.File;
 import java.util.Queue;
 
 public interface LogAdapter {
-    Queue<LogEntry> getEntriesSequential(File f);
+    Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count);
 }
