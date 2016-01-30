@@ -100,7 +100,7 @@ public class SingleTabController {
         while (test.size() > 0) {
             LogEntry temp = test.remove();
             //TODO: this needs to be different and must fetch the strings from the mappings in the API
-            String OpCode = APIEntryPoint.getCommandName(temp.getOpCode());
+            String OpCode = APIEntryPoint.getCommandName((int)temp.getOpCode());
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             //TODO: this needs to be broken up and we need info on this.

@@ -33,7 +33,8 @@ public final class APIEntryPoint {
      * @param errors
      * @param commands
      */
-    static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
+    //TEMPORARLY PUBLIC FOR FAKE INITILIZATION BY UI
+    public static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
         INIT = true;
         ERRORS = errors;
         COMMANDNAMES = names;

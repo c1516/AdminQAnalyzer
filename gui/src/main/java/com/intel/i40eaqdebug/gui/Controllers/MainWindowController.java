@@ -83,7 +83,7 @@ public class MainWindowController {
 
     private Queue<LogEntry> LoadData(File filePath) {
         FakeAPIInitilizer.InitApi();
-        return APIEntryPoint.getCommandLogQueue(filePath);
+        return APIEntryPoint.getCommandLogQueue(filePath, 0, -1);
     }
 
     @FXML

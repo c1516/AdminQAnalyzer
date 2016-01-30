@@ -16,13 +16,13 @@ import java.util.*;
 public class FakeAPIInitilizer {
     public static void InitApi() {
         FakeErrors errors = new FakeErrors();
-        Map<Short, String> opcodeMap = new LinkedHashMap<Short, String>();
-        opcodeMap.put((short)0x0A00, "Opcode");
-        opcodeMap.put((short)0x0A07, "Cooler_Opcode");
+        Map<Integer, String> opcodeMap = new LinkedHashMap<Integer, String>();
+        opcodeMap.put(0x0A00, "Opcode");
+        opcodeMap.put(0x0A07, "Cooler_Opcode");
 
-        Map<Short, CommandStruct> commandMap = new LinkedHashMap<Short, CommandStruct>();
-        commandMap.put((short)0x0A00, new FakeCommandStruct(true));
-        commandMap.put((short)0x0A07, new FakeCommandStruct(false));
+        Map<Integer, CommandStruct> commandMap = new LinkedHashMap<Integer, CommandStruct>();
+        commandMap.put(0x0A00, new FakeCommandStruct(true));
+        commandMap.put(0x0A07, new FakeCommandStruct(false));
 
         FakeLogAdaptor adaptor = new FakeLogAdaptor();
 
@@ -50,7 +50,7 @@ public class FakeAPIInitilizer {
     public static class FakeLogAdaptor implements LogAdapter {
 
         @Override
-        public Queue<LogEntry> getEntriesSequential(File f) {
+        public Queue<LogEntry> getEntriesSequential(File f, int low, int high) {
             Queue<LogEntry> logs = new LinkedList<LogEntry>();
 
             for (int i = 0; i < 20; i++) {
@@ -150,6 +150,11 @@ public class FakeAPIInitilizer {
             RetVal = (short)rand.nextInt(255);
             CookieH = rand.nextInt();
             CookieL = rand.nextInt();
+        }
+
+        @Override
+        public int getStartLine() {
+            return 0;
         }
 
         @Override
