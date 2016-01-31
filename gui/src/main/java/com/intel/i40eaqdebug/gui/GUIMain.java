@@ -31,7 +31,7 @@ public class GUIMain extends Application {
 
         //How to load External CSS files.
         //We should load all of them here.
-        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/highlightingTable.css").toExternalForm());
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
     }

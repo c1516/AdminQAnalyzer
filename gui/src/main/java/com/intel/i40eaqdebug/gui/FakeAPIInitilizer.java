@@ -36,10 +36,14 @@ public class FakeAPIInitilizer {
                 case 0:
                     return "";
                 case 1:
-                    return "Bad Thing";
+                    return "";
                 case 2:
-                    return "Worse Thing";
+                    return "";
                 case 3:
+                    return "Bad Thing";
+                case 4:
+                    return "Worse Thing";
+                case 5:
                     return "Baddest Thing in existance!!!";
                 default:
                     return "Unknown Error";
