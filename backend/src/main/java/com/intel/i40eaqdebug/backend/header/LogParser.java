@@ -5,6 +5,7 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -21,9 +22,10 @@ public class LogParser implements LogAdapter {
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
         try {
-            return readDiscreteEntries(startIdx, endIdx, );
+            return readDiscreteEntries(startIdx, count, new BufferedReader(new FileReader(f)));
         } catch (Exception e) {
             e.printStackTrace(); // TODO
+            return new LinkedList<LogEntry>();
         }
     }
 
