@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -56,6 +57,7 @@ public class SingleTabController {
             Row1.setPercentHeight(100);
             Row2.setPercentHeight(0);
             DetailsVisible = false;
+            HideablePane.getChildren().clear();
         }
     }
 
@@ -110,22 +112,18 @@ public class SingleTabController {
                 Row2.setPercentHeight(30);
                 DetailsVisible = true;
 
-                //Stage tempStage = new Stage();
-                //tempStage.initModality(Modality.APPLICATION_MODAL);
-                //tempStage.initOwner(Application.getMainStage());
-
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
                 tabFXML.setController(new DetailsPaneController(Application, (TableModel)newSelection));
-                //TODO: determine good size.
-                //Scene tempScene = null;
+                GridPane testPane = null;
                 try {
-                    HideablePane.getChildren().add(tabFXML.load());
-                    //tempScene = new Scene(tabFXML.load(), 300, 200);
+                    testPane = tabFXML.load();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //tempStage.setScene(tempScene);
-                //tempStage.show();
+
+                HideablePane.getChildren().add(testPane);
+                HideablePane.requestFocus();
+                HideablePane.setVisible(true);
             }
         });
         fillTable();

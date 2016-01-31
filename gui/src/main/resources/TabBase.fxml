@@ -30,7 +30,7 @@
                 </TableColumn>
             </columns>
         </TableView>
-        <VBox fx:id="HideablePane" GridPane.rowIndex="1">
+        <VBox fx:id="HideablePane" GridPane.rowIndex="1" style="-fx-border-color: black; -fx-border-width: 2px 0px 0px 0px;">
 
         </VBox>
         <!--             This is how the binding should happen
