@@ -7,11 +7,14 @@ import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -24,11 +27,20 @@ public class SingleTabController {
     //region FXML properties.
     @FXML
     private TableView<TableModel> TabTable;
+
+    @FXML
+    private VBox HideablePane;
+
+    @FXML
+    private RowConstraints Row1;
+    @FXML
+    private RowConstraints Row2;
+
     //endregion
 
     private GUIMain Application;
-
     private Queue<LogEntry> logLines;
+    private boolean DetailsVisible = false;
 
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
         Application = App;
@@ -37,6 +49,14 @@ public class SingleTabController {
 
     public SingleTabController() {
 
+    }
+
+    public void HideDetails() {
+        if (DetailsVisible) {
+            Row1.setPercentHeight(100);
+            Row2.setPercentHeight(0);
+            DetailsVisible = false;
+        }
     }
 
     public void Search(String term) {
@@ -54,36 +74,58 @@ public class SingleTabController {
         }
     }
 
-    @FXML
-    public void MouseEnter(MouseEvent event) {
+    private boolean clickInPane(double x, double y) {
+        double lx = HideablePane.getLayoutX();
+        double ly = HideablePane.getLayoutY() + 80;//TODO: this needs to be progmatically corrected to tool-bar size.
+        double height = HideablePane.getLayoutBounds().getHeight();
+        double width = HideablePane.getLayoutBounds().getWidth();
+        System.out.println("X: " + x + ", Y: " + y + " | lx: " + lx + ", ly: " + ly + ", h: " + height + ", w: " + width);
+
+
+        if ((x >= lx && x <= (lx + width)) && (y >= ly && y <= (ly + height))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-
     @FXML
-    public void MouseLeft(MouseEvent event) {
+    public void HandleTabClick(MouseEvent event) {
+
     }
 
     @FXML
     public void initialize() {
+        Application.getMainStage().getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, (event) -> {
+            Object src = event.getSource();
+            if (!clickInPane(event.getSceneX(), event.getSceneY())){
+                HideDetails();
+            }
+        });
 
         //TODO: there's gonna be a better way of handling this instead of this massive lambada.
         TabTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                Stage tempStage = new Stage();
-                tempStage.initModality(Modality.APPLICATION_MODAL);
-                tempStage.initOwner(Application.getMainStage());
+                Row1.setPercentHeight(70);
+                Row2.setPercentHeight(30);
+                DetailsVisible = true;
+
+                //Stage tempStage = new Stage();
+                //tempStage.initModality(Modality.APPLICATION_MODAL);
+                //tempStage.initOwner(Application.getMainStage());
 
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
                 tabFXML.setController(new DetailsPaneController(Application, (TableModel)newSelection));
                 //TODO: determine good size.
-                Scene tempScene = null;
+                //Scene tempScene = null;
                 try {
-                    tempScene = new Scene(tabFXML.load(), 300, 200);
+                    HideablePane.getChildren().add(tabFXML.load());
+                    //tempScene = new Scene(tabFXML.load(), 300, 200);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                tempStage.setScene(tempScene);
-                tempStage.show();
+                //tempStage.setScene(tempScene);
+                //tempStage.show();
             }
         });
         fillTable();
