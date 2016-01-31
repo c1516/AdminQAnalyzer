@@ -125,6 +125,17 @@ public class MainWindowController {
 
     }
 
+    public void Clear() {
+
+        SearchField.setText(null);
+
+        try {
+            controllers.get(0).Search("");
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void Exit() {
         Platform.exit();

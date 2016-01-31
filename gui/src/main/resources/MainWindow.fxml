@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
@@ -53,7 +54,8 @@
                         </Button>
                         <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS" />
                   <TextField fx:id="SearchField" onAction="#Search" promptText="Enter search parameters" />
-                  <Button fx:id="SearchButton" onAction="#Search" mnemonicParsing="false" text="Search" />
+                  <Button fx:id="SearchButton" mnemonicParsing="false" onAction="#Search" text="Search" />
+                  <Button fx:id="ClearButton" mnemonicParsing="false" onAction="#Clear" text="X" />
                     </items>
                 </ToolBar>
                 <TabPane fx:id="TabElement" tabClosingPolicy="ALL_TABS" GridPane.rowIndex="2">
