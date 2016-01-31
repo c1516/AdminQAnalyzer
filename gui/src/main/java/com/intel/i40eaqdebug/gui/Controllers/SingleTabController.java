@@ -135,7 +135,6 @@ public class SingleTabController {
 
     private void fillTable() {
 
-
         ObservableList<TableModel> data = TabTable.getItems();
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
