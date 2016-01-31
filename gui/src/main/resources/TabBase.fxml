@@ -5,15 +5,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES"/>
+        <RowConstraints fx:id="Row1" percentHeight="100.0" vgrow="SOMETIMES"/>
+        <RowConstraints fx:id="Row2" percentHeight="0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0">
+        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0">
             <columns>
                 <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
                     <cellValueFactory><PropertyValueFactory property="OpCode"/></cellValueFactory>
@@ -29,6 +30,9 @@
                 </TableColumn>
             </columns>
         </TableView>
+        <VBox fx:id="HideablePane" GridPane.rowIndex="1" style="-fx-border-color: black; -fx-border-width: 2px 0px 0px 0px;">
+
+        </VBox>
         <!--             This is how the binding should happen
         <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
            <items>

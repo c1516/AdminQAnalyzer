@@ -26,12 +26,12 @@ public class GUIMain extends Application {
         root.setController(new MainWindowController(this));
         primaryStage.setTitle("Admin Que Log Analyzer");
         primaryStage.setScene(new Scene(root.load(), 1024, 768));
-        primaryStage.setMaximized(true);
+        primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
 
         //How to load External CSS files.
         //We should load all of them here.
-        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/highlightingTable.css").toExternalForm());
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
     }
