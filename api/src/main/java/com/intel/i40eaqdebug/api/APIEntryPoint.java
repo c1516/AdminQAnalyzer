@@ -48,14 +48,14 @@ public final class APIEntryPoint {
         return ERRORS.getByByte(errFlag);
     }
 
-    public static String getCommandName(Integer opcode) {
+    public static String getCommandName(int opcode) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
         return COMMANDNAMES.getOrDefault(opcode, "UNKNOWN");
     }
 
-    public static CommandStruct getCommandStruct(Integer opcode) {
+    public static CommandStruct getCommandStruct(int opcode) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
