@@ -103,8 +103,12 @@ public class SingleTabController {
                 Row2.setPercentHeight(30);
                 DetailsVisible = true;
 
+                //Retrieve the row number of the selected entry, retrieve that log entry and pass it to the detail window
+                int selectedRow = TabTable.getSelectionModel().getSelectedIndex();
+                LogEntry tempLogEntry = (LogEntry) ((LinkedList) logLines).get(selectedRow);
+
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
-                tabFXML.setController(new DetailsPaneController(Application, (TableModel)newSelection));
+                tabFXML.setController(new DetailsPaneController(Application, tempLogEntry));
                 GridPane testPane = null;
                 try {
                     testPane = tabFXML.load();

@@ -20,8 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -34,12 +36,21 @@ public class DetailsPaneController {
     TableView<DetailTableModel> DetailTable = new TableView<>();
     //endregion
     private GUIMain Application;
-    private TableModel SelectedRowDetail;
+    private DetailTableModel SelectedRowDetail;
     private LogEntry logLines;
 
-    public DetailsPaneController(GUIMain App, TableModel selectedRow) {
+    public DetailsPaneController(GUIMain App, LogEntry selectedRow) {
         Application = App;
-        SelectedRowDetail = selectedRow;
+
+        //Create data model from incoming log entry
+        String OpCode = String.valueOf(selectedRow.getOpCode());
+        String Flags = String.valueOf(selectedRow.getFlags());
+        String Error = String.valueOf(selectedRow.getErr());
+        String ReturnVal = String.valueOf(selectedRow.getRetVal());
+        String CookieHigh = String.valueOf(selectedRow.getCookieHigh());
+        String CookieLow = String.valueOf(selectedRow.getCookieLow());
+
+        SelectedRowDetail = new DetailTableModel(OpCode, Flags, Error, ReturnVal, CookieHigh, CookieLow);
     }
 
     public DetailsPaneController() {
@@ -51,7 +62,7 @@ public class DetailsPaneController {
 
         ObservableList<DetailTableModel> rows = DetailTable.getItems();
 
-        rows.add(new DetailTableModel(SelectedRowDetail.getOpCode()));
+        rows.add(SelectedRowDetail);
     }
 
 }

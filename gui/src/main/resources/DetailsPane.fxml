@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.cell.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -10,6 +11,7 @@
 <!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.DetailsPaneControllerller"-->
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -20,12 +22,10 @@
    <children>
       <TableView fx:id="DetailTable" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn prefWidth="150.0" text="Key" >
-            <cellValueFactory><PropertyValueFactory property="OpCode"/></cellValueFactory>
+          <TableColumn prefWidth="150.0" text="Key">
+            <cellValueFactory><PropertyValueFactory property="OpCode" /></cellValueFactory>
           </TableColumn>
           <TableColumn prefWidth="150.0" text="Value" />
-            <TableColumn prefWidth="75.0" text="Column X" />
-            <TableColumn prefWidth="75.0" text="Column X" />
         </columns>
       </TableView>
    </children>
