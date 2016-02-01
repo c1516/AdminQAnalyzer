@@ -6,28 +6,28 @@ package com.intel.i40eaqdebug.api;
 public final class Util {
 
     public static byte[] toBytes(int i) {
-        byte b0 = (byte) ((i & 0xF000) >> 24);
-        byte b1 = (byte) ((i & 0xF00) >> 16);
-        byte b2 = (byte) ((i & 0xF0) >> 8);
-        byte b3 = (byte) (i & 0xF);
+        byte b0 = (byte) ((i & 0xFF000000) >> 24);
+        byte b1 = (byte) ((i & 0xFF0000) >> 16);
+        byte b2 = (byte) ((i & 0xFF00) >> 8);
+        byte b3 = (byte) (i & 0xFF);
         return new byte[] {b0, b1, b2, b3};
     }
 
     public static byte[] toBytes(short s) {
-        byte b0 = (byte) ((s & 0xF0) >> 8);
-        byte b1 = (byte) (s & 0xF);
+        byte b0 = (byte) ((s & 0xFF00) >> 8);
+        byte b1 = (byte) (s & 0xFF);
         return new byte[] {b0, b1};
     }
 
     public static byte[] toBytes(long l) {
-        byte b0 = (byte) ((l & 0xF0000000) >> 56);
-        byte b1 = (byte) ((l & 0xF000000) >> 48);
-        byte b2 = (byte) ((l & 0xF00000) >> 40);
-        byte b3 = (byte) ((l & 0xF0000) >> 32);
-        byte b4 = (byte) ((l & 0xF000) >> 24);
-        byte b5 = (byte) ((l & 0xF00) >> 16);
-        byte b6 = (byte) ((l & 0xF0) >> 8);
-        byte b7 = (byte) (l & 0xF);
+        byte b0 = (byte) ((l & 0xFF00000000000000L) >> 56);
+        byte b1 = (byte) ((l & 0xFF000000000000L) >> 48);
+        byte b2 = (byte) ((l & 0xFF0000000000L) >> 40);
+        byte b3 = (byte) ((l & 0xFF00000000L) >> 32);
+        byte b4 = (byte) ((l & 0xFF000000) >> 24);
+        byte b5 = (byte) ((l & 0xFF0000) >> 16);
+        byte b6 = (byte) ((l & 0xFF00) >> 8);
+        byte b7 = (byte) (l & 0xFF);
         return new byte[] {b0, b1, b2, b3, b4, b5, b6, b7};
     }
 
