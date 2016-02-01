@@ -7,11 +7,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.*;
 
-import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,6 +75,14 @@ public class LogParser implements LogAdapter {
         if (!flag) { // Ended due to EOF
             parsedEntries.put(currLineNumber, currEntry.toArray(new String[currEntry.size()]));
         }
+        Queue<LogEntry> ret = new LinkedList<LogEntry>();
+        for (Map.Entry<Integer, String[]> entry : parsedEntries.entrySet()) {
+            ret.add(produceEntry(entry.getKey(), entry.getValue()));
+        }
+        return ret;
+    }
+
+    private LogEntry produceEntry(int lineNum, String[] lines) {
         return null;
     }
 
