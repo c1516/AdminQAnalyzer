@@ -162,6 +162,9 @@ public class SingleTabController {
                 } else if (currentItem.getErrorCode().equals("Bad Thing")) {
                     row.pseudoClassStateChanged(error, true);
                     row.pseudoClassStateChanged(success, false);
+                } else {
+                    row.pseudoClassStateChanged(error, false);
+                    row.pseudoClassStateChanged(success, false);
                 }
             });
 

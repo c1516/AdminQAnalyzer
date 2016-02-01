@@ -1,6 +1,8 @@
 package com.intel.i40eaqdebug.gui.Controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.header.CommandField;
+import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.DataModels.DetailTableModel;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
@@ -23,9 +25,7 @@ import javafx.stage.Stage;
 import sun.rmi.runtime.Log;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 
 public class DetailsPaneController {
@@ -33,36 +33,47 @@ public class DetailsPaneController {
     @FXML
     public AnchorPane Pane;
     @FXML
-    TableView<DetailTableModel> DetailTable = new TableView<>();
+    public TableView<DetailTableModel> DetailTable = new TableView<>();
     //endregion
     private GUIMain Application;
-    private DetailTableModel SelectedRowDetail;
-    private LogEntry logLines;
+    private LogEntry LogLine;
+
+
 
     public DetailsPaneController(GUIMain App, LogEntry selectedRow) {
         Application = App;
-
-        //Create data model from incoming log entry
-        String OpCode = String.valueOf(selectedRow.getOpCode());
-        String Flags = String.valueOf(selectedRow.getFlags());
-        String Error = String.valueOf(selectedRow.getErr());
-        String ReturnVal = String.valueOf(selectedRow.getRetVal());
-        String CookieHigh = String.valueOf(selectedRow.getCookieHigh());
-        String CookieLow = String.valueOf(selectedRow.getCookieLow());
-
-        SelectedRowDetail = new DetailTableModel(OpCode, Flags, Error, ReturnVal, CookieHigh, CookieLow);
+        LogLine = selectedRow;
     }
 
     public DetailsPaneController() {
 
     }
 
+    /*
+    So the idea here is pretty simple. We get one log entry from the
+    calling window, and display it's contetns (other then the stuff already
+    displayed in the table) + use it's opcode to fetch it's command sturct and also display that.
+     */
     @FXML
     public void initialize() {
+        ObservableList<DetailTableModel> rows =  DetailTable.getItems();
+        String lineNumber = Integer.toString(LogLine.getStartLine());
+        String cookieHigh = Integer.toString(LogLine.getCookieHigh());
+        String cookieLow = Integer.toString(LogLine.getCookieLow());
+        //TODO: add some sort of link to, or display of, the raw command byte file.
 
-        ObservableList<DetailTableModel> rows = DetailTable.getItems();
+        rows.add(new DetailTableModel("Line Number", lineNumber));
+        rows.add(new DetailTableModel("Cookie High", cookieHigh));
+        rows.add(new DetailTableModel("Cookie Low", cookieLow));
 
-        rows.add(SelectedRowDetail);
+        CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode());
+        LinkedHashMap<String, CommandField> structContents = tempStruct.getFields();
+
+        for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
+            DetailTableModel tempModel = new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(LogLine.getBuffer()));
+            rows.add(tempModel);
+        }
+        System.out.println(rows.size());
     }
 
 }

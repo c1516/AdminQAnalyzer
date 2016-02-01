@@ -14,6 +14,8 @@ import java.util.*;
  * Created by andrey on 1/26/2016.
  */
 public class FakeAPIInitilizer {
+    public static final int BUFFER_SIZE = 500;
+
     public static void InitApi() {
         FakeErrors errors = new FakeErrors();
         Map<Integer, String> opcodeMap = new LinkedHashMap<Integer, String>();
@@ -95,35 +97,47 @@ public class FakeAPIInitilizer {
 
     public static class FakeCommandField implements CommandField {
         private int WhichOne = 0;
+        private int low = 0;
+        private int high = 0;
+        private Random rand = new Random();
 
         public FakeCommandField(int selector) {
             WhichOne = selector;
+            low = rand.nextInt(BUFFER_SIZE);
+            high = rand.nextInt(BUFFER_SIZE);
+            if (low == high) {
+                if (low != 0)
+                    low--;
+                else
+                    low++;
+            }
+
+            if (low > high) {
+                int temp = high;
+                high = low;
+                low = temp;
+            }
+
+
         }
 
         @Override
         public String getValueAsString(byte[] raw) {
-            switch (WhichOne) {
-                case 0:
-                    return "Amazing Altruistic Anaconda";
-                case 1:
-                    return "Bouncy Broken Bull";
-                case 2:
-                    return "Cute Crazy Cat";
-                case 3:
-                    return "Dank Derpy Dog";
-                default:
-                    return "Zany Zanky Zebra";
+            StringBuilder builder = new StringBuilder();
+            for (int i = low; i < high; i++) {
+                builder.append( Integer.toHexString(raw[i]).toUpperCase());
             }
+            return builder.toString();
         }
 
         @Override
         public int getStartPos() {
-            return 50;
+            return low;
         }
 
         @Override
         public int getEndPos() {
-            return 200;
+            return high;
         }
 
         @Override
@@ -141,19 +155,22 @@ public class FakeAPIInitilizer {
         private short RetVal;
         private int CookieH;
         private int CookieL;
+        private byte[] ByteBuffer;
 
         public FakeLogLine() {
-            Error = (byte)rand.nextInt(6);
-            Flags = (short)rand.nextInt(255);
+            Error = (byte) rand.nextInt(6);
+            Flags = (short) rand.nextInt(255);
             if (rand.nextBoolean()) {
                 OpCode = 0x0A00;
             } else {
                 OpCode = 0x0A07;
             }
 
-            RetVal = (short)rand.nextInt(255);
+            RetVal = (short) rand.nextInt(255);
             CookieH = rand.nextInt();
             CookieL = rand.nextInt();
+            ByteBuffer = new byte[BUFFER_SIZE];
+            rand.nextBytes(ByteBuffer);
         }
 
         @Override
@@ -194,7 +211,7 @@ public class FakeAPIInitilizer {
 
         @Override
         public byte[] getBuffer() {
-            return new byte[0];
+            return ByteBuffer;
         }
     }
 }
