@@ -57,7 +57,9 @@ public class LogParser implements LogAdapter {
                 }
                 // Check if we already have a current Entry and add to parsed entries if so
                 if (readLineNumber >= 0) { // We have an index that is non-zero -> we have read in something
-                    parsedEntries.put(currLineNumber, currEntry.toArray(new String[currEntry.size()]));
+                    if (currLineNumber != -1) { // Init value/we just reached first one
+                        parsedEntries.put(currLineNumber, currEntry.toArray(new String[currEntry.size()]));
+                    }
                     currLineNumber = readLineNumber; // Update the line for next read entry
                     currEntry.clear();
                 }
