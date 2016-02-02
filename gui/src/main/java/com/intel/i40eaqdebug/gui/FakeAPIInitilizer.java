@@ -16,20 +16,6 @@ import java.util.*;
 public class FakeAPIInitilizer {
     public static final int BUFFER_SIZE = 500;
 
-    public static void InitApi() {
-        FakeErrors errors = new FakeErrors();
-        Map<Integer, String> opcodeMap = new LinkedHashMap<Integer, String>();
-        opcodeMap.put(0x0A00, "Opcode");
-        opcodeMap.put(0x0A07, "Cooler_Opcode");
-
-        Map<Integer, CommandStruct> commandMap = new LinkedHashMap<Integer, CommandStruct>();
-        commandMap.put(0x0A00, new FakeCommandStruct(true));
-        commandMap.put(0x0A07, new FakeCommandStruct(false));
-
-        FakeLogAdaptor adaptor = new FakeLogAdaptor();
-
-        APIEntryPoint.init(errors, opcodeMap, commandMap, adaptor);
-    }
 
     public static class FakeErrors implements Errors {
         @Override
