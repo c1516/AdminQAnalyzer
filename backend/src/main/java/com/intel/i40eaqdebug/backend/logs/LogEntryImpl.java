@@ -94,5 +94,14 @@ public class LogEntryImpl implements LogEntry {
     public short  getRetVal()     { return retval;    }
     public int    getCookieHigh() { return cookie[0]; }
     public int    getCookieLow()  { return cookie[1]; }
+
+    public int[] getParams() {
+        return param;
+    }
+
+    public int[] getAddr() {
+        return addr;
+    }
+
     public byte[] getBuffer()     { return buffer;    }
 }

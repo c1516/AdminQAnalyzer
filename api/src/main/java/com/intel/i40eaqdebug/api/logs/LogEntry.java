@@ -9,5 +9,8 @@ public interface LogEntry {
     int getCookieHigh();
     int getCookieLow();
 
+    int[] getParams();
+    int[] getAddr();
+
     byte[] getBuffer();
 }
