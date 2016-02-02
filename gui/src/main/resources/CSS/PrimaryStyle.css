@@ -1,0 +1,11 @@
+.table-row-cell:error {
+    -fx-background-color: pink;
+}
+
+.table-row-cell:success {
+    -fx-background-color: lightgreen;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: blue;
+}

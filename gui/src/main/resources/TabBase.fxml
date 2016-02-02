@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.SingleTabControllerller"-->
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints fx:id="Row1" percentHeight="100.0" vgrow="SOMETIMES"/>
+        <RowConstraints fx:id="Row2" percentHeight="0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0">
+            <columns>
+                <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
+                    <cellValueFactory><PropertyValueFactory property="OpCode"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags">
+                    <cellValueFactory><PropertyValueFactory property="Flags"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error">
+                    <cellValueFactory><PropertyValueFactory property="ErrorCode"/></cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return">
+                    <cellValueFactory><PropertyValueFactory property="ReturnCode"/></cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+        <VBox fx:id="HideablePane" GridPane.rowIndex="1" style="-fx-border-color: black; -fx-border-width: 2px 0px 0px 0px;">
+
+        </VBox>
+        <!--             This is how the binding should happen
+        <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                   <HBox>
+                      <children>
+                          <Label text="Op Code: " />
+                          <Label onMouseEntered="#MouseEnter" onMouseExited="#MouseLeft" style="-fx-background-color: lightblue" text="i40e_aqc_opc_get_cee_dcb_cfg" />
+                      </children>
+                   </HBox>
+                   <HBox>
+                      <children>
+                          <Label text="Flags: " />
+                          <Label style=" -fx-background-color: yellow" text="I40E_AQ_FLAG_ERR, I40E_AQ_FLAG_VFE" />
+                      </children>
+                   </HBox>
+               </FXCollections>
+           </items>
+        </ListView>
+                   -->
+
+    </children>
+</GridPane>

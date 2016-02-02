@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.DetailsPaneControllerller"-->
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints  percentWidth="100" hgrow="SOMETIMES"/>
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints percentHeight="100" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TableView fx:id="DetailTable" GridPane.rowIndex="0">
+        <columns>
+          <TableColumn prefWidth="150.0" text="Field Name">
+            <cellValueFactory><PropertyValueFactory property="Name" /></cellValueFactory>
+          </TableColumn>
+          <TableColumn prefWidth="150.0" text="Field Value" >
+              <cellValueFactory><PropertyValueFactory property="Value" /></cellValueFactory>
+          </TableColumn>
+        </columns>
+      </TableView>
+   </children>
+</GridPane>
