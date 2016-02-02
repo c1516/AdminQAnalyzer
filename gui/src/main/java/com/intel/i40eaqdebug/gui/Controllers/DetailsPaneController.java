@@ -1,6 +1,7 @@
 package com.intel.i40eaqdebug.gui.Controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.Util;
 import com.intel.i40eaqdebug.api.header.CommandField;
 import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
@@ -70,7 +71,21 @@ public class DetailsPaneController {
         LinkedHashMap<String, CommandField> structContents = tempStruct.getFields();
 
         for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
-            DetailTableModel tempModel = new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(LogLine.getBuffer()));
+            // Build the actual buffer for the command structure latter 16 bytes
+            byte[] structBuf = new byte[16];
+            // TODO double check that the ordering is actually right
+            int[] params = LogLine.getParams();
+            int[] addr = LogLine.getAddr();
+
+            byte[][] paramsByte = new byte[][] {Util.toBytes(params[0]), Util.toBytes(params[1])};
+            byte[][] addrByte = new byte[][] {Util.toBytes(addr[0]), Util.toBytes(addr[1])};
+            System.arraycopy(paramsByte[0], 0, structBuf, 0, 4);
+            System.arraycopy(paramsByte[1], 0, structBuf, 4, 4);
+            System.arraycopy(addrByte[0], 0, structBuf, 8, 4);
+            System.arraycopy(addrByte[1], 0, structBuf, 12, 4);
+
+            DetailTableModel tempModel = new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
+
             rows.add(tempModel);
         }
         System.out.println(rows.size());
