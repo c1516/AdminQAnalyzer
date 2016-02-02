@@ -63,8 +63,8 @@ public class HeaderParser {
             if (parse.length < 2) {
                 continue;
             }
-            String opcName = parse[0];
-            String structName = parse[1];
+            String opcName = parse[0].replaceAll(" ", "");
+            String structName = parse[1].replaceAll(" ", "");
             ret.put(invert.get(opcName), structs.get(structName));
         }
         return ret;
