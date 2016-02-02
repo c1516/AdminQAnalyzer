@@ -2,6 +2,7 @@ package com.intel.i40eaqdebug.backend.logs;
 
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.BufferedReader;
@@ -44,14 +45,14 @@ public class LogEntryImpl implements LogEntry {
             if (isMainHeader.find()) {
                 opcode = (short) Integer.parseInt(isMainHeader.group(1), 16);
                 flags = (short) Integer.parseInt(isMainHeader.group(2), 16);
-                datalen = (long) Integer.parseInt(isMainHeader.group(3), 16);
+                datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
                 retval = (short) Integer.parseInt(isMainHeader.group(4), 16);
             }
             else {
                 Matcher isCookieLine = COOKIE_PATTERN.matcher(logInputLine);
                 if (isCookieLine.find()) {
-                    int a = Integer.parseInt(isCookieLine.group(2), 16);
-                    int b = Integer.parseInt(isCookieLine.group(3), 16);
+                    int a = new BigInteger(isCookieLine.group(2), 16).intValue();
+                    int b = new BigInteger(isCookieLine.group(3), 16).intValue();
 
                     if (isCookieLine.group(1).equals("cookie")) {
                         cookie[0] = a;
