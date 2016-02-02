@@ -1,4 +1,6 @@
-package com.intel.i40eaqdebug.api.logs;
+package com.intel.i40eaqdebug.backend.logs;
+
+import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -7,10 +9,13 @@ import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
 
 
-/**
- * Created by steve on 1/25/16.
- */
 public class LogEntryImpl implements LogEntry {
+
+    private static final Pattern BUFF_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+0x([0-9a-f]+)(\\s+[0-9a-f]+)+");
+    private static final Pattern HEADER_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-f]+),\\s+flags\\s+0x([0-9a-f]+),\\s+datalen\\s+0x([0-9a-f]+),\\s+retval\\s+0x([0-9a-f]+)");
+    private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)");
+
+    private int lineNum;
     private int cookie[] = {0, 0};
     private int param[] = {0, 0};
     private int addr[] = {0, 0};
@@ -30,16 +35,12 @@ public class LogEntryImpl implements LogEntry {
     //    addr (h,l) 0x999 0x999
     // 0x9999 99 99 99 99 99 ...   <- bytes may have garbage sign extension but are 8 bit values
 
-    public LogEntryImpl(String rawLogData) throws java.io.IOException {
-        BufferedReader logInputLines = new BufferedReader(new StringReader(rawLogData));
-        Pattern bufferLinePattern     = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+0x([0-9a-f]+)(\\s+[0-9a-f]+)+");
-        Pattern mainHeaderLinePattern = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-f]+),\\s+flags\\s+0x([0-9a-f]+),\\s+datalen\\s+0x([0-9a-f]+),\\s+retval\\s+0x([0-9a-f]+)");
-        Pattern cookieLinePattern     = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)");
-        String logInputLine;
+    public LogEntryImpl(int startLine, String[] rawLogData) throws java.io.IOException {
+        lineNum = startLine;
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
-        while ((logInputLine = logInputLines.readLine()) != null) {
-            Matcher isMainHeader = mainHeaderLinePattern.matcher(logInputLine);
+        for (String logInputLine : rawLogData) {
+            Matcher isMainHeader = HEADER_PATTERN.matcher(logInputLine);
             if (isMainHeader.find()) {
                 opcode = (short) Integer.parseInt(isMainHeader.group(1), 16);
                 flags = (short) Integer.parseInt(isMainHeader.group(2), 16);
@@ -47,7 +48,7 @@ public class LogEntryImpl implements LogEntry {
                 retval = (short) Integer.parseInt(isMainHeader.group(4), 16);
             }
             else {
-                Matcher isCookieLine = cookieLinePattern.matcher(logInputLine);
+                Matcher isCookieLine = COOKIE_PATTERN.matcher(logInputLine);
                 if (isCookieLine.find()) {
                     int a = Integer.parseInt(isCookieLine.group(2), 16);
                     int b = Integer.parseInt(isCookieLine.group(3), 16);
@@ -67,7 +68,7 @@ public class LogEntryImpl implements LogEntry {
                     // Otherwise, we just ignore this silently.
                 }
                 else {
-                    Matcher isBufferLine = bufferLinePattern.matcher(logInputLine);
+                    Matcher isBufferLine = BUFF_PATTERN.matcher(logInputLine);
                     if (isBufferLine.find()) {
                         // group 1 is the address, which we will ignore here for simplicity
                         // group 2 is a space-separated group of hex bytes (although they may be erroneously sign-extended
@@ -80,6 +81,10 @@ public class LogEntryImpl implements LogEntry {
             }
         }
         buffer = buff.toByteArray();
+    }
+
+    public int getStartLine() {
+        return lineNum;
     }
 
     public byte   getErr()        { return err;       }
