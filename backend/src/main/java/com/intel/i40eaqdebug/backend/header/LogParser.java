@@ -2,6 +2,7 @@ package com.intel.i40eaqdebug.backend.header;
 
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.backend.logs.LogEntryImpl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +17,7 @@ public class LogParser implements LogAdapter {
 
     Pattern BEGIN = Pattern.compile("desc and buffer");
     Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
+    Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+\\.[0-9]+)] (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
         try {
@@ -82,8 +84,17 @@ public class LogParser implements LogAdapter {
         return ret;
     }
 
-    private LogEntry produceEntry(int lineNum, String[] lines) {
-        return null;
+    private LogEntry produceEntry(int lineNum, String[] lines) throws IOException {
+        List<String> out = new LinkedList<String>();
+        for (String logLine : lines) {
+            Matcher m = JUNK_FILTER.matcher(logLine);
+            if (m.find()) {
+                String timestamp = m.group(1); // TODO actually use this
+                String item = m.group(2);
+                out.add(item);
+            }
+        }
+        return new LogEntryImpl(lineNum, out.toArray(new String[out.size()]));
     }
 
 }
