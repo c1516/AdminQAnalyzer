@@ -33,8 +33,7 @@ public final class APIEntryPoint {
      * @param errors
      * @param commands
      */
-    //TEMPORARLY PUBLIC FOR FAKE INITILIZATION BY UI
-    public static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
+    static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
         INIT = true;
         ERRORS = errors;
         COMMANDNAMES = names;
@@ -46,7 +45,7 @@ public final class APIEntryPoint {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
-        return ERRORS.getByByte(errFlag);
+        return errFlag + ""; // TODO
     }
 
     public static String getCommandName(int opcode) {

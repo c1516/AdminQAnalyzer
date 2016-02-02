@@ -68,6 +68,10 @@ public class DetailsPaneController {
         rows.add(new DetailTableModel("Cookie Low", cookieLow));
 
         CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode());
+        if (tempStruct == null) {
+            System.out.println(LogLine.getOpCode());
+            return;
+        }
         LinkedHashMap<String, CommandField> structContents = tempStruct.getFields();
 
         for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
