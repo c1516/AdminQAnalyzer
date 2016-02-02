@@ -26,7 +26,7 @@ public class CommandFieldImpl implements CommandField {
         if (reverse) {
             for(int i = 0; i < specific.length / 2; i++) {
                 byte temp = specific[i];
-                specific[i] = specific[buf.length - i - 1];
+                specific[i] = specific[specific.length - i - 1];
                 specific[specific.length - i - 1] = temp;
             }
         }

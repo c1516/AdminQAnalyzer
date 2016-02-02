@@ -5,6 +5,7 @@ import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.header.Errors;
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.backend.header.HeaderParser;
+import com.intel.i40eaqdebug.backend.header.LogParser;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -30,8 +31,7 @@ public class BackendMain {
         // Some reflection to bypass private access to method
         Method m = APIEntryPoint.class.getDeclaredMethod("init", Errors.class, Map.class, Map.class, LogAdapter.class);
         m.setAccessible(true);
-        m.invoke(null, null, opcIntToString, opcIntToStruct, null); // TODO
-
+        m.invoke(null, null, opcIntToString, opcIntToStruct, new LogParser());
     }
 
     private static void copyResources() throws IOException {

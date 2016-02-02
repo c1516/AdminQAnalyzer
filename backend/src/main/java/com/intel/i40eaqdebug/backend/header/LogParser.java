@@ -56,10 +56,10 @@ public class LogParser implements LogAdapter {
                     continue; // We haven't reached the part we are interested in yet so we skip until next entry
                 }
                 // Check if we already have a current Entry and add to parsed entries if so
-                if (currLineNumber >= 0) { // We have an index that is non-zero -> we have read in something
+                if (readLineNumber >= 0) { // We have an index that is non-zero -> we have read in something
                     parsedEntries.put(currLineNumber, currEntry.toArray(new String[currEntry.size()]));
                     currLineNumber = readLineNumber; // Update the line for next read entry
-                    currEntry = new LinkedList<String>();
+                    currEntry.clear();
                 }
                 if (readCount == count) { // Reached the end of desired input
                     flag = true;
@@ -81,6 +81,7 @@ public class LogParser implements LogAdapter {
         for (Map.Entry<Integer, String[]> entry : parsedEntries.entrySet()) {
             ret.add(produceEntry(entry.getKey(), entry.getValue()));
         }
+        System.out.println(ret.size());
         return ret;
     }
 
@@ -94,7 +95,12 @@ public class LogParser implements LogAdapter {
                 out.add(item);
             }
         }
-        return new LogEntryImpl(lineNum, out.toArray(new String[out.size()]));
+        for (String s : out) {
+            System.out.println(s);
+        }
+        LogEntry ent = new LogEntryImpl(lineNum, out.toArray(new String[out.size()]));
+        System.out.println("Opcode: " + ent.getOpCode());
+        return ent;
     }
 
 }

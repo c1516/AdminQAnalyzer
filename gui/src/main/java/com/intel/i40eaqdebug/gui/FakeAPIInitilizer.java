@@ -209,6 +209,14 @@ public class FakeAPIInitilizer {
             return CookieL;
         }
 
+        @Override public int[] getParams() {
+            return new int[0];
+        }
+
+        @Override public int[] getAddr() {
+            return new int[0];
+        }
+
         @Override
         public byte[] getBuffer() {
             return ByteBuffer;

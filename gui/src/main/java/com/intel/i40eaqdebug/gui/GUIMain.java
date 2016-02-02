@@ -25,7 +25,7 @@ public class GUIMain extends Application {
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         root.setController(new MainWindowController(this));
         primaryStage.setTitle("Admin Que Log Analyzer");
-        primaryStage.setScene(new Scene(root.load(), 1024, 768));
+        primaryStage.setScene(new Scene((Parent) root.load(), 1024, 768));
         primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
 
@@ -37,7 +37,7 @@ public class GUIMain extends Application {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         launch(args);
     }
 }

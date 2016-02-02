@@ -42,7 +42,8 @@ public final class Util {
             }
             sB.append(String.format("%02X", b));
         }
-        return null;
+        return sB.toString();
     }
+
 
 }
