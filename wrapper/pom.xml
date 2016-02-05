@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>wrapper</artifactId>
+    <artifactId>I40EAQDebug-Wrapper</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
