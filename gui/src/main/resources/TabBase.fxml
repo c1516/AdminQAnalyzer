@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--fx:controller="com.intel.i40eaqdebug.gui.Controllers.SingleTabControllerller"-->
+<!--fx:controller="com.intel.i40eaqdebug.gui.controllers.SingleTabControllerller"-->
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

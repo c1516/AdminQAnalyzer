@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- fx:controller="com.intel.i40eaqdebug.gui.Controllers.MainWindowController"-->
+<!-- fx:controller="com.intel.i40eaqdebug.gui.controllers.MainWindowController"-->
 
 <AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>

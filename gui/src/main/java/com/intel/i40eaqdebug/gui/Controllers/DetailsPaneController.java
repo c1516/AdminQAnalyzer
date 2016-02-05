@@ -1,31 +1,17 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.Util;
 import com.intel.i40eaqdebug.api.header.CommandField;
 import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.DataModels.DetailTableModel;
-import com.intel.i40eaqdebug.gui.DataModels.TableModel;
-import com.intel.i40eaqdebug.gui.FakeAPIInitilizer;
+import com.intel.i40eaqdebug.gui.datamodels.DetailTableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import sun.rmi.runtime.Log;
 
-import java.io.IOException;
 import java.util.*;
 
 

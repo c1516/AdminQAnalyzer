@@ -1,10 +1,8 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.DataModels.TableModel;
-import com.intel.i40eaqdebug.gui.FakeAPIInitilizer;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
 
