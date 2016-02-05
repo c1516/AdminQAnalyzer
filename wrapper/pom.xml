@@ -32,6 +32,8 @@
     </dependencies>
 
     <build>
+        <defaultGoal>clean install</defaultGoal>
+        <finalName>AdminQDebug</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
