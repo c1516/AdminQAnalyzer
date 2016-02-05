@@ -47,9 +47,11 @@
                         </goals>
                         <configuration>
                             <artifactSet>
-                                <includes>com.intel:I40EAQDebug-API</includes>
-                                <includes>com.intel:I40EAQDebug-GUI</includes>
-                                <includes>com.intel:I40EAQDebug-Backend</includes>
+                                <includes>
+                                    <include>com.intel:I40EAQDebug-API</include>
+                                    <include>com.intel:I40EAQDebug-GUI</include>
+                                    <include>com.intel:I40EAQDebug-Backend</include>
+                                </includes>
                             </artifactSet>
                         </configuration>
                     </execution>
