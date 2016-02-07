@@ -31,11 +31,11 @@ public class TableModel {
         else
             return false;
     }
-//Added by dustin
+    
     public String getLineNumber() {return LineNumber.get();}
     public StringProperty getLineNumberProperty() {return LineNumber;}
     public void setLineNumber(String newLineNumber) {LineNumber.set(newLineNumber);}
-//
+
     public String getOpCode() {return OpCode.get();}
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}

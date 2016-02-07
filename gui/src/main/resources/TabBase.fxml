@@ -2,7 +2,6 @@
 
 <!--fx:controller="com.intel.i40eaqdebug.gui.controllers.SingleTabControllerller"-->
 
-<?import java.lang.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
