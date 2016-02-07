@@ -4,16 +4,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class TableModel {
+    private final StringProperty LineNumber;
     private final StringProperty OpCode;
     private final StringProperty Flags;
     private final StringProperty ErrorCode;
     private final StringProperty ReturnCode;
 
     public TableModel() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
-    public TableModel(String OpCode, String Flags, String Error, String Return) {
+    public TableModel(String LineNumber, String OpCode, String Flags, String Error, String Return) {
+        this.LineNumber = new SimpleStringProperty(LineNumber);
         this.OpCode = new SimpleStringProperty(OpCode);
         this.Flags = new SimpleStringProperty(Flags);
         this.ErrorCode = new SimpleStringProperty(Error);
@@ -29,7 +31,11 @@ public class TableModel {
         else
             return false;
     }
-
+//Added by dustin
+    public String getLineNumber() {return LineNumber.get();}
+    public StringProperty getLineNumberProperty() {return LineNumber;}
+    public void setLineNumber(String newLineNumber) {LineNumber.set(newLineNumber);}
+//
     public String getOpCode() {return OpCode.get();}
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}

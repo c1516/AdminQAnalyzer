@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -178,7 +179,9 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
+        Integer LineNumber = 0;
         while (test.size() > 0) {
+            LineNumber++;
             LogEntry temp = test.remove();
             String OpCode = APIEntryPoint.getCommandName((int)temp.getOpCode());
             String Error = APIEntryPoint.getErrorString(temp.getErr());
@@ -186,10 +189,11 @@ public class SingleTabController {
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
             String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
 
-            TableModel tempModel = new TableModel(OpCode, Flags,  Error, Short.toString(temp.getRetVal()));
+            TableModel tempModel = new TableModel(LineNumber.toString(), OpCode, Flags,  Error, Short.toString(temp.getRetVal()));
             if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
                 data.add(tempModel);
         }
 
     }
+
 }
