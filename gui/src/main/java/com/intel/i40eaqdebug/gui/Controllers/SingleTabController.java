@@ -25,6 +25,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.function.ObjDoubleConsumer;
 
 
 public class SingleTabController {
@@ -35,26 +37,16 @@ public class SingleTabController {
     @FXML
     private VBox HideablePane;
     @FXML
-    private StackPane TheStack;
-
-    @FXML
-    private RowConstraints Row1;
-    @FXML
-    private RowConstraints Row2;
-    @FXML
-    private RowConstraints Row3;
+    private SplitPane BaseSplitPane;
 
     @FXML
     private Separator DraggbleSeparator;
 
     //endregion
-
     private GUIMain Application;
     private Queue<LogEntry> logLines;
     private boolean DetailsVisible = false;
     private double DetailsHeight = -1;
-    private double MouseYOffset = 0;
-    private TableModel TableSelection = null;
     private VirtualFlow<?> virtualFlow;
 
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
@@ -62,17 +54,12 @@ public class SingleTabController {
         logLines = logs;
     }
 
-    public SingleTabController() {
+    public SingleTabController() {}
 
-    }
-
-    public void HideDetails() {
+    private void HideDetails() {
         if (DetailsVisible) {
-            Row1.setPrefHeight(Application.getMainStage().getHeight());
-            Row2.setPrefHeight(0);
             DetailsVisible = false;
-            HideablePane.getChildren().clear();
-            //DraggbleSeparator.setVisible(false);
+            HideablePane.setMaxHeight(0);
         }
     }
 
@@ -83,11 +70,11 @@ public class SingleTabController {
     //This function checks to see if a click happens inside or outside the details pane
     //Used to decide weather to hide it or now.
     private boolean clickInPane(double x, double y) {
-        double lx = TheStack.getLayoutX();
-        //TODO: The 80 pixel offset needs to be computed dinamically. (this corrects for the toolbar height).
-        double ly = TheStack.getLayoutY() + 80;
-        double height = TheStack.getLayoutBounds().getHeight();
-        double width = TheStack.getLayoutBounds().getWidth();
+        double lx = BaseSplitPane.getLayoutX();
+        //TODO: The 80 pixel offset needs to be computed dynamically. (this corrects for the toolbar height).
+        double ly = BaseSplitPane.getLayoutY() + 80;
+        double height = BaseSplitPane.getLayoutBounds().getHeight();
+        double width = BaseSplitPane.getLayoutBounds().getWidth();
 
         if ((x >= lx && x <= (lx + width)) && (y >= ly && y <= (ly + height))) {
             return true;
@@ -96,35 +83,11 @@ public class SingleTabController {
         }
     }
 
-    @FXML
-    public void SepMousePressed(MouseEvent event) {
-        MouseYOffset = TheStack.getLayoutY() - event.getSceneY();
-    }
-
-    @FXML
-    public void SepMouseEntered(MouseEvent event) {
-        DraggbleSeparator.setCursor(Cursor.V_RESIZE);
-    }
-
-    @FXML
-    public void SepMouseLeft(MouseEvent event) {
-        DraggbleSeparator.setCursor(Cursor.DEFAULT);
-    }
-
-
-    @FXML
-    public void SepMouseDragged(MouseEvent event) {
-        DetailsHeight = event.getSceneY() + MouseYOffset;
-
-        Row1.setPrefHeight(DetailsHeight);
-        Row2.setPrefHeight(Application.getMainStage().getHeight() - DetailsHeight);
-
-        scrollTo(TabTable.getSelectionModel().getSelectedIndex());
-    }
-
 
     @FXML
     public void initialize() {
+        HideablePane.setMaxHeight(0);
+
         //This sets up an listener on the main scene, watchig for mouse clicks.
         //Used to hide the details pane when the user clicks off of it.
         Application.getMainStage().getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, (event) -> {
@@ -132,36 +95,34 @@ public class SingleTabController {
             if (!clickInPane(event.getSceneX(), event.getSceneY())){
                 HideDetails();
             }
-            //event.
         });
 
         //This sets up an event listener on the tables selector. IE: if the current selection changes, we run this code.
         //There is probably a better way to declare this as a separate function and pass it in instead, hence the todo.
         //TODO: there's gonna be a better way of handling this instead of this massive lambada.
+
         TabTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                //DraggbleSeparator.setVisible(true);
+                DetailsVisible = true;
+                HideablePane.getChildren().clear();
+
+                HideablePane.setMaxHeight(Double.POSITIVE_INFINITY);
+
                 if (DetailsHeight == -1) {
-                    Row1.setPercentHeight(70);
-                    Row2.setPercentHeight(30);
-
-                    DetailsHeight = Row1.getPrefHeight();
-
-                    Row1.setPrefHeight(DetailsHeight);
-                    Row2.setPrefHeight(Application.getMainStage().getHeight()-DetailsHeight);
-
-                    Row1.setPercentHeight(0);
-                    Row2.setPercentHeight(0);
-
                     TableViewSkin<?> tableSkin = (TableViewSkin<?>) TabTable.getSkin();
                     virtualFlow = (VirtualFlow<?>) tableSkin.getChildren().get(1);
-                } else {
-                    Row1.setPrefHeight(DetailsHeight);
-                    Row2.setPrefHeight(Application.getMainStage().getHeight()-DetailsHeight);
-                }
-                scrollTo(TabTable.getSelectionModel().getSelectedIndex());
 
-                DetailsVisible = true;
+                    BaseSplitPane.getDividers().get(0).positionProperty().addListener((obj, oldVal, newVal) -> {
+                        if (DetailsVisible) {
+                            DetailsHeight = newVal.doubleValue();
+                            scrollTo(TabTable.getSelectionModel().getSelectedIndex());
+                        }
+                    });
+                    BaseSplitPane.setDividerPosition(0, 0.6);
+                } else {
+                    BaseSplitPane.setDividerPosition(0, DetailsHeight);
+                }
+
 
                 //Retrieve the row number of the selected entry, retrieve that log entry and pass it to the detail window
                 int selectedRow = TabTable.getSelectionModel().getSelectedIndex();
@@ -169,7 +130,7 @@ public class SingleTabController {
 
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
                 tabFXML.setController(new DetailsPaneController(Application, tempLogEntry));
-                GridPane testPane = null;
+                SplitPane testPane = null;
                 try {
                     testPane = tabFXML.load();
                 } catch (IOException e) {
@@ -177,8 +138,9 @@ public class SingleTabController {
                 }
 
                 HideablePane.getChildren().add(testPane);
-                HideablePane.requestFocus();
+                //HideablePane.requestFocus();
                 HideablePane.setVisible(true);
+
             }
         });
         fillTable(null);
@@ -262,13 +224,12 @@ public class SingleTabController {
         while (test.size() > 0) {
             LineNumber++;
             LogEntry temp = test.remove();
-            String OpCode = APIEntryPoint.getCommandName((int)temp.getOpCode());
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
             String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
 
-            TableModel tempModel = new TableModel(LineNumber.toString(), OpCode, Flags,  Error, Short.toString(temp.getRetVal()));
+            TableModel tempModel = new TableModel(LineNumber.toString(), (int)temp.getOpCode(), Flags,  Error, Short.toString(temp.getRetVal()));
             if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
                 data.add(tempModel);
         }

@@ -51,7 +51,7 @@ public class MainWindowController {
 
 
     @FXML
-    public void OpenFile() {
+    public void OpenFile() throws IOException {
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         chooser.setTitle("Select Log File");
@@ -65,7 +65,7 @@ public class MainWindowController {
         if (theFile != null) {
             Queue<LogEntry> data = LoadData(theFile);
 
-            try {
+           // try {
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
                 SingleTabController newTabController = new SingleTabController(Application, data);
@@ -76,10 +76,11 @@ public class MainWindowController {
                 newTab.setContent(tabFXML.load());
 
                 TabElement.getTabs().add(newTab);
-            } catch (IOException Ex) {
+            /*} catch (IOException Ex) {
                 DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                rethrow Ex;
                 //Platform.exit();
-            }
+            }*/
 
 
         }

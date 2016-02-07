@@ -59,14 +59,14 @@
                     </items>
                 </ToolBar>
                 <TabPane fx:id="TabElement" tabClosingPolicy="ALL_TABS" GridPane.rowIndex="2">
-                    <contextMenu>
+                    <!--<contextMenu>
                         <ContextMenu>
                             <items>
                                 <Menu mnemonicParsing="false" text="Open File">
                                 </Menu>
                             </items>
                         </ContextMenu>
-                    </contextMenu>
+                    </contextMenu>-->
                     <tabs>
                     </tabs>
                 </TabPane>

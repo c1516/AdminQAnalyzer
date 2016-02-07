@@ -10,8 +10,10 @@ import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.*;
 
 
@@ -19,6 +21,8 @@ public class DetailsPaneController {
     //region FXML properties.
     @FXML
     public AnchorPane Pane;
+    @FXML
+    public TextArea RawArea;
     @FXML
     public TableView<DetailTableModel> DetailTable = new TableView<>();
     //endregion
@@ -43,15 +47,16 @@ public class DetailsPaneController {
      */
     @FXML
     public void initialize() {
+        System.out.println(LogLine.getBuffer().length);
+        RawArea.setText(DatatypeConverter.printHexBinary(LogLine.getBuffer()));
+
         ObservableList<DetailTableModel> rows =  DetailTable.getItems();
         String lineNumber = Integer.toString(LogLine.getStartLine());
-        String cookieHigh = Integer.toString(LogLine.getCookieHigh());
-        String cookieLow = Integer.toString(LogLine.getCookieLow());
-        //TODO: add some sort of link to, or display of, the raw command byte file.
+        //TODO: is this the right way to combine cookies
+        String cookie = Integer.toString((LogLine.getCookieHigh() << 16) |  LogLine.getCookieLow());
 
-        rows.add(new DetailTableModel("Line Number", lineNumber));
-        rows.add(new DetailTableModel("Cookie High", cookieHigh));
-        rows.add(new DetailTableModel("Cookie Low", cookieLow));
+        //rows.add(new DetailTableModel("Line Number", lineNumber));
+        rows.add(new DetailTableModel("Cookie", cookie));
 
         CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode());
         if (tempStruct == null) {
