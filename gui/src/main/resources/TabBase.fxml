@@ -10,35 +10,54 @@
 
 <GridPane prefHeight="680.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints fx:id="Row1" percentHeight="100.0" vgrow="SOMETIMES" />
-        <RowConstraints fx:id="Row2" percentHeight="0" vgrow="SOMETIMES" />
+        <RowConstraints fx:id="Row1" percentHeight="100.0" vgrow="SOMETIMES"/>
+        <RowConstraints fx:id="Row2" percentHeight="0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
         <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0">
             <columns>
                 <TableColumn fx:id="numColumn" prefWidth="75.0" text="#">
-                    <cellValueFactory><PropertyValueFactory property="LineNumber" /></cellValueFactory>
+                    <cellValueFactory>
+                        <PropertyValueFactory property="LineNumber"/>
+                    </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
-                    <cellValueFactory><PropertyValueFactory property="OpCode" /></cellValueFactory>
+                    <cellValueFactory>
+                        <PropertyValueFactory property="OpCode"/>
+                    </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags">
-                    <cellValueFactory><PropertyValueFactory property="Flags" /></cellValueFactory>
+                    <cellValueFactory>
+                        <PropertyValueFactory property="Flags"/>
+                    </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error">
-                    <cellValueFactory><PropertyValueFactory property="ErrorCode" /></cellValueFactory>
+                    <cellValueFactory>
+                        <PropertyValueFactory property="ErrorCode"/>
+                    </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return">
-                    <cellValueFactory><PropertyValueFactory property="ReturnCode" /></cellValueFactory>
+                    <cellValueFactory>
+                        <PropertyValueFactory property="ReturnCode"/>
+                    </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
-        <VBox fx:id="HideablePane" style="-fx-border-color: black; -fx-border-width: 2px 0px 0px 0px;" GridPane.rowIndex="1">
 
-        </VBox>
+        <StackPane fx:id="TheStack" GridPane.rowIndex="1">
+            <children>
+                <VBox fx:id="HideablePane" >
+
+                </VBox>
+                <Separator fx:id="DraggbleSeparator" orientation="HORIZONTAL" onMousePressed="#SepMousePressed" minHeight="5" StackPane.alignment="TOP_CENTER"
+                           onMouseEntered="#SepMouseEntered" onMouseExited="#SepMouseLeft" onMouseDragged="#SepMouseDragged"/>
+            </children>
+
+        </StackPane>
+
         <!--             This is how the binding should happen
         <ListView prefHeight="151.0" prefWidth="249.0" GridPane.rowIndex="1">
            <items>

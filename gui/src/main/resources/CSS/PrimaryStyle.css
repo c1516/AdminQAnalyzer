@@ -9,3 +9,10 @@
 .table-row-cell:selected {
     -fx-background-color: blue;
 }
+
+
+.separator *.line: {
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-color: red;
+}

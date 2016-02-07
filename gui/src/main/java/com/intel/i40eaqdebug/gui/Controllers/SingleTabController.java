@@ -1,19 +1,27 @@
-package com.intel.i40eaqdebug.gui.controllers;
+package com.intel.i40eaqdebug.gui.Controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.datamodels.TableModel;
+import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.Cursor;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -26,17 +34,28 @@ public class SingleTabController {
 
     @FXML
     private VBox HideablePane;
+    @FXML
+    private StackPane TheStack;
 
     @FXML
     private RowConstraints Row1;
     @FXML
     private RowConstraints Row2;
+    @FXML
+    private RowConstraints Row3;
+
+    @FXML
+    private Separator DraggbleSeparator;
 
     //endregion
 
     private GUIMain Application;
     private Queue<LogEntry> logLines;
     private boolean DetailsVisible = false;
+    private double DetailsHeight = -1;
+    private double MouseYOffset = 0;
+    private TableModel TableSelection = null;
+    private VirtualFlow<?> virtualFlow;
 
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
         Application = App;
@@ -49,10 +68,11 @@ public class SingleTabController {
 
     public void HideDetails() {
         if (DetailsVisible) {
-            Row1.setPercentHeight(100);
-            Row2.setPercentHeight(0);
+            Row1.setPrefHeight(Application.getMainStage().getHeight());
+            Row2.setPrefHeight(0);
             DetailsVisible = false;
             HideablePane.getChildren().clear();
+            //DraggbleSeparator.setVisible(false);
         }
     }
 
@@ -63,11 +83,11 @@ public class SingleTabController {
     //This function checks to see if a click happens inside or outside the details pane
     //Used to decide weather to hide it or now.
     private boolean clickInPane(double x, double y) {
-        double lx = HideablePane.getLayoutX();
+        double lx = TheStack.getLayoutX();
         //TODO: The 80 pixel offset needs to be computed dinamically. (this corrects for the toolbar height).
-        double ly = HideablePane.getLayoutY() + 80;
-        double height = HideablePane.getLayoutBounds().getHeight();
-        double width = HideablePane.getLayoutBounds().getWidth();
+        double ly = TheStack.getLayoutY() + 80;
+        double height = TheStack.getLayoutBounds().getHeight();
+        double width = TheStack.getLayoutBounds().getWidth();
 
         if ((x >= lx && x <= (lx + width)) && (y >= ly && y <= (ly + height))) {
             return true;
@@ -75,6 +95,33 @@ public class SingleTabController {
             return false;
         }
     }
+
+    @FXML
+    public void SepMousePressed(MouseEvent event) {
+        MouseYOffset = TheStack.getLayoutY() - event.getSceneY();
+    }
+
+    @FXML
+    public void SepMouseEntered(MouseEvent event) {
+        DraggbleSeparator.setCursor(Cursor.V_RESIZE);
+    }
+
+    @FXML
+    public void SepMouseLeft(MouseEvent event) {
+        DraggbleSeparator.setCursor(Cursor.DEFAULT);
+    }
+
+
+    @FXML
+    public void SepMouseDragged(MouseEvent event) {
+        DetailsHeight = event.getSceneY() + MouseYOffset;
+
+        Row1.setPrefHeight(DetailsHeight);
+        Row2.setPrefHeight(Application.getMainStage().getHeight() - DetailsHeight);
+
+        scrollTo(TabTable.getSelectionModel().getSelectedIndex());
+    }
+
 
     @FXML
     public void initialize() {
@@ -85,6 +132,7 @@ public class SingleTabController {
             if (!clickInPane(event.getSceneX(), event.getSceneY())){
                 HideDetails();
             }
+            //event.
         });
 
         //This sets up an event listener on the tables selector. IE: if the current selection changes, we run this code.
@@ -92,8 +140,27 @@ public class SingleTabController {
         //TODO: there's gonna be a better way of handling this instead of this massive lambada.
         TabTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                Row1.setPercentHeight(70);
-                Row2.setPercentHeight(30);
+                //DraggbleSeparator.setVisible(true);
+                if (DetailsHeight == -1) {
+                    Row1.setPercentHeight(70);
+                    Row2.setPercentHeight(30);
+
+                    DetailsHeight = Row1.getPrefHeight();
+
+                    Row1.setPrefHeight(DetailsHeight);
+                    Row2.setPrefHeight(Application.getMainStage().getHeight()-DetailsHeight);
+
+                    Row1.setPercentHeight(0);
+                    Row2.setPercentHeight(0);
+
+                    TableViewSkin<?> tableSkin = (TableViewSkin<?>) TabTable.getSkin();
+                    virtualFlow = (VirtualFlow<?>) tableSkin.getChildren().get(1);
+                } else {
+                    Row1.setPrefHeight(DetailsHeight);
+                    Row2.setPrefHeight(Application.getMainStage().getHeight()-DetailsHeight);
+                }
+                scrollTo(TabTable.getSelectionModel().getSelectedIndex());
+
                 DetailsVisible = true;
 
                 //Retrieve the row number of the selected entry, retrieve that log entry and pass it to the detail window
@@ -169,6 +236,19 @@ public class SingleTabController {
         });
     }
 
+    private void scrollTo(int index) {
+        int first = virtualFlow.getFirstVisibleCell().getIndex();
+        int last = virtualFlow.getLastVisibleCell().getIndex();
+        if (index <= first){
+            while (index <= first && virtualFlow.adjustPixels(-1) < 0){
+                first = virtualFlow.getFirstVisibleCell().getIndex();
+            }
+        } else {
+            while (index >= last && virtualFlow.adjustPixels(1) > 0){
+                last = virtualFlow.getLastVisibleCell().getIndex();
+            }
+        }
+    }
 
     //This function fills the TableView with models for items
     //If there is a filter string, it will only include itesm that match that string.
