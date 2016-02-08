@@ -26,11 +26,14 @@ public class MainWindowController {
     @FXML
     private ToolBar SearchBar;
     @FXML
+    private Button ClearButton;
+    @FXML
     private TextField SearchField;
     @FXML
     private Parent RootPanel;
 
     private List<SingleTabController> controllers = new LinkedList<SingleTabController>();
+    private ArrayList<String> searchTerms = new ArrayList<String>();
     private GUIMain Application;
 
     public MainWindowController(GUIMain app) {
@@ -41,7 +44,16 @@ public class MainWindowController {
 
     @FXML
     public void initialize(){
-
+        //Disable search bar when we start
+        SearchBar.setDisable(true);
+        //When we switch tabs, load whatever it is we where searching for in that one (this will alos eventually work with filtering)
+        TabElement.getSelectionModel().selectedIndexProperty().addListener((obj, prev, next) -> {
+            int index = (int)next;
+            if (controllers.size() > 0) {
+                controllers.get(index).Search(searchTerms.get(index));
+                SearchField.setText(searchTerms.get(index));
+            }
+        });
     }
 
     @FXML
@@ -65,7 +77,7 @@ public class MainWindowController {
         if (theFile != null) {
             Queue<LogEntry> data = LoadData(theFile);
 
-           // try {
+            try {
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
                 SingleTabController newTabController = new SingleTabController(Application, data);
@@ -75,12 +87,21 @@ public class MainWindowController {
                 Tab newTab = new Tab(theFile.getName());
                 newTab.setContent(tabFXML.load());
 
+                //If we close the last tab, we want to disable the search bar again.
+                newTab.onClosedProperty().addListener((v, o, n) -> {
+                    if (TabElement.getTabs().size() == 0)
+                        SearchBar.setDisable(true);
+                });
+                //add a blacnk space to save search terms in for our new tab
+                searchTerms.add("");
                 TabElement.getTabs().add(newTab);
-            /*} catch (IOException Ex) {
+                SearchBar.setDisable(false);
+
+            } catch (IOException Ex) {
                 DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
-                rethrow Ex;
+                throw Ex;
                 //Platform.exit();
-            }*/
+            }
 
 
         }
@@ -110,27 +131,28 @@ public class MainWindowController {
 
     }
 
-    public void Search() {
+    @FXML
+    public void SearchKeyPressed() {
+        if (TabElement.getTabs().size() > 0) {
+            String term = SearchField.getText();
+            ClearButton.setVisible(term.length() > 0);
+            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-        String term = SearchField.getText();
-
-        try {
-//            TODO pick the current tab once this information is available (instead of the first one)
-            controllers.get(0).Search(term);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
+            controllers.get(selectedTab).Search(term);
+            searchTerms.set(selectedTab, term);
         }
-
     }
 
+    @FXML
     public void Clear() {
+        if (TabElement.getTabs().size() > 0) {
+            ClearButton.setVisible(false);
 
-        SearchField.setText(null);
+            SearchField.setText("");
+            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-        try {
-            controllers.get(0).Search("");
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
+            controllers.get(selectedTab).Search("");
+            searchTerms.set(selectedTab, "");
         }
     }
 

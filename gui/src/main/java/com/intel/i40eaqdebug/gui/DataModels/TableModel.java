@@ -31,7 +31,7 @@ public class TableModel {
 
         if (OpCode.get().contains(val) || Flags.get().contains(val)
                 || ErrorCode.get().contains(val) || ReturnCode.get().contains(val)
-                || Integer.toHexString(OpCodeInt.get()).contains(val))
+                || Integer.toHexString(OpCodeInt.get()).toUpperCase().contains(val.toUpperCase()))
              return true;
         else
             return false;

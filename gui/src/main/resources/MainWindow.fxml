@@ -9,30 +9,32 @@
 
 <!-- fx:controller="com.intel.i40eaqdebug.gui.controllers.MainWindowController"-->
 
-<AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
 
             <padding>
-                <Insets bottom="0" left="0" right="0" top="0" />
+                <Insets bottom="0" left="0" right="0" top="0"/>
             </padding>
             <columnConstraints>
-                <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints prefHeight="20" vgrow="NEVER" />
-                <RowConstraints prefHeight="30" vgrow="NEVER" />
-                <RowConstraints fillHeight="true" vgrow="ALWAYS" />
+                <RowConstraints prefHeight="20" vgrow="NEVER"/>
+                <RowConstraints prefHeight="30" vgrow="NEVER"/>
+                <RowConstraints fillHeight="true" vgrow="ALWAYS"/>
             </rowConstraints>
             <children>
                 <MenuBar GridPane.rowIndex="0">
                     <menus>
                         <Menu text="File">
                             <items>
-                                <MenuItem onAction="#OpenFile" text="Open" />
-                                <MenuItem onAction="#OpenOptions" text="Options" />
-                                <SeparatorMenuItem />
-                                <MenuItem onAction="#Exit" text="Exit" />
+                                <MenuItem onAction="#OpenFile" text="Open"/>
+                                <MenuItem onAction="#OpenOptions" text="Options"/>
+                                <SeparatorMenuItem/>
+                                <MenuItem onAction="#Exit" text="Exit"/>
                             </items>
                         </Menu>
                     </menus>
@@ -40,22 +42,48 @@
                 <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
                     <items>
                         <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
-                        <Button fx:id="ErrorFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;">
-                                <tooltip><Tooltip text="Filter Errors" /> </tooltip>
+                        <Button fx:id="ErrorFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0"
+                                mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0"
+                                prefWidth="15.0"
+                                style="-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;">
+                            <tooltip>
+                                <Tooltip text="Filter Errors"/>
+                            </tooltip>
                         </Button>
-                        <Button fx:id="SuccessFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 1;">
-                            <tooltip><Tooltip text="Filter Success" /> </tooltip>
+                        <Button fx:id="SuccessFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0"
+                                mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0"
+                                prefWidth="15.0"
+                                style="-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 1;">
+                            <tooltip>
+                                <Tooltip text="Filter Success"/>
+                            </tooltip>
                         </Button>
-                        <Button fx:id="SometingFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: cyan; -fx-border-color: black; -fx-border-width: 1;">
-                            <tooltip><Tooltip text="Filter Something" /> </tooltip>
+                        <Button fx:id="SometingFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0"
+                                mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0"
+                                prefWidth="15.0"
+                                style="-fx-background-color: cyan; -fx-border-color: black; -fx-border-width: 1;">
+                            <tooltip>
+                                <Tooltip text="Filter Something"/>
+                            </tooltip>
                         </Button>
-                        <Button fx:id="Something2Filter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 1;">
-                            <tooltip><Tooltip text="Filter Something Else" /> </tooltip>
+                        <Button fx:id="Something2Filter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0"
+                                minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked"
+                                prefHeight="15.0" prefWidth="15.0"
+                                style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 1;">
+                            <tooltip>
+                                <Tooltip text="Filter Something Else"/>
+                            </tooltip>
                         </Button>
-                        <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="SearchField" onAction="#Search" promptText="Enter search parameters" />
-                  <Button fx:id="SearchButton" mnemonicParsing="false" onAction="#Search" text="Search" />
-                  <Button fx:id="ClearButton" mnemonicParsing="false" onAction="#Clear" text="X" />
+                        <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS"/>
+                        <StackPane >
+                            <TextField fx:id="SearchField" StackPane.alignment="CENTER"  onKeyPressed="#SearchKeyPressed"
+                                       promptText="Search">
+                                <padding><Insets top="2" right="18" bottom="2" left="2" /> </padding>
+
+                            </TextField>
+                            <Button fx:id="ClearButton" visible="false" StackPane.alignment="CENTER_RIGHT" mnemonicParsing="false"
+                                    onAction="#Clear" text="x" textAlignment="CENTER" style="-fx-background-color: transparent; -fx-border-width: 0;"/>
+                        </StackPane>
                     </items>
                 </ToolBar>
                 <TabPane fx:id="TabElement" tabClosingPolicy="ALL_TABS" GridPane.rowIndex="2">
