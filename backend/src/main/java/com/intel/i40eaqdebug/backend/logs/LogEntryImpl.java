@@ -88,6 +88,10 @@ public class LogEntryImpl implements LogEntry {
         return lineNum;
     }
 
+    @Override public long getTimeStampMillis() {
+        return 0; // TODO
+    }
+
     public byte   getErr()        { return err;       }
     public short  getFlags()      { return flags;     }
     public short  getOpCode()     { return opcode;    }
