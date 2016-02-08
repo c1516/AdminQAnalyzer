@@ -76,7 +76,7 @@
                         </Button>
                         <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS"/>
                         <StackPane >
-                            <TextField fx:id="SearchField" StackPane.alignment="CENTER"  onKeyPressed="#SearchKeyPressed"
+                            <TextField fx:id="SearchField" StackPane.alignment="CENTER"  onKeyReleased="#SearchKeyReleased"
                                        promptText="Search">
                                 <padding><Insets top="2" right="18" bottom="2" left="2" /> </padding>
 

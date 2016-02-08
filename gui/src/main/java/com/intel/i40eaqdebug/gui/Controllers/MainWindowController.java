@@ -87,12 +87,17 @@ public class MainWindowController {
                 Tab newTab = new Tab(theFile.getName());
                 newTab.setContent(tabFXML.load());
 
-                //If we close the last tab, we want to disable the search bar again.
-                newTab.onClosedProperty().addListener((v, o, n) -> {
+                //If we close a tab, we want to remove it from controlelr list, search list
+                //And disable the bar if it's the last one
+                newTab.setOnCloseRequest((event) -> {
+                    int index = TabElement.getTabs().indexOf((Tab)event.getSource());
+                    controllers.remove(index);
+                    searchTerms.remove(index);
+
                     if (TabElement.getTabs().size() == 0)
                         SearchBar.setDisable(true);
                 });
-                //add a blacnk space to save search terms in for our new tab
+                //add a blank space to save search terms in for our new tab
                 searchTerms.add("");
                 TabElement.getTabs().add(newTab);
                 SearchBar.setDisable(false);
@@ -113,8 +118,7 @@ public class MainWindowController {
 
     @FXML
     public void OpenOptions() {
-
-//        TODO Give this some dummy options and hook them up to the filters or other corresponding parameters
+        //TODO: Give this some dummy options and hook them up to the filters or other corresponding parameters
         Stage tempStage = new Stage();
         tempStage.initModality(Modality.APPLICATION_MODAL);
         tempStage.initOwner(Application.getMainStage());
@@ -132,7 +136,7 @@ public class MainWindowController {
     }
 
     @FXML
-    public void SearchKeyPressed() {
+    public void SearchKeyReleased() {
         if (TabElement.getTabs().size() > 0) {
             String term = SearchField.getText();
             ClearButton.setVisible(term.length() > 0);
