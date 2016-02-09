@@ -41,7 +41,7 @@ public final class APIEntryPoint {
         ADAPTER = adapter;
     }
 
-    public static String getErrorString(byte errFlag) {
+    public static String getErrorString(int errFlag) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
