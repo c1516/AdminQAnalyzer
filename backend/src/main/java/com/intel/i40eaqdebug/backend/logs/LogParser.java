@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.backend.header;
+package com.intel.i40eaqdebug.backend.logs;
 
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 public class LogParser implements LogAdapter {
 
     Pattern BEGIN = Pattern.compile("desc and buffer");
-    Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
     Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+\\.[0-9]+)] (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {

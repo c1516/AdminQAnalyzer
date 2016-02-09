@@ -6,7 +6,7 @@ import com.intel.i40eaqdebug.api.header.Errors;
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.backend.header.ErrorImpl;
 import com.intel.i40eaqdebug.backend.header.HeaderParser;
-import com.intel.i40eaqdebug.backend.header.LogParser;
+import com.intel.i40eaqdebug.backend.logs.LogParser;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

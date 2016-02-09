@@ -15,12 +15,14 @@ public class LogEntryImpl implements LogEntry {
     private static final Pattern BUFF_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+0x([0-9a-f]+)(\\s+[0-9a-f]+)+", Pattern.CASE_INSENSITIVE);
     private static final Pattern HEADER_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-f]+),\\s+flags\\s+0x([0-9a-f]+),\\s+datalen\\s+0x([0-9a-f]+),\\s+retval\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
+
 
     private int lineNum;
     private int cookie[] = {0, 0};
     private int param[] = {0, 0};
     private int addr[] = {0, 0};
-    private byte err = 0;
+    private int err = 0;
     private short opcode = 0;
     private short flags = 0;
     private long datalen = 0;
@@ -49,6 +51,10 @@ public class LogEntryImpl implements LogEntry {
                 retval = (short) Integer.parseInt(isMainHeader.group(4), 16);
             }
             else {
+                Matcher m = ERR_RET.matcher(logInputLine);
+                if (m.find()) {
+                    err = Integer.valueOf(m.group(1), 16);
+                }
                 Matcher isCookieLine = COOKIE_PATTERN.matcher(logInputLine);
                 if (isCookieLine.find()) {
                     int a = new BigInteger(isCookieLine.group(2), 16).intValue();
@@ -92,7 +98,7 @@ public class LogEntryImpl implements LogEntry {
         return 0; // TODO
     }
 
-    public byte   getErr()        { return err;       }
+    public int   getErr()        { return err;       }
     public short  getFlags()      { return flags;     }
     public short  getOpCode()     { return opcode;    }
     public short  getRetVal()     { return retval;    }

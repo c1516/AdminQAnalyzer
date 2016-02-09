@@ -4,7 +4,7 @@ public interface LogEntry {
 
     int getStartLine();
     long getTimeStampMillis();
-    byte getErr();
+    int getErr();
     short getFlags();
     short getOpCode();
     short getRetVal();
