@@ -106,6 +106,7 @@ public class LogParser implements LogAdapter {
         int i = 0;
         for (EntryRaw r : out) {
             entraw[i] = r.item;
+            i++;
         }
         LogEntry ent = new LogEntryImpl(stamp, lineNum, entraw);
         System.out.println("Opcode: " + ent.getOpCode());
