@@ -1,5 +1,6 @@
 package com.intel.i40eaqdebug.backend.logs;
 
+import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.math.BigInteger;
@@ -17,7 +18,7 @@ public class LogEntryImpl implements LogEntry {
     private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
 
-
+    private TimeStamp time;
     private int lineNum;
     private int cookie[] = {0, 0};
     private int param[] = {0, 0};
@@ -38,7 +39,8 @@ public class LogEntryImpl implements LogEntry {
     //    addr (h,l) 0x999 0x999
     // 0x9999 99 99 99 99 99 ...   <- bytes may have garbage sign extension but are 8 bit values
 
-    public LogEntryImpl(int startLine, String[] rawLogData) throws java.io.IOException {
+    public LogEntryImpl(TimeStamp stamp, int startLine, String[] rawLogData) throws java.io.IOException {
+        time = stamp;
         lineNum = startLine;
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
@@ -94,8 +96,8 @@ public class LogEntryImpl implements LogEntry {
         return lineNum;
     }
 
-    @Override public long getTimeStampMillis() {
-        return 0; // TODO
+    @Override public TimeStamp getTimeStamp() {
+        return time;
     }
 
     public int   getErr()        { return err;       }

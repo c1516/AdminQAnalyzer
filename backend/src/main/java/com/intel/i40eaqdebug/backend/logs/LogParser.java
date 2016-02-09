@@ -1,5 +1,6 @@
 package com.intel.i40eaqdebug.backend.logs;
 
+import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.backend.logs.LogEntryImpl;
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 public class LogParser implements LogAdapter {
 
     Pattern BEGIN = Pattern.compile("desc and buffer");
-    Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+\\.[0-9]+)] (i40e .+)");
+    Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+)\\.([0-9]+)] (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
         try {
@@ -87,21 +88,36 @@ public class LogParser implements LogAdapter {
     }
 
     private LogEntry produceEntry(int lineNum, String[] lines) throws IOException {
-        List<String> out = new LinkedList<String>();
+        LinkedList<EntryRaw> out = new LinkedList<EntryRaw>();
         for (String logLine : lines) {
             Matcher m = JUNK_FILTER.matcher(logLine);
             if (m.find()) {
-                String timestamp = m.group(1); // TODO actually use this
-                String item = m.group(2);
-                out.add(item);
+                String timesec = m.group(1);
+                String timenano = m.group(2);
+                String item = m.group(3);
+                out.add(new EntryRaw(Long.valueOf(timesec), Long.valueOf(timenano), item));
             }
         }
-        for (String s : out) {
-            System.out.println(s);
-        }
-        LogEntry ent = new LogEntryImpl(lineNum, out.toArray(new String[out.size()]));
+
+        EntryRaw raw  = out.getFirst();
+
+        TimeStamp stamp = new TimeStamp(raw.timestampSec, raw.timestampNano);
+
+        LogEntry ent = new LogEntryImpl(stamp, lineNum, out.toArray(new String[out.size()]));
         System.out.println("Opcode: " + ent.getOpCode());
         return ent;
+    }
+
+    private class EntryRaw {
+        long timestampSec;
+        long timestampNano;
+        String item;
+
+        public EntryRaw(long timestampSec, long timestampNano, String item) {
+            this.timestampSec = timestampSec;
+            this.timestampNano = timestampNano;
+            this.item = item;
+        }
     }
 
 }
