@@ -12,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +31,8 @@ public class MainWindowController {
     private Button ClearButton;
     @FXML
     private TextField SearchField;
+    @FXML
+    private StackPane LoadingScreen;
     @FXML
     private Parent RootPanel;
 
@@ -73,47 +77,58 @@ public class MainWindowController {
         );
         File theFile = chooser.showOpenDialog(RootPanel.getScene().getWindow());
 
+        LogRetriver runner = new LogRetriver();
+        runner.theFile = theFile;
+        runner.LoadingScreen = LoadingScreen;
 
-        if (theFile != null) {
-            Queue<LogEntry> data = LoadData(theFile);
+        LoadingScreen.setVisible(true);
 
-            try {
-                FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
-
-                SingleTabController newTabController = new SingleTabController(Application, data);
-                controllers.add(newTabController);
-
-                tabFXML.setController(newTabController);
-                Tab newTab = new Tab(theFile.getName());
-                newTab.setContent(tabFXML.load());
-
-                //If we close a tab, we want to remove it from controlelr list, search list
-                //And disable the bar if it's the last one
-                newTab.setOnCloseRequest((event) -> {
-                    int index = TabElement.getTabs().indexOf((Tab)event.getSource());
-                    controllers.remove(index);
-                    searchTerms.remove(index);
-
-                    if (TabElement.getTabs().size() == 0)
-                        SearchBar.setDisable(true);
-                });
-                //add a blank space to save search terms in for our new tab
-                searchTerms.add("");
-                TabElement.getTabs().add(newTab);
-                SearchBar.setDisable(false);
-
-            } catch (IOException Ex) {
-                DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
-                throw Ex;
-                //Platform.exit();
-            }
-
-
-        }
+        Platform.runLater(runner);
     }
 
-    private Queue<LogEntry> LoadData(File filePath) {
-        return APIEntryPoint.getCommandLogQueue(filePath, 0, Integer.MAX_VALUE);
+
+    class LogRetriver implements Runnable {
+        public File theFile = null;
+        public StackPane LoadingScreen = null;
+
+        @Override
+        public void run() {
+            if (theFile != null) {
+                Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
+
+                try {
+                    FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+
+                    SingleTabController newTabController = new SingleTabController(Application, data);
+                    controllers.add(newTabController);
+
+                    tabFXML.setController(newTabController);
+                    Tab newTab = new Tab(theFile.getName());
+                    newTab.setContent(tabFXML.load());
+
+                    //If we close a tab, we want to remove it from controlelr list, search list
+                    //And disable the bar if it's the last one
+                    newTab.setOnCloseRequest((event) -> {
+                        int index = TabElement.getTabs().indexOf((Tab)event.getSource());
+                        controllers.remove(index);
+                        searchTerms.remove(index);
+
+                        if (TabElement.getTabs().size() == 0)
+                            SearchBar.setDisable(true);
+                    });
+                    //add a blank space to save search terms in for our new tab
+                    searchTerms.add("");
+                    TabElement.getTabs().add(newTab);
+                    SearchBar.setDisable(false);
+
+                } catch (IOException Ex) {
+                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                    //throw Ex;
+                    //Platform.exit();
+                }
+            }
+            LoadingScreen.setVisible(false);
+        }
     }
 
     @FXML

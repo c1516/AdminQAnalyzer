@@ -4,11 +4,37 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.sun.javafx.scene.control.skin.ContextMenuContent.ArrowMenuItem?>
 <SplitPane fx:id="BaseSplitPane" orientation="VERTICAL" prefHeight="680.0" prefWidth="932.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0">
+           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+        <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0" onKeyPressed="#KeyShortcuts">
+            <!-- TODO: temp solution. need better styling (ie: constrain size but diffrent starting sizes. -->
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                    <MenuItem text="Copy Row" onAction="#CopyRow" />
+                    <MenuItem text="Copy Cell" onAction="#CopyCell">
+                        <!--
+                        <MenuItem text="Time Stamp"  />
+                        <MenuItem text="Op Code" />
+                        <MenuItem text="Line Number" />
+                        <MenuItem text="Flags" />
+                        <MenuItem text="ErrorCode" />
+                        -->
+                    </MenuItem>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+
             <columns>
-                <TableColumn fx:id="numColumn" prefWidth="75.0" text="#">
+                <TableColumn fx:id="timeColumn" prefWidth="100" text="Time Stamp">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="TimeStamp"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="numColumn" prefWidth="30" text="#">
                     <cellValueFactory>
                         <PropertyValueFactory property="LineNumber"/>
                     </cellValueFactory>
@@ -18,19 +44,14 @@
                         <PropertyValueFactory property="OpCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="flagColumn" prefWidth="200.0" text="Flags">
+                <TableColumn fx:id="flagColumn" prefWidth="100.0" text="Flags">
                     <cellValueFactory>
                         <PropertyValueFactory property="Flags"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="errColumn" prefWidth="100.0" text="Error">
+                <TableColumn fx:id="errColumn" prefWidth="300.0" text="Error">
                     <cellValueFactory>
                         <PropertyValueFactory property="ErrorCode"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn fx:id="retColumn" prefWidth="20.0" text="Return">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="ReturnCode"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>

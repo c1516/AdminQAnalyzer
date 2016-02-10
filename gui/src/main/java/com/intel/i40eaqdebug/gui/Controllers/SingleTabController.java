@@ -1,6 +1,7 @@
 package com.intel.i40eaqdebug.gui.Controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
@@ -11,23 +12,21 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.Cursor;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseDragEvent;
+import javafx.scene.control.TableColumn;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.locks.Lock;
-import java.util.function.ObjDoubleConsumer;
 
+//TODO: format this file better. It's hard to readn and everything is all over the place.
 
 public class SingleTabController {
     //region FXML properties.
@@ -38,6 +37,8 @@ public class SingleTabController {
     private VBox HideablePane;
     @FXML
     private SplitPane BaseSplitPane;
+    @FXML
+    private TableColumn<TableModel, TimeStamp> timeColumn;
 
     @FXML
     private Separator DraggbleSeparator;
@@ -54,7 +55,8 @@ public class SingleTabController {
         logLines = logs;
     }
 
-    public SingleTabController() {}
+    public SingleTabController() {
+    }
 
     private void HideDetails() {
         if (DetailsVisible) {
@@ -65,6 +67,7 @@ public class SingleTabController {
 
     public void Search(String term) {
         fillTable(term);
+        TabTable.sort();
     }
 
     //This function checks to see if a click happens inside or outside the details pane
@@ -88,12 +91,68 @@ public class SingleTabController {
     public void initialize() {
         HideablePane.setMaxHeight(0);
 
+        BaseSplitPane.widthProperty().addListener((obv, oldWidth, newWidth) -> {
+            TabTable.setMaxWidth((double) newWidth);
+        });
+
         //This sets up an listener on the main scene, watchig for mouse clicks.
         //Used to hide the details pane when the user clicks off of it.
         Application.getMainStage().getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, (event) -> {
             Object src = event.getSource();
-            if (!clickInPane(event.getSceneX(), event.getSceneY())){
+            if (!clickInPane(event.getSceneX(), event.getSceneY())) {
                 HideDetails();
+            }
+        });
+
+        InitializeTableView();
+    }
+
+    @FXML
+    private void CopyRow() {
+        String row = TabTable.getSelectionModel().getSelectedItem().toString();
+
+        StringSelection stringSelection = new StringSelection(row);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+    }
+
+    @FXML
+    private void CopyCell() {
+        TablePosition pos = TabTable.getSelectionModel().getSelectedCells().get(0);
+        TableModel item = TabTable.getItems().get(pos.getRow());
+        TableColumn col = pos.getTableColumn();
+
+        String cell = col.getCellObservableValue(item).getValue().toString();
+
+        StringSelection stringSelection = new StringSelection(cell);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+    }
+
+    @FXML
+    private void KeyShortcuts(KeyEvent event) {
+        if (event.isControlDown() && event.getCode() == KeyCode.C) {
+            CopyRow();
+        }
+    }
+
+    private void InitializeTableView() {
+        //TabTable.getSelectionModel().setSelectionMode(SelectionMode.);
+        TabTable.setOnSort((SortEvent) -> {
+            TableView<TableModel> target = (TableView<TableModel>) SortEvent.getTarget();
+            if (target.getSortOrder().size() == 0) {
+                //TODO: this needs to default to timestamp column once we have that
+                TableColumn<TableModel, ?> targetColumn = null;
+                for (int i = 0; i < target.getColumns().size(); i++) {
+                    if (target.getColumns().get(i).getText().equals("Time Stamp")) {
+                        targetColumn = target.getColumns().get(i);
+                        break;
+                    }
+                }
+                if (targetColumn != null) {
+                    targetColumn.setSortType(TableColumn.SortType.ASCENDING);
+                    target.getSortOrder().add(targetColumn);
+                }
             }
         });
 
@@ -145,6 +204,35 @@ public class SingleTabController {
         });
         fillTable(null);
 
+        timeColumn.setCellValueFactory(CellData -> {
+            return CellData.getValue().getTimeStampProperty();
+        });
+
+        //timeColumn.setCellValueFactory(new PropertyValueFactory<TableModel, TimeStamp>("TimeStamp"));
+        timeColumn.setComparator((value1, value2) -> {
+            if (value1.getSeconds() > value2.getSeconds())
+                return 1;
+            else if (value1.getSeconds() < value2.getSeconds())
+                return -1;
+            else {
+                if (value1.getNanos() > value2.getNanos())
+                    return 1;
+                else if (value1.getNanos() < value2.getNanos())
+                    return -1;
+                else
+                    return 0;
+            }
+        });
+        timeColumn.setCellFactory((ColumnData) -> {
+            TableCell<TableModel, TimeStamp> temp = new TableCell<TableModel, TimeStamp>();
+            temp.itemProperty().addListener((obs, oldv, newv) -> {
+                if (newv != null) {
+                    temp.setText(newv.toString());
+                }
+            });
+
+            return temp;
+        });
 
         //These are CSS pseudo classes. We more or less load these from our CSS file
         //The CSS file itself is currently loaded in GUIMain.
@@ -155,7 +243,7 @@ public class SingleTabController {
         //The idea is, for every row in the table, we set up a listener on a specific property
         //of the object that's being displayed. Then, based on that value, we change the styles of the row
         //Or other things (if we had a text box in our rows, we could disable it for instance).
-        TabTable.setRowFactory(tableView -> {
+        TabTable.setRowFactory(TableData -> {
             //First, we create a table row. This is ultimately what we will be inserting into the controll
             TableRow<TableModel> row = new TableRow<>();
 
@@ -164,11 +252,12 @@ public class SingleTabController {
             row.itemProperty().addListener((obs, oldItem, currentItem) -> {
                 //If the currentItem doesn't exist (ie: nothing in the row)
                 //we clear the row style by setting both CSS pseudo-classes to false.
-                if (currentItem == null ) {
+                if (currentItem == null) {
                     row.pseudoClassStateChanged(error, false);
                     row.pseudoClassStateChanged(success, false);
                     return;
-                };
+                }
+                ;
 
                 //currentRow.getErrorCodeProperty().removeListener(changeListener);
                 //currentRow.getErrorCodeProperty().addListener(changeListener);
@@ -198,15 +287,16 @@ public class SingleTabController {
         });
     }
 
+
     private void scrollTo(int index) {
         int first = virtualFlow.getFirstVisibleCell().getIndex();
         int last = virtualFlow.getLastVisibleCell().getIndex();
-        if (index <= first){
-            while (index <= first && virtualFlow.adjustPixels(-1) < 0){
+        if (index <= first) {
+            while (index <= first && virtualFlow.adjustPixels(-1) < 0) {
                 first = virtualFlow.getFirstVisibleCell().getIndex();
             }
         } else {
-            while (index >= last && virtualFlow.adjustPixels(1) > 0){
+            while (index >= last && virtualFlow.adjustPixels(1) > 0) {
                 last = virtualFlow.getLastVisibleCell().getIndex();
             }
         }
@@ -229,11 +319,10 @@ public class SingleTabController {
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
             String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
 
-            TableModel tempModel = new TableModel(LineNumber.toString(), (int)temp.getOpCode(), Flags,  Error, Short.toString(temp.getRetVal()));
+            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
             if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
                 data.add(tempModel);
         }
 
     }
-
 }

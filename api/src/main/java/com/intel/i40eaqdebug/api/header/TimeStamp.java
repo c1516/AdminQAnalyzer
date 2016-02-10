@@ -9,10 +9,15 @@ public class TimeStamp {
         this.nanos = nanos;
     }
 
-    long getSeconds() {
+    public long getSeconds() {
         return seconds;
     }
-    long getNanos() {
+    public long getNanos() {
         return nanos;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toString(seconds) + "." + Long.toString(nanos);
     }
 }
