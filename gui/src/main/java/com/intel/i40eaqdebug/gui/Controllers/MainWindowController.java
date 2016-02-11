@@ -96,35 +96,40 @@ public class MainWindowController {
             if (theFile != null) {
                 Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
 
-                try {
-                    FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+                if (data == null || data.size() == 0) {
+                    DialogController.CreateDialog("Unable to open file",
+                            "Unable to open the provided file \"" + theFile.getName() + "\"\nPlease select another file.", true);
+                } else {
+                    try {
+                        FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                    SingleTabController newTabController = new SingleTabController(Application, data);
-                    controllers.add(newTabController);
+                        SingleTabController newTabController = new SingleTabController(Application, data);
+                        controllers.add(newTabController);
 
-                    tabFXML.setController(newTabController);
-                    Tab newTab = new Tab(theFile.getName());
-                    newTab.setContent(tabFXML.load());
+                        tabFXML.setController(newTabController);
+                        Tab newTab = new Tab(theFile.getName());
+                        newTab.setContent(tabFXML.load());
 
-                    //If we close a tab, we want to remove it from controlelr list, search list
-                    //And disable the bar if it's the last one
-                    newTab.setOnCloseRequest((event) -> {
-                        int index = TabElement.getTabs().indexOf((Tab)event.getSource());
-                        controllers.remove(index);
-                        searchTerms.remove(index);
+                        //If we close a tab, we want to remove it from controlelr list, search list
+                        //And disable the bar if it's the last one
+                        newTab.setOnCloseRequest((event) -> {
+                            int index = TabElement.getTabs().indexOf((Tab) event.getSource());
+                            controllers.remove(index);
+                            searchTerms.remove(index);
 
-                        if (TabElement.getTabs().size() == 0)
-                            SearchBar.setDisable(true);
-                    });
-                    //add a blank space to save search terms in for our new tab
-                    searchTerms.add("");
-                    TabElement.getTabs().add(newTab);
-                    SearchBar.setDisable(false);
+                            if (TabElement.getTabs().size() == 0)
+                                SearchBar.setDisable(true);
+                        });
+                        //add a blank space to save search terms in for our new tab
+                        searchTerms.add("");
+                        TabElement.getTabs().add(newTab);
+                        SearchBar.setDisable(false);
 
-                } catch (IOException Ex) {
-                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
-                    //throw Ex;
-                    //Platform.exit();
+                    } catch (IOException Ex) {
+                        DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                        //throw Ex;
+                        //Platform.exit();
+                    }
                 }
             }
             LoadingScreen.setVisible(false);

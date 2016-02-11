@@ -39,6 +39,8 @@ public class SingleTabController {
     private SplitPane BaseSplitPane;
     @FXML
     private TableColumn<TableModel, TimeStamp> timeColumn;
+    @FXML
+    private TableColumn<TableModel, String> numColumn;
 
     @FXML
     private Separator DraggbleSeparator;
@@ -206,6 +208,13 @@ public class SingleTabController {
 
         timeColumn.setCellValueFactory(CellData -> {
             return CellData.getValue().getTimeStampProperty();
+        });
+
+        numColumn.setComparator((value1, value2) -> {
+            //Yeah I know this is inefficient, but at the same time I don't care
+            int iv1 = Integer.parseInt(value1);
+            int iv2 = Integer.parseInt(value2);
+            return iv1 < iv2 ? -1 : (iv1 > iv2 ? 1 : 0);
         });
 
         //timeColumn.setCellValueFactory(new PropertyValueFactory<TableModel, TimeStamp>("TimeStamp"));

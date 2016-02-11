@@ -16,5 +16,5 @@
             </TableColumn>
         </columns>
     </TableView>
-    <TextArea fx:id="RawArea" />
+    <TextArea fx:id="RawArea" editable="false" />
 </SplitPane>
