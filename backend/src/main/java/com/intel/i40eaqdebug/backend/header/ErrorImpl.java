@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class ErrorImpl implements Errors {
 
-    static Pattern ERRENUMPATTERN = Pattern.compile("enum i40e_admin_queue_err \\{([^}])};");
+    static Pattern ERRENUMPATTERN = Pattern.compile("enum i40e_admin_queue_err \\{([^}]+)};");
     static Pattern ERRENUMENTPATTERN = Pattern.compile("(I40E_AQ_RC_\\w+)\\s+=\\s([0-9]+)");
 
     private Map<Integer, String> intToName;
