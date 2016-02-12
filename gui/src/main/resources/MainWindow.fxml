@@ -66,6 +66,7 @@
                         <tooltip><Tooltip text="Filter Something Else"/></tooltip>
                     </Button>
                     <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="EventTotalText" text="Event Total: " minWidth="120.0"/>
                     <StackPane>
                         <children>
                             <TextField fx:id="SearchField" onKeyReleased="#SearchKeyReleased"

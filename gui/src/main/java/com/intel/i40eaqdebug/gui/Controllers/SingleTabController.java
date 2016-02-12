@@ -46,6 +46,9 @@ public class SingleTabController {
     @FXML
     private Separator DraggbleSeparator;
 
+    //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
+    private int EventTotal = 0;
+
     //endregion
     private GUIMain Application;
     private Queue<LogEntry> logLines;
@@ -321,6 +324,7 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
+        Integer Total = 0;
         Integer LineNumber = 0;
         while (test.size() > 0) {
             LineNumber++;
@@ -329,21 +333,30 @@ public class SingleTabController {
 
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
             String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
-
+            //TODO: If the OR condition can be removed or modified, move all ops (except LineNumber++) inside IF statement
             TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
 
             //When wanting to display matched substring
             if (Match) {
-                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
+                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter))) {
                     data.add(tempModel);
+                    Total++;
+                }
             }
 
             //When wanting to not display matched substring
             if (!Match) {
-                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter)))
+                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter))) {
                     data.add(tempModel);
+                    Total++;
+                }
             }
         }
+        EventTotal = Total;
 
+    }
+
+    public int getEventTotal() {
+        return EventTotal;
     }
 }

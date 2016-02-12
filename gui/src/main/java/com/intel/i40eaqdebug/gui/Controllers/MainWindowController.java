@@ -36,6 +36,8 @@ public class MainWindowController {
     private StackPane LoadingScreen;
     @FXML
     private Parent RootPanel;
+    @FXML
+    private Label EventTotalText;
 
     private List<SingleTabController> controllers = new LinkedList<SingleTabController>();
     private ArrayList<String> searchTerms = new ArrayList<String>();
@@ -57,6 +59,7 @@ public class MainWindowController {
             if (controllers.size() > 0) {
                 controllers.get(index).Search(searchTerms.get(index), true);
                 SearchField.setText(searchTerms.get(index));
+                UpdateTotal(controllers.get(index).getEventTotal());
             }
         });
     }
@@ -159,11 +162,13 @@ public class MainWindowController {
                         TabElement.getTabs().add(newTab);
                         SearchBar.setDisable(false);
 
-                    } catch (IOException Ex) {
-                        DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
-                        //throw Ex;
-                        //Platform.exit();
-                    }
+                    int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+                    UpdateTotal(controllers.get(selectedTab).getEventTotal());
+
+                } catch (IOException Ex) {
+                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                    //throw Ex;
+                    //Platform.exit();
                 }
             }
             LoadingScreen.setVisible(false);
@@ -198,7 +203,12 @@ public class MainWindowController {
 
             controllers.get(selectedTab).Search(term, true);
             searchTerms.set(selectedTab, term);
+            UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
+    }
+
+    private void UpdateTotal(int eventTotal) {
+        EventTotalText.setText("Event Total: " + eventTotal);
     }
 
     @FXML
@@ -211,6 +221,7 @@ public class MainWindowController {
 
             controllers.get(selectedTab).Search("", true);
             searchTerms.set(selectedTab, "");
+            UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
     }
 
