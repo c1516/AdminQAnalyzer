@@ -45,7 +45,7 @@ public final class APIEntryPoint {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
-        return errFlag + ""; // TODO
+        return ERRORS.getByInt(errFlag);
     }
 
     public static String getCommandName(int opcode) {
