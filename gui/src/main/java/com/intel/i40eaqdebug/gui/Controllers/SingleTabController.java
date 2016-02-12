@@ -7,6 +7,7 @@ import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -67,8 +68,8 @@ public class SingleTabController {
         }
     }
 
-    public void Search(String term) {
-        fillTable(term);
+    public void Search(String term, Boolean match) {
+        fillTable(term, match);
         TabTable.sort();
     }
 
@@ -204,7 +205,7 @@ public class SingleTabController {
 
             }
         });
-        fillTable(null);
+        fillTable(null, true);
 
         timeColumn.setCellValueFactory(CellData -> {
             return CellData.getValue().getTimeStampProperty();
@@ -312,8 +313,9 @@ public class SingleTabController {
     }
 
     //This function fills the TableView with models for items
-    //If there is a filter string, it will only include itesm that match that string.
-    private void fillTable(String Filter) {
+    //If there is a filter string, it will only include items that match that string.
+    //Match indicates if incidences of the Filter string should be displayed or not
+    private void fillTable(String Filter, Boolean Match) {
         ObservableList<TableModel> data = TabTable.getItems();
         data.clear();
 
@@ -329,8 +331,18 @@ public class SingleTabController {
             String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
 
             TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
-            if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
-                data.add(tempModel);
+
+            //When wanting to display matched substring
+            if (Match) {
+                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
+                    data.add(tempModel);
+            }
+
+            //When wanting to not display matched substring
+            if (!Match) {
+                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter)))
+                    data.add(tempModel);
+            }
         }
 
     }
