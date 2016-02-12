@@ -3,13 +3,10 @@ package com.intel.i40eaqdebug.gui.Controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewer.FlagViewer;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -23,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -41,13 +39,12 @@ public class SingleTabController {
     private SplitPane BaseSplitPane;
     @FXML
     private TableColumn<TableModel, TimeStamp> timeColumn;
-    @FXML
-    private TableColumn<TableModel, String> numColumn;
-    @FXML
-    private TableColumn<TableModel, Integer> flagColumn;
 
     @FXML
     private Separator DraggbleSeparator;
+
+    //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
+    private int EventTotal = 0;
 
     //endregion
     private GUIMain Application;
@@ -203,17 +200,6 @@ public class SingleTabController {
                 }
 
                 HideablePane.getChildren().add(testPane);
-                /*FlagViewer temp = new FlagViewer();
-                double Height = 22;
-                double Width = 200;
-
-                temp.setPrefHeight(Height);
-                temp.setMaxHeight(Height);
-                temp.setMinHeight(Height);
-                temp.setPrefWidth(Width);
-                temp.setMaxWidth(Width);
-                temp.setMinWidth(Width);
-                HideablePane.getChildren().add(temp);*/
                 //HideablePane.requestFocus();
                 HideablePane.setVisible(true);
 
@@ -221,13 +207,8 @@ public class SingleTabController {
         });
         fillTable(null);
 
-        timeColumn.setCellValueFactory(CellData -> CellData.getValue().getTimeStampProperty());
-
-        numColumn.setComparator((value1, value2) -> {
-            //Yeah I know this is inefficient, but at the same time I don't care
-            int iv1 = Integer.parseInt(value1);
-            int iv2 = Integer.parseInt(value2);
-            return iv1 < iv2 ? -1 : (iv1 > iv2 ? 1 : 0);
+        timeColumn.setCellValueFactory(CellData -> {
+            return CellData.getValue().getTimeStampProperty();
         });
 
         //timeColumn.setCellValueFactory(new PropertyValueFactory<TableModel, TimeStamp>("TimeStamp"));
@@ -255,10 +236,6 @@ public class SingleTabController {
 
             return temp;
         });
-
-
-        flagColumn.setCellValueFactory(CellData ->  CellData.getValue().getFlagsProperty().asObject());
-        flagColumn.setCellFactory((ColumnData) -> new FlagViewCell());
 
         //These are CSS pseudo classes. We more or less load these from our CSS file
         //The CSS file itself is currently loaded in GUIMain.
@@ -315,7 +292,6 @@ public class SingleTabController {
 
 
     private void scrollTo(int index) {
-        if (virtualFlow.getFirstVisibleCell() == null) return;
         int first = virtualFlow.getFirstVisibleCell().getIndex();
         int last = virtualFlow.getLastVisibleCell().getIndex();
         if (index <= first) {
@@ -337,6 +313,7 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
+        Integer Total = 0;
         Integer LineNumber = 0;
         while (test.size() > 0) {
             LineNumber++;
@@ -344,12 +321,19 @@ public class SingleTabController {
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
-            //String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
-
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), temp.getFlags(), Error);
-            if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
+            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
+            //TODO: If the OR condition can be removed or modified, move all ops (except LineNumber++) inside IF statement
+            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
+            if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter))) {
                 data.add(tempModel);
+                Total++;
+            }
         }
+        EventTotal = Total;
 
+    }
+
+    public int getEventTotal() {
+        return EventTotal;
     }
 }

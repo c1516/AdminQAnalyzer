@@ -35,6 +35,8 @@ public class MainWindowController {
     private StackPane LoadingScreen;
     @FXML
     private Parent RootPanel;
+    @FXML
+    private Label EventTotalText;
 
     private List<SingleTabController> controllers = new LinkedList<SingleTabController>();
     private ArrayList<String> searchTerms = new ArrayList<String>();
@@ -56,6 +58,7 @@ public class MainWindowController {
             if (controllers.size() > 0) {
                 controllers.get(index).Search(searchTerms.get(index));
                 SearchField.setText(searchTerms.get(index));
+                UpdateTotal(controllers.get(index).getEventTotal());
             }
         });
     }
@@ -95,40 +98,39 @@ public class MainWindowController {
         public void run() {
             if (theFile != null) {
                 Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
-                if (data == null || data.size() == 0) {
-                    DialogController.CreateDialog("Unable to open file",
-                            "Unable to open the provided file \"" + theFile.getName() + "\"\nPlease select another file.", true);
-                } else {
-                    try {
-                        FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                        SingleTabController newTabController = new SingleTabController(Application, data);
-                        controllers.add(newTabController);
+                try {
+                    FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                        tabFXML.setController(newTabController);
-                        Tab newTab = new Tab(theFile.getName());
-                        newTab.setContent(tabFXML.load());
+                    SingleTabController newTabController = new SingleTabController(Application, data);
+                    controllers.add(newTabController);
 
-                        //If we close a tab, we want to remove it from controlelr list, search list
-                        //And disable the bar if it's the last one
-                        newTab.setOnCloseRequest((event) -> {
-                            int index = TabElement.getTabs().indexOf((Tab) event.getSource());
-                            controllers.remove(index);
-                            searchTerms.remove(index);
+                    tabFXML.setController(newTabController);
+                    Tab newTab = new Tab(theFile.getName());
+                    newTab.setContent(tabFXML.load());
 
-                            if (TabElement.getTabs().size() == 0)
-                                SearchBar.setDisable(true);
-                        });
-                        //add a blank space to save search terms in for our new tab
-                        searchTerms.add("");
-                        TabElement.getTabs().add(newTab);
-                        SearchBar.setDisable(false);
+                    //If we close a tab, we want to remove it from controlelr list, search list
+                    //And disable the bar if it's the last one
+                    newTab.setOnCloseRequest((event) -> {
+                        int index = TabElement.getTabs().indexOf((Tab)event.getSource());
+                        controllers.remove(index);
+                        searchTerms.remove(index);
 
-                    } catch (IOException Ex) {
-                        DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
-                        //throw Ex;
-                        //Platform.exit();
-                    }
+                        if (TabElement.getTabs().size() == 0)
+                            SearchBar.setDisable(true);
+                    });
+                    //add a blank space to save search terms in for our new tab
+                    searchTerms.add("");
+                    TabElement.getTabs().add(newTab);
+                    SearchBar.setDisable(false);
+
+                    int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+                    UpdateTotal(controllers.get(selectedTab).getEventTotal());
+
+                } catch (IOException Ex) {
+                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                    //throw Ex;
+                    //Platform.exit();
                 }
             }
             LoadingScreen.setVisible(false);
@@ -163,7 +165,12 @@ public class MainWindowController {
 
             controllers.get(selectedTab).Search(term);
             searchTerms.set(selectedTab, term);
+            UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
+    }
+
+    private void UpdateTotal(int eventTotal) {
+        EventTotalText.setText("Event Total: " + eventTotal);
     }
 
     @FXML
@@ -176,6 +183,7 @@ public class MainWindowController {
 
             controllers.get(selectedTab).Search("");
             searchTerms.set(selectedTab, "");
+            UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
     }
 
