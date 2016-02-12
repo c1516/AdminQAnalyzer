@@ -3,6 +3,7 @@ package com.intel.i40eaqdebug.gui.Controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
@@ -42,6 +43,11 @@ public class SingleTabController {
     private TableColumn<TableModel, TimeStamp> timeColumn;
     @FXML
     private TableColumn<TableModel, String> numColumn;
+    @FXML
+    private TableColumn<TableModel, Integer> flagColumn;
+
+    //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
+    private int EventTotal = 0;
 
     @FXML
     private Separator DraggbleSeparator;
@@ -244,6 +250,9 @@ public class SingleTabController {
             return temp;
         });
 
+        flagColumn.setCellValueFactory(CellData ->  CellData.getValue().getFlagsProperty().asObject());
+        flagColumn.setCellFactory((ColumnData) -> new FlagViewCell());
+
         //These are CSS pseudo classes. We more or less load these from our CSS file
         //The CSS file itself is currently loaded in GUIMain.
         PseudoClass error = PseudoClass.getPseudoClass("error");
@@ -321,6 +330,7 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
+        Integer Total = 0;
         Integer LineNumber = 0;
         while (test.size() > 0) {
             LineNumber++;
@@ -331,16 +341,25 @@ public class SingleTabController {
 
             //When wanting to display matched substring
             if (Match) {
-                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
+                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter))) {
                     data.add(tempModel);
+                    Total++;
+                }
             }
 
             //When wanting to not display matched substring
             if (!Match) {
-                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter)))
+                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter))) {
                     data.add(tempModel);
+                    Total++;
+                }
             }
         }
 
+    }
+
+
+    public int getEventTotal() {
+        return EventTotal;
     }
 }
