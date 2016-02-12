@@ -17,7 +17,10 @@ public class FlagViewCell extends TableCell<TableModel, Integer> {
     @Override
     protected void updateItem(Integer item, boolean empty) {
         super.updateItem(item, empty);
-        flagViewer.setFlag(empty ? 0 : item.shortValue());
-        setGraphic(flagViewer);
+        if (!empty) {
+            flagViewer.setFlag(empty ? 0 : item.shortValue());
+            setGraphic(flagViewer);
+        } else
+            setGraphic(null);
     }
 }

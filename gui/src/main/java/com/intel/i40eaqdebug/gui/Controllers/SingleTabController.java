@@ -242,9 +242,10 @@ public class SingleTabController {
         timeColumn.setCellFactory((ColumnData) -> {
             TableCell<TableModel, TimeStamp> temp = new TableCell<TableModel, TimeStamp>();
             temp.itemProperty().addListener((obs, oldv, newv) -> {
-                if (newv != null) {
+                if (newv != null)
                     temp.setText(newv.toString());
-                }
+                else
+                    temp.setText("");
             });
 
             return temp;
@@ -356,6 +357,7 @@ public class SingleTabController {
             }
         }
 
+        EventTotal = Total;
     }
 
 
