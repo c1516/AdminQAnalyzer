@@ -133,34 +133,31 @@ public class MainWindowController {
         public void run() {
             if (theFile != null) {
                 Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
-                if (data == null || data.size() == 0) {
-                    DialogController.CreateDialog("Unable to open file",
-                            "Unable to open the provided file \"" + theFile.getName() + "\"\nPlease select another file.", true);
-                } else {
-                    try {
-                        FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                        SingleTabController newTabController = new SingleTabController(Application, data);
-                        controllers.add(newTabController);
+                try {
+                    FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                        tabFXML.setController(newTabController);
-                        Tab newTab = new Tab(theFile.getName());
-                        newTab.setContent(tabFXML.load());
+                    SingleTabController newTabController = new SingleTabController(Application, data);
+                    controllers.add(newTabController);
 
-                        //If we close a tab, we want to remove it from controlelr list, search list
-                        //And disable the bar if it's the last one
-                        newTab.setOnCloseRequest((event) -> {
-                            int index = TabElement.getTabs().indexOf((Tab) event.getSource());
-                            controllers.remove(index);
-                            searchTerms.remove(index);
+                    tabFXML.setController(newTabController);
+                    Tab newTab = new Tab(theFile.getName());
+                    newTab.setContent(tabFXML.load());
 
-                            if (TabElement.getTabs().size() == 0)
-                                SearchBar.setDisable(true);
-                        });
-                        //add a blank space to save search terms in for our new tab
-                        searchTerms.add("");
-                        TabElement.getTabs().add(newTab);
-                        SearchBar.setDisable(false);
+                    //If we close a tab, we want to remove it from controlelr list, search list
+                    //And disable the bar if it's the last one
+                    newTab.setOnCloseRequest((event) -> {
+                        int index = TabElement.getTabs().indexOf((Tab)event.getSource());
+                        controllers.remove(index);
+                        searchTerms.remove(index);
+
+                        if (TabElement.getTabs().size() == 1)
+                            SearchBar.setDisable(true);
+                    });
+                    //add a blank space to save search terms in for our new tab
+                    searchTerms.add("");
+                    TabElement.getTabs().add(newTab);
+                    SearchBar.setDisable(false);
 
                     int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
                     UpdateTotal(controllers.get(selectedTab).getEventTotal());

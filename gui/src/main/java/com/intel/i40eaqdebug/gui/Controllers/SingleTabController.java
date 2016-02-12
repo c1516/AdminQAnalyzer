@@ -3,6 +3,7 @@ package com.intel.i40eaqdebug.gui.Controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
@@ -42,12 +43,14 @@ public class SingleTabController {
     private TableColumn<TableModel, TimeStamp> timeColumn;
     @FXML
     private TableColumn<TableModel, String> numColumn;
-
     @FXML
-    private Separator DraggbleSeparator;
+    private TableColumn<TableModel, Integer> flagColumn;
 
     //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
     private int EventTotal = 0;
+
+    @FXML
+    private Separator DraggbleSeparator;
 
     //endregion
     private GUIMain Application;
@@ -239,13 +242,17 @@ public class SingleTabController {
         timeColumn.setCellFactory((ColumnData) -> {
             TableCell<TableModel, TimeStamp> temp = new TableCell<TableModel, TimeStamp>();
             temp.itemProperty().addListener((obs, oldv, newv) -> {
-                if (newv != null) {
+                if (newv != null)
                     temp.setText(newv.toString());
-                }
+                else
+                    temp.setText("");
             });
 
             return temp;
         });
+
+        flagColumn.setCellValueFactory(CellData ->  CellData.getValue().getFlagsProperty().asObject());
+        flagColumn.setCellFactory((ColumnData) -> new FlagViewCell());
 
         //These are CSS pseudo classes. We more or less load these from our CSS file
         //The CSS file itself is currently loaded in GUIMain.
@@ -325,16 +332,14 @@ public class SingleTabController {
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
         Integer Total = 0;
-        Integer LineNumber = 0;
+        //Integer LineNumber = 0;
         while (test.size() > 0) {
-            LineNumber++;
+           // LineNumber++;
             LogEntry temp = test.remove();
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
-            //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
-            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
-            //TODO: If the OR condition can be removed or modified, move all ops (except LineNumber++) inside IF statement
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
+            TableModel tempModel = new TableModel(temp.getTimeStamp(),
+                    Integer.toString(temp.getStartLine()), (int) temp.getOpCode(), temp.getFlags(), Error);
 
             //When wanting to display matched substring
             if (Match) {
@@ -352,9 +357,10 @@ public class SingleTabController {
                 }
             }
         }
-        EventTotal = Total;
 
+        EventTotal = Total;
     }
+
 
     public int getEventTotal() {
         return EventTotal;
