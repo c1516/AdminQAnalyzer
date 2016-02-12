@@ -8,18 +8,18 @@ import javafx.beans.property.*;
 public class TableModel {
     private final StringProperty LineNumber;
     private final StringProperty OpCode;
-    private final StringProperty Flags;
+    private final IntegerProperty Flags;
     private final StringProperty ErrorCode;
     private final ObjectProperty<TimeStamp> TimeStamp;
     private final IntegerProperty OpCodeInt;
 
-    public TableModel() { this(null, null, 0, null, null); }
+    public TableModel() { this(null, null, 0, 0, null); }
 
-    public TableModel( TimeStamp TheTime, String LineNumber, int OpCode, String Flags, String Error) {
+    public TableModel( TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error) {
         this.LineNumber = new SimpleStringProperty(LineNumber);
         this.OpCode = new SimpleStringProperty(APIEntryPoint.getCommandName(OpCode));
         this.OpCodeInt = new SimpleIntegerProperty(OpCode);
-        this.Flags = new SimpleStringProperty(Flags);
+        this.Flags = new SimpleIntegerProperty(Flags);
         this.ErrorCode = new SimpleStringProperty(Error);
         this.TimeStamp = new SimpleObjectProperty<TimeStamp>(TheTime);
     }
@@ -27,7 +27,7 @@ public class TableModel {
     public boolean hasPartialValue(String val) {
         if (val == null) return false;
 
-        if (OpCode.get().contains(val) || Flags.get().contains(val)
+        if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val)
                 || ErrorCode.get().contains(val) || (TimeStamp.get()).toString().contains(val)
                 || Integer.toHexString(OpCodeInt.get()).toUpperCase().contains(val.toUpperCase()))
              return true;
@@ -43,9 +43,9 @@ public class TableModel {
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}
 
-    public String getFlags() {return Flags.get();}
-    public StringProperty getFlagsProperty() {return Flags;}
-    public void setFlags(String newFlags) {Flags.set(newFlags);}
+    public Integer getFlags() {return Flags.get();}
+    public IntegerProperty getFlagsProperty() {return Flags;}
+    public void setFlags(int newFlags) {Flags.set(newFlags);}
 
     public String getErrorCode() {return ErrorCode.get();}
     public StringProperty getErrorCodeProperty() {return ErrorCode;}
@@ -63,6 +63,6 @@ public class TableModel {
     @Override
     public String toString() {
         return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString()
-                + ", " + Flags.get().toString() + ", " + ErrorCode.get().toString();
+                + ", " + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString();
     }
 }
