@@ -95,7 +95,6 @@ public class MainWindowController {
         public void run() {
             if (theFile != null) {
                 Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
-
                 if (data == null || data.size() == 0) {
                     DialogController.CreateDialog("Unable to open file",
                             "Unable to open the provided file \"" + theFile.getName() + "\"\nPlease select another file.", true);

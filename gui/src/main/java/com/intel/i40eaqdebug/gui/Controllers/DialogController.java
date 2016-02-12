@@ -31,7 +31,7 @@ public class DialogController {
         stage.setTitle(Title);
 
         try {
-            stage.setScene(new Scene((Pane) loader.load(), 350, 150));
+            stage.setScene(new Scene((Pane) loader.load()));
         } catch (Exception e) {
             //TODO: try to rebuild the fxml manually here.
             return;
