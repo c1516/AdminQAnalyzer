@@ -321,9 +321,9 @@ public class SingleTabController {
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
-            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
+            //String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
             //TODO: If the OR condition can be removed or modified, move all ops (except LineNumber++) inside IF statement
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
+            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), temp.getFlags(), Error);
             if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter))) {
                 data.add(tempModel);
                 Total++;
