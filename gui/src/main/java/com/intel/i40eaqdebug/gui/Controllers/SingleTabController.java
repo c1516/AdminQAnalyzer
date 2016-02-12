@@ -327,10 +327,7 @@ public class SingleTabController {
             LogEntry temp = test.remove();
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
-            //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
-            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
-
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
+            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), temp.getFlags(), Error);
 
             //When wanting to display matched substring
             if (Match) {
