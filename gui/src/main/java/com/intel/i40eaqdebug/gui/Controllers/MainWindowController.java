@@ -151,7 +151,7 @@ public class MainWindowController {
                         controllers.remove(index);
                         searchTerms.remove(index);
 
-                        if (TabElement.getTabs().size() == 0)
+                        if (TabElement.getTabs().size() == 1)
                             SearchBar.setDisable(true);
                     });
                     //add a blank space to save search terms in for our new tab

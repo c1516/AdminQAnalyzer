@@ -34,7 +34,7 @@
                         <PropertyValueFactory property="TimeStamp"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="numColumn" prefWidth="30" text="#">
+                <TableColumn fx:id="numColumn" prefWidth="30" text="Line Number">
                     <cellValueFactory>
                         <PropertyValueFactory property="LineNumber"/>
                     </cellValueFactory>

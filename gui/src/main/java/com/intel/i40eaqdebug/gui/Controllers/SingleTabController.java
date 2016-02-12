@@ -332,13 +332,14 @@ public class SingleTabController {
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
         Integer Total = 0;
-        Integer LineNumber = 0;
+        //Integer LineNumber = 0;
         while (test.size() > 0) {
-            LineNumber++;
+           // LineNumber++;
             LogEntry temp = test.remove();
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), temp.getFlags(), Error);
+            TableModel tempModel = new TableModel(temp.getTimeStamp(),
+                    Integer.toString(temp.getStartLine()), (int) temp.getOpCode(), temp.getFlags(), Error);
 
             //When wanting to display matched substring
             if (Match) {

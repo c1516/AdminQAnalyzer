@@ -29,7 +29,7 @@ public class FlagViewerSkin extends SkinBase {
     Paint errorColorDis = Paint.valueOf("#FF8080");
     Insets margin = new Insets(0, 0, 0, 1);
 
-    private boolean Initilized = false;
+    private boolean Initialized = false;
 
 
     public FlagViewerSkin(Control control) {
@@ -52,7 +52,7 @@ public class FlagViewerSkin extends SkinBase {
         flagNames.add("I40E_AQ_FLAG_EI");
         flagNames.add("I40E_AQ_FLAG_FE");
 
-        mainBox.setMouseTransparent(true);
+        //mainBox.setMouseTransparent(true);
         mainBox.setPadding(new Insets(2,2,2,2));
     }
 
@@ -79,7 +79,7 @@ public class FlagViewerSkin extends SkinBase {
     @Override
     protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
         super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
-        if (!Initilized) {
+        if (!Initialized) {
             for (int i = 0; i < 16; i++) {
                 Rectangle bit = new Rectangle(0, 0, reservedColor);
                 //bit.onMouseClickedProperty().addListener((obs, oldV, newV) -> { });
@@ -95,7 +95,7 @@ public class FlagViewerSkin extends SkinBase {
 
 
             getChildren().add(mainBox);
-            Initilized = true;
+            Initialized = true;
         }
         Update();
 
