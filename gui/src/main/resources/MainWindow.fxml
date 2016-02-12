@@ -42,13 +42,13 @@
                 <items>
                     <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
                     <Button fx:id="ErrorFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0"
-                            minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked"
+                            minWidth="15.0" mnemonicParsing="false" onMouseClicked="#errorFilterClicked"
                             prefHeight="15.0" prefWidth="15.0"
                             style="-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;">
                         <tooltip><Tooltip text="Filter Errors"/></tooltip>
                     </Button>
                     <Button fx:id="SuccessFilter" maxHeight="15.0" maxWidth="15.0" minHeight="15.0"
-                            minWidth="15.0" mnemonicParsing="false" onMouseClicked="#filterClicked"
+                            minWidth="15.0" mnemonicParsing="false" onMouseClicked="#successFilterClicked"
                             prefHeight="15.0" prefWidth="15.0"
                             style="-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 1;">
                         <tooltip><Tooltip text="Filter Success"/></tooltip>

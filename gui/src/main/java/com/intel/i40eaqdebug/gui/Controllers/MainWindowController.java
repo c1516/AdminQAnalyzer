@@ -6,6 +6,7 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -56,16 +57,50 @@ public class MainWindowController {
         TabElement.getSelectionModel().selectedIndexProperty().addListener((obj, prev, next) -> {
             int index = (int)next;
             if (controllers.size() > 0) {
-                controllers.get(index).Search(searchTerms.get(index));
+                controllers.get(index).Search(searchTerms.get(index), true);
                 SearchField.setText(searchTerms.get(index));
                 UpdateTotal(controllers.get(index).getEventTotal());
             }
         });
     }
 
+
     @FXML
     public void filterClicked(MouseEvent event) {
+        if (TabElement.getTabs().size() > 0) {
+            String term = SearchField.getText();
+            ClearButton.setVisible(term.length() > 0);
+            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
+            controllers.get(selectedTab).Search(term, true);
+            searchTerms.set(selectedTab, term);
+        }
+    }
+
+
+    @FXML
+    public void errorFilterClicked(MouseEvent event) {
+        if (TabElement.getTabs().size() > 0) {
+            String term = "I40E_AQ_RC_OK";
+            ClearButton.setVisible(term.length() > 0);
+            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+
+            controllers.get(selectedTab).Search(term, false);
+            searchTerms.set(selectedTab, term);
+        }
+    }
+
+
+    @FXML
+    public void successFilterClicked(MouseEvent event) {
+        if (TabElement.getTabs().size() > 0) {
+            String term = "I40E_AQ_RC_OK";
+            ClearButton.setVisible(term.length() > 0);
+            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+
+            controllers.get(selectedTab).Search(term, true);
+            searchTerms.set(selectedTab, term);
+        }
     }
 
 
@@ -163,7 +198,7 @@ public class MainWindowController {
             ClearButton.setVisible(term.length() > 0);
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-            controllers.get(selectedTab).Search(term);
+            controllers.get(selectedTab).Search(term, true);
             searchTerms.set(selectedTab, term);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
@@ -181,7 +216,7 @@ public class MainWindowController {
             SearchField.setText("");
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-            controllers.get(selectedTab).Search("");
+            controllers.get(selectedTab).Search("", true);
             searchTerms.set(selectedTab, "");
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }

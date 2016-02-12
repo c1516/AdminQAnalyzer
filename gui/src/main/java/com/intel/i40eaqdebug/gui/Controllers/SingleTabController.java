@@ -7,6 +7,7 @@ import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -39,12 +40,11 @@ public class SingleTabController {
     private SplitPane BaseSplitPane;
     @FXML
     private TableColumn<TableModel, TimeStamp> timeColumn;
+    @FXML
+    private TableColumn<TableModel, String> numColumn;
 
     @FXML
     private Separator DraggbleSeparator;
-
-    //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
-    private int EventTotal = 0;
 
     //endregion
     private GUIMain Application;
@@ -68,8 +68,8 @@ public class SingleTabController {
         }
     }
 
-    public void Search(String term) {
-        fillTable(term);
+    public void Search(String term, Boolean match) {
+        fillTable(term, match);
         TabTable.sort();
     }
 
@@ -205,10 +205,17 @@ public class SingleTabController {
 
             }
         });
-        fillTable(null);
+        fillTable(null, true);
 
         timeColumn.setCellValueFactory(CellData -> {
             return CellData.getValue().getTimeStampProperty();
+        });
+
+        numColumn.setComparator((value1, value2) -> {
+            //Yeah I know this is inefficient, but at the same time I don't care
+            int iv1 = Integer.parseInt(value1);
+            int iv2 = Integer.parseInt(value2);
+            return iv1 < iv2 ? -1 : (iv1 > iv2 ? 1 : 0);
         });
 
         //timeColumn.setCellValueFactory(new PropertyValueFactory<TableModel, TimeStamp>("TimeStamp"));
@@ -306,14 +313,14 @@ public class SingleTabController {
     }
 
     //This function fills the TableView with models for items
-    //If there is a filter string, it will only include itesm that match that string.
-    private void fillTable(String Filter) {
+    //If there is a filter string, it will only include items that match that string.
+    //Match indicates if incidences of the Filter string should be displayed or not
+    private void fillTable(String Filter, Boolean Match) {
         ObservableList<TableModel> data = TabTable.getItems();
         data.clear();
 
         Queue<LogEntry> test = new LinkedList<LogEntry>(logLines);
 
-        Integer Total = 0;
         Integer LineNumber = 0;
         while (test.size() > 0) {
             LineNumber++;
@@ -321,19 +328,22 @@ public class SingleTabController {
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             //TODO: At some point we'll probably want to get the actual flag names from API (assuming it's implemented then)
-            //String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
-            //TODO: If the OR condition can be removed or modified, move all ops (except LineNumber++) inside IF statement
-            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), temp.getFlags(), Error);
-            if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter))) {
-                data.add(tempModel);
-                Total++;
+            String Flags = "0x" + Integer.toHexString(temp.getFlags()).toUpperCase();
+
+            TableModel tempModel = new TableModel(temp.getTimeStamp(), LineNumber.toString(), (int) temp.getOpCode(), Flags, Error);
+
+            //When wanting to display matched substring
+            if (Match) {
+                if (Filter == null || (Filter != null && tempModel.hasPartialValue(Filter)))
+                    data.add(tempModel);
+            }
+
+            //When wanting to not display matched substring
+            if (!Match) {
+                if (Filter == null || (Filter != null && !tempModel.hasPartialValue(Filter)))
+                    data.add(tempModel);
             }
         }
-        EventTotal = Total;
 
-    }
-
-    public int getEventTotal() {
-        return EventTotal;
     }
 }
