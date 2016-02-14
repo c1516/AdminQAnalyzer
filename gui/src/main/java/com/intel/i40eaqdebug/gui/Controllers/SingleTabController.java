@@ -252,19 +252,20 @@ public class SingleTabController {
         });
 
         flagColumn.setCellValueFactory(CellData ->  CellData.getValue().getFlagsProperty().asObject());
-        flagColumn.setCellFactory((ColumnData) -> new FlagViewCell());
+        flagColumn.setCellFactory(ColumnData -> {
+            FlagViewCell test = new FlagViewCell();
+            //This is ugly, and it shouldn't be necessary, but because of how events are handled
+            //I don't really have a choice.
+            test.flagViewer.setOnMousePressed(e -> {
+                TabTable.getSelectionModel().select((TableModel)test.getTableRow().getItem());
+                TabTable.requestFocus();
+            });
+            return test;
+        });
 
-        //These are CSS pseudo classes. We more or less load these from our CSS file
-        //The CSS file itself is currently loaded in GUIMain.
         PseudoClass error = PseudoClass.getPseudoClass("error");
-        PseudoClass success = PseudoClass.getPseudoClass("success");
 
-        //This over-rides the table view rowfactory with our custom lambada.
-        //The idea is, for every row in the table, we set up a listener on a specific property
-        //of the object that's being displayed. Then, based on that value, we change the styles of the row
-        //Or other things (if we had a text box in our rows, we could disable it for instance).
         TabTable.setRowFactory(TableData -> {
-            //First, we create a table row. This is ultimately what we will be inserting into the controll
             TableRow<TableModel> row = new TableRow<>();
 
             //This simply sets up a listener on the item property of a row
@@ -274,35 +275,17 @@ public class SingleTabController {
                 //we clear the row style by setting both CSS pseudo-classes to false.
                 if (currentItem == null) {
                     row.pseudoClassStateChanged(error, false);
-                    row.pseudoClassStateChanged(success, false);
+                    //row.pseudoClassStateChanged(success, false);
                     return;
                 }
-                ;
 
-                //currentRow.getErrorCodeProperty().removeListener(changeListener);
-                //currentRow.getErrorCodeProperty().addListener(changeListener);
-
-                //Then based on the error code from our table model (or anything really) we
-                //set CSS psuedo-classes to appropriately style our table row.
-                //NOTE: all normal CSS rules apply. In other words, if your psuedo-class is
-                //physically higher in the file then another one that applies styles to the same element,
-                //your style wont be seen.
-                if (currentItem.getErrorCode().equals("")) {
-                    row.pseudoClassStateChanged(error, false);
-                    row.pseudoClassStateChanged(success, true);
-                } else if (currentItem.getErrorCode().equals("Bad Thing")) {
+                if (!currentItem.getErrorCode().equals("I40E_AQ_RC_OK")) {
                     row.pseudoClassStateChanged(error, true);
-                    row.pseudoClassStateChanged(success, false);
-                } else {
+                }else {
                     row.pseudoClassStateChanged(error, false);
-                    row.pseudoClassStateChanged(success, false);
                 }
             });
 
-            /*Since our rows will never change during execution (only loaded once) we don't need
-              to set up a listener for property changes. However I will leave this here for posterity.
-            ChangeListener<String> changeListener = (obs, oldRow, currentRow) -> {
-            };*/
             return row;
         });
     }
