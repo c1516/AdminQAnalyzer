@@ -53,7 +53,7 @@ public class DetailsPaneController {
         rows.add(new DetailTableModel("Cookie High", cookieHigh));
         rows.add(new DetailTableModel("Cookie Low", cookieLow));
 
-        CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode());
+        CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode(), LogLine.isWriteback());
         if (tempStruct == null) {
             System.out.println(LogLine.getOpCode());
             return;
