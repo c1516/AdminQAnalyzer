@@ -190,6 +190,7 @@ public class MainWindowController {
         LoadingScreen.setVisible(true);
 
         Platform.runLater(runner);
+
     }
 
 
@@ -245,6 +246,10 @@ public class MainWindowController {
                 }
             }
             LoadingScreen.setVisible(false);
+
+            //Switch to newly opened tab
+            int newTabIndex = TabElement.getTabs().size() - 1;
+            TabElement.getSelectionModel().select(newTabIndex);
         }
     }
 
@@ -264,7 +269,6 @@ public class MainWindowController {
         }
         tempStage.setScene(tempScene);
         tempStage.show();
-
     }
 
     @FXML
