@@ -87,13 +87,12 @@ public class MainWindowController {
         //Reset SuccessFilter's toggle state to unset
         if(SuccessFilter.isSelected()) {
             SuccessFilter.setSelected(false);
-            Clear();
-            SuccessFilter.setStyle("-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 1;");
+            SuccessFilter.setStyle("-fx-background-color: limegreen;");
         }
 
         //If toggle is set
         if ((TabElement.getTabs().size() > 0) && ErrorFilter.isSelected()) {
-            ErrorFilter.setStyle("-fx-background-color: crimson; -fx-border-color: black; -fx-border-width: 1;");
+            ErrorFilter.setStyle("-fx-background-color: darkred;");
             String term = "I40E_AQ_RC_OK";
             ClearButton.setVisible(term.length() > 0);
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
@@ -105,7 +104,7 @@ public class MainWindowController {
         //If toggle is unset
         else {
             Clear();
-            ErrorFilter.setStyle("-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;");
+            ErrorFilter.setStyle("-fx-background-color: crimson;");
         }
     }
 
@@ -115,13 +114,12 @@ public class MainWindowController {
         //Reset ErrorFilter's toggle state to unset
         if(ErrorFilter.isSelected()) {
             ErrorFilter.setSelected(false);
-            Clear();
-            ErrorFilter.setStyle("-fx-background-color: red; -fx-border-color: black; -fx-border-width: 1;");
+            ErrorFilter.setStyle("-fx-background-color: crimson;");
         }
 
         //If toggle is set
         if ((TabElement.getTabs().size() > 0) && SuccessFilter.isSelected()) {
-            SuccessFilter.setStyle("-fx-background-color: green; -fx-border-color: black; -fx-border-width: 1;");
+            SuccessFilter.setStyle("-fx-background-color: green;");
             String term = "I40E_AQ_RC_OK";
             ClearButton.setVisible(term.length() > 0);
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
@@ -133,7 +131,7 @@ public class MainWindowController {
         //If toggle is unset
         else {
             Clear();
-            SuccessFilter.setStyle("-fx-background-color: limegreen; -fx-border-color: black; -fx-border-width: 1;");
+            SuccessFilter.setStyle("-fx-background-color: limegreen;");
         }
     }
 
