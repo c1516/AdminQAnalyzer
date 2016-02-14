@@ -63,6 +63,33 @@ public class SingleTabController {
     private double DetailsHeight = -1;
     private VirtualFlow<?> virtualFlow;
 
+    /**
+     * * * * * * * * * * * * * * * *
+     * TEMPORARY CODE FOR TESTING *
+     * * * * * * * * * * * * * * *
+     */
+    private boolean beh = false;
+    public void setResBeh(Boolean beh) {
+        this.beh = beh;
+        if (beh) {
+            double totalWidth = 0;
+            for (TableColumn c : TabTable.getColumns()) {
+                totalWidth += c.getWidth();
+            }
+            if (totalWidth < TabTable.getWidth()) {
+                double delta = TabTable.getWidth() - totalWidth;
+                TableColumn<?,?> last = TabTable.getColumns().get(TabTable.getColumns().size() - 1);
+                last.setPrefWidth(last.getWidth() + delta);
+            }
+        }
+
+    }
+    /**
+     * * * * * * * * * * * * * * * * * *
+     * END TEMPORARY CODE FOR TESTING *
+     * * * * * * * * * * * * * * * * *
+     */
+
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
         Application = App;
         logLines = logs;
@@ -157,8 +184,8 @@ public class SingleTabController {
                         column.setPrefWidth(column.getWidth() + delta);
                         System.out.println(affectedCols.size());
 
-
-                        if (delta > 0 && totalWidth >= tableWidth) {
+                        //TEMPORARY CODE: "beh || "
+                        if (beh || (delta > 0 && totalWidth >= tableWidth)) {
                             newDelta = delta / affectedCols.size();
                             for (TableColumn c : affectedCols) {
                                 c.setPrefWidth(c.getWidth() - newDelta);

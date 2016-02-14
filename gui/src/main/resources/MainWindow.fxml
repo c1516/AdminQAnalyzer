@@ -70,7 +70,21 @@
                                         <Glow/>
                                     </effect>
                                 </ToggleButton>
+                                <!--
+                                /**
+                                * * * * * * * * * * * * * * * *
+                                * TEMPORARY CODE FOR TESTING *
+                                * * * * * * * * * * * * * * *
+                                */
+                                -->
                                 <CheckBox fx:id="resBeh" text="Resizing Behavior" onAction="#resBehE" />
+                                <!--
+                                /**
+                                * * * * * * * * * * * * * * * * * *
+                                * END TEMPORARY CODE FOR TESTING *
+                                * * * * * * * * * * * * * * * * *
+                                */
+                                -->
                                 <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="EventTotalText" minWidth="120.0" text="Event Total: "/>
                                 <StackPane>
