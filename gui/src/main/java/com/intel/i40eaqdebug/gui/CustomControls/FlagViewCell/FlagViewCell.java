@@ -11,7 +11,7 @@ public class FlagViewCell extends TableCell<TableModel, Integer> {
     public FlagViewer flagViewer = new FlagViewer();
 
     public FlagViewCell(){
-        //flagViewer.setFlag(getItem());
+          //flagViewer.setFlag(getItem());
     }
 
     @Override

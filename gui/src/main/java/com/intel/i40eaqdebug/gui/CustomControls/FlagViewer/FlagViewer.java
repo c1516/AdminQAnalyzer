@@ -22,25 +22,9 @@ public class FlagViewer extends Control {
 
     public FlagViewer() {
         getStyleClass().add("flagviewer-control");
+
         setMinWidth(0);
         setMinHeight(0);
-    }
-
-    @Override
-    public void resize(double width, double height) {
-        double newWidth = Math.round(width);//(Math.round((width) / 16) * 16)-4;
-        double newHeight = Math.round(height);
-
-        super.resize(width, height);
-
-    }
-
-    @Override
-    public void resizeRelocate(double x, double y, double width, double height) {
-        double newWidth = Math.round(width);//(Math.round((width) / 16) * 16) - 4;
-        double newHeight = Math.round(height);
-
-        super.resizeRelocate(x, y, width, height);
     }
 
     @Override
