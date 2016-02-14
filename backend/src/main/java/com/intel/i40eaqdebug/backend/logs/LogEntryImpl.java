@@ -18,6 +18,7 @@ public class LogEntryImpl implements LogEntry {
     private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
 
+    private boolean iswriteback;
     private TimeStamp time;
     private int lineNum;
     private int cookie[] = {0, 0};
@@ -39,9 +40,10 @@ public class LogEntryImpl implements LogEntry {
     //    addr (h,l) 0x999 0x999
     // 0x9999 99 99 99 99 99 ...   <- bytes may have garbage sign extension but are 8 bit values
 
-    public LogEntryImpl(TimeStamp stamp, int startLine, String[] rawLogData) throws java.io.IOException {
+    public LogEntryImpl(TimeStamp stamp, boolean writeback, int startLine, String[] rawLogData) throws java.io.IOException {
         time = stamp;
         lineNum = startLine;
+        iswriteback = writeback;
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
         for (String logInputLine : rawLogData) {
@@ -90,6 +92,10 @@ public class LogEntryImpl implements LogEntry {
             }
         }
         buffer = buff.toByteArray();
+    }
+
+    @Override public boolean isWriteback() {
+        return iswriteback;
     }
 
     public int getStartLine() {

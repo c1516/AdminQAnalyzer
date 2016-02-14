@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 
 public class LogParser implements LogAdapter {
 
-    Pattern BEGIN = Pattern.compile("desc and buffer");
-    Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+)\\.([0-9]+)] (i40e .+)");
+    Pattern BEGIN = Pattern.compile("desc and buffer (writeback)?");
+    Pattern JUNK_FILTER = Pattern.compile("(\\[([0-9]+)\\.([0-9]+)])? (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
         try {
@@ -69,6 +69,7 @@ public class LogParser implements LogAdapter {
                 }
                 // New discrete entry we want to read - update save flag if false
                 save = true;
+                currEntry.add((m.group(1) != null) + ""); // Add whether this is a writeback to beginning of list
             } else {
                 // Not a new discrete entry line
                 if (save) {
@@ -89,12 +90,18 @@ public class LogParser implements LogAdapter {
 
     private LogEntry produceEntry(int lineNum, String[] lines) throws IOException {
         LinkedList<EntryRaw> out = new LinkedList<EntryRaw>();
-        for (String logLine : lines) {
+        boolean isWriteback = Boolean.valueOf(lines[0]);
+        for (int i = 1; i < lines.length; i++) {
+            String logLine = lines[i];
             Matcher m = JUNK_FILTER.matcher(logLine);
             if (m.find()) {
-                String timesec = m.group(1);
-                String timenano = m.group(2);
-                String item = m.group(3);
+                String timesec = "-1";
+                String timenano = "-1";
+                if (m.group(1) != null) {
+                    timesec = m.group(2);
+                    timenano = m.group(3);
+                }
+                String item = m.group(4);
                 out.add(new EntryRaw(Long.valueOf(timesec), Long.valueOf(timenano), item));
             }
         }
@@ -108,7 +115,7 @@ public class LogParser implements LogAdapter {
             entraw[i] = r.item;
             i++;
         }
-        LogEntry ent = new LogEntryImpl(stamp, lineNum, entraw);
+        LogEntry ent = new LogEntryImpl(stamp, isWriteback, lineNum, entraw);
         System.out.println("Opcode: " + ent.getOpCode());
         return ent;
     }

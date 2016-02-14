@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class HeaderParser {
 
     static Pattern OPCODEPATTERN = Pattern.compile("(i40e_aqc_opc_[a-z_]+)\\s+=\\s(0x[A-F0-9]+)");
-    static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct (i40e_aqc_[a-z_]+) \\{([^}]+)};");
+    static Pattern COMMANDSTRUCTPATTERN = Pattern.compile("struct\\s+(i40e_aq(?:c)?_[a-z_]+) \\{([^}]+)};");
     static Pattern FIELDPARSEPATTERN = Pattern.compile(
         "(/\\*(?:[\\w\\s+=;\\n])+\\*/)|(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);");
     // Can't match #defines with shifted values, might look into implementations of that (perhaps by building a value table?)
@@ -49,7 +49,7 @@ public class HeaderParser {
         return ret;
     }
 
-    public static Map<Integer, CommandStruct> constructOPCShortToStruct(Map<Integer, String> opcShortToString,
+    public static Map<Integer, CommandStruct[]> constructOPCShortToStruct(Map<Integer, String> opcShortToString,
         File opcodesFile, Map<String, CommandStruct> structs) throws IOException {
         Map<String, Integer> invert = new HashMap<String, Integer>();
         for (Map.Entry<Integer, String> e : opcShortToString.entrySet()) {
@@ -57,7 +57,7 @@ public class HeaderParser {
         }
         BufferedReader reader = new BufferedReader(new FileReader(opcodesFile));
         String ln;
-        Map<Integer, CommandStruct> ret = new HashMap<Integer, CommandStruct>();
+        Map<Integer, CommandStruct[]> ret = new HashMap<>();
         while ((ln = reader.readLine()) != null) {
             String[] parse = ln.split(",");
             if (parse.length < 2) {
@@ -65,24 +65,72 @@ public class HeaderParser {
             }
             String opcName = parse[0].replaceAll(" ", "");
             String structName = parse[1].replaceAll(" ", "");
-            CommandStruct struct = structs.get(structName);
-            if (struct == null) {
-                System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
-                continue;
+
+            String[] possibleStructNames = structName.split("\\|");
+            if (possibleStructNames.length > 1) {
+                CommandStruct struct1 = structs.get(possibleStructNames[0]);
+                CommandStruct struct2 = structs.get(possibleStructNames[1]);
+                if (struct1 == null || struct2 == null) {
+                    System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
+                    continue;
+                } else {
+                    int size1 = 0;
+                    for (CommandField f : struct1.getFields().values()) {
+                        size1 += (f.getEndPos() - f.getStartPos());
+                    }
+                    int size2 = 0;
+                    for (CommandField f : struct1.getFields().values()) {
+                        size2 += (f.getEndPos() - f.getStartPos());
+                    }
+                    if (size1 > 16) {
+                        System.out.println(
+                            "Invalid struct mapping (oversized): " + parse[0] + " to " + possibleStructNames[0]
+                                + " actual size: " + size1);
+                        continue;
+                    } else if (size1 < 16) {
+                        System.out.println(
+                            "Invalid struct mapping (undersized): " + parse[0] + " to " + possibleStructNames[0]
+                                + " actual size: " + size1);
+                        continue;
+                    }
+                    if (size2 > 16) {
+                        System.out.println(
+                            "Invalid struct mapping (oversized): " + parse[0] + " to " + possibleStructNames[1]
+                                + " actual size: " + size1);
+                        continue;
+                    } else if (size2 < 16) {
+                        System.out.println(
+                            "Invalid struct mapping (undersized): " + parse[0] + " to " + possibleStructNames[1]
+                                + " actual size: " + size1);
+                        continue;
+                    }
+                }
+                ret.put(invert.get(opcName),
+                    new CommandStruct[] {structs.get(possibleStructNames[0]), structs.get(possibleStructNames[1])});
             } else {
-                int size = 0;
-                for (CommandField f : struct.getFields().values()) {
-                    size += (f.getEndPos() - f.getStartPos());
-                }
-                if (size > 16) {
-                    System.out.println("Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1] + " actual size: " + size);
+                CommandStruct struct = structs.get(structName);
+                if (struct == null) {
+                    System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
                     continue;
-                } else if (size < 16) {
-                    System.out.println("Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1] + " actual size: " + size);
-                    continue;
+                } else {
+                    int size = 0;
+                    for (CommandField f : struct.getFields().values()) {
+                        size += (f.getEndPos() - f.getStartPos());
+                    }
+                    if (size > 16) {
+                        System.out.println(
+                            "Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1] + " actual size: "
+                                + size);
+                        continue;
+                    } else if (size < 16) {
+                        System.out.println(
+                            "Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1] + " actual size: "
+                                + size);
+                        continue;
+                    }
                 }
+                ret.put(invert.get(opcName), new CommandStruct[] {structs.get(structName)});
             }
-            ret.put(invert.get(opcName), structs.get(structName));
         }
         return ret;
     }

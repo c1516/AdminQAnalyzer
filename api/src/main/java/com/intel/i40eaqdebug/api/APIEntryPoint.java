@@ -18,7 +18,7 @@ public final class APIEntryPoint {
     private static boolean INIT;
     private static Errors ERRORS;
     private static Map<Integer, String> COMMANDNAMES;
-    private static Map<Integer, CommandStruct> COMMANDSTRUCTS;
+    private static Map<Integer, CommandStruct[]> COMMANDSTRUCTS;
     private static LogAdapter ADAPTER;
     private static CommandStruct UNKNOWN_COMMAND_STRUCT;
 
@@ -33,7 +33,7 @@ public final class APIEntryPoint {
      * @param errors
      * @param commands
      */
-    static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct> commands, LogAdapter adapter) {
+    static void init(Errors errors, Map<Integer, String> names, Map<Integer, CommandStruct[]> commands, LogAdapter adapter) {
         INIT = true;
         ERRORS = errors;
         COMMANDNAMES = names;
@@ -55,11 +55,18 @@ public final class APIEntryPoint {
         return COMMANDNAMES.getOrDefault(opcode, "UNKNOWN");
     }
 
-    public static CommandStruct getCommandStruct(int opcode) {
+    public static CommandStruct getCommandStruct(int opcode, boolean isWriteback) {
         if (!INIT) {
             throw new IllegalStateException("Attempted to call API methods before initialization");
         }
-        return COMMANDSTRUCTS.getOrDefault(opcode, UNKNOWN_COMMAND_STRUCT);
+        CommandStruct[] possible = COMMANDSTRUCTS.get(opcode);
+        if (possible == null) {
+            return UNKNOWN_COMMAND_STRUCT;
+        } else if (possible.length > 1) {
+            return isWriteback ? possible[0] : possible[1];
+        } else {
+            return possible[0];
+        }
     }
 
     public static Queue<LogEntry> getCommandLogQueue(File file, int startIndex, int count) {
