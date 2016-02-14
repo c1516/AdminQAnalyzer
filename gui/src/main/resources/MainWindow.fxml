@@ -12,91 +12,106 @@
 
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-          <children>
-              <GridPane>
-                  <padding>
-                      <Insets bottom="0" left="0" right="0" top="0" />
-                  </padding>
-                  <columnConstraints>
-                      <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
-                  </columnConstraints>
-                  <rowConstraints>
-                      <RowConstraints prefHeight="20" vgrow="NEVER" />
-                      <RowConstraints prefHeight="30" vgrow="NEVER" />
-                      <RowConstraints fillHeight="true" vgrow="ALWAYS" />
-                  </rowConstraints>
-                 <children>
-                     <MenuBar GridPane.rowIndex="0">
-                         <menus>
-                             <Menu text="File">
-                                 <items>
-                                     <MenuItem onAction="#OpenFile" text="Open" />
-                                     <MenuItem onAction="#OpenOptions" text="Options" />
-                                     <SeparatorMenuItem />
-                                     <MenuItem onAction="#Exit" text="Exit" />
-                                 </items>
-                             </Menu>
-                         </menus>
-                     </MenuBar>
-                     <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
-                         <items>
-                             <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
-                             <ToggleButton fx:id="ErrorFilter" contentDisplay="CENTER" maxHeight="70.0" maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false" onMouseClicked="#errorFilterClicked" prefHeight="20.0" prefWidth="85.0" style="-fx-background-color: crimson;" text="Failure" textAlignment="CENTER">
-                                 <tooltip>
-                              <Tooltip text="Filter Errors" />
-                           </tooltip>
-                           <effect>
-                              <Glow />
-                           </effect>
-                             </ToggleButton>
-                             <ToggleButton fx:id="SuccessFilter" contentDisplay="CENTER" maxHeight="70.0" maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false" onMouseClicked="#successFilterClicked" prefHeight="20.0" prefWidth="85.0" style="-fx-background-color: limegreen;" text="Success" textAlignment="CENTER">
-                                 <tooltip>
-                              <Tooltip text="Filter Success" />
-                           </tooltip>
-                           <effect>
-                              <Glow />
-                           </effect>
-                             </ToggleButton>
-                             <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS" />
-                             <Label fx:id="EventTotalText" minWidth="120.0" text="Event Total: " />
-                             <StackPane>
-                                 <children>
-                                     <TextField fx:id="SearchField" onKeyReleased="#SearchKeyReleased" promptText="Search" StackPane.alignment="CENTER">
-                                         <padding>
-                                             <Insets bottom="2" left="2" right="18" top="2" />
-                                         </padding>
-         
-                                     </TextField>
-                                     <Button fx:id="ClearButton" mnemonicParsing="false" onAction="#Clear" style="-fx-background-color: transparent; -fx-border-width: 0;" text="x" textAlignment="CENTER" visible="false" StackPane.alignment="CENTER_RIGHT" />
-                                 </children>
-                             </StackPane>
-                         </items>
-                     </ToolBar>
-                     <TabPane fx:id="TabElement" tabClosingPolicy="ALL_TABS" GridPane.rowIndex="2" />
-                 </children>
-              </GridPane>
-              <StackPane fx:id="LoadingScreen" opacity="0.62" style="-fx-background: black;" visible="false">
-                 <children>
-                     <VBox style="-fx-background-color: black;">
-                         <children>
-                             <ProgressIndicator prefHeight="200.0" style="-fx-background-color: black;">
-                                 <VBox.margin>
-                              <Insets top="75.0" />
-                           </VBox.margin>
-                             </ProgressIndicator>
-                         </children>
-                     </VBox>
-                     <Label alignment="BOTTOM_CENTER" text="Loading File">
-                         <font>
-                        <Font size="39.0" />
-                     </font>
-                     </Label>
-                 </children>
-              </StackPane>
-          </children>
-       </StackPane>
-   </children>
+<AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="0.0">
+            <children>
+                <GridPane>
+                    <padding>
+                        <Insets bottom="0" left="0" right="0" top="0"/>
+                    </padding>
+                    <columnConstraints>
+                        <ColumnConstraints fillWidth="true" hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints prefHeight="20" vgrow="NEVER"/>
+                        <RowConstraints prefHeight="30" vgrow="NEVER"/>
+                        <RowConstraints fillHeight="true" vgrow="ALWAYS"/>
+                    </rowConstraints>
+                    <children>
+                        <MenuBar GridPane.rowIndex="0">
+                            <menus>
+                                <Menu text="File">
+                                    <items>
+                                        <MenuItem onAction="#OpenFile" text="Open"/>
+                                        <MenuItem onAction="#OpenOptions" text="Options"/>
+                                        <SeparatorMenuItem/>
+                                        <MenuItem onAction="#Exit" text="Exit"/>
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
+                            <items>
+                                <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
+                                <ToggleButton fx:id="ErrorFilter" contentDisplay="CENTER" maxHeight="70.0"
+                                              maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false"
+                                              onMouseClicked="#errorFilterClicked" prefHeight="20.0" prefWidth="85.0"
+                                              style="-fx-background-color: crimson;" text="Failure"
+                                              textAlignment="CENTER">
+                                    <tooltip>
+                                        <Tooltip text="Filter Errors"/>
+                                    </tooltip>
+                                    <effect>
+                                        <Glow/>
+                                    </effect>
+                                </ToggleButton>
+                                <ToggleButton fx:id="SuccessFilter" contentDisplay="CENTER" maxHeight="70.0"
+                                              maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false"
+                                              onMouseClicked="#successFilterClicked" prefHeight="20.0" prefWidth="85.0"
+                                              style="-fx-background-color: limegreen;" text="Success"
+                                              textAlignment="CENTER">
+                                    <tooltip>
+                                        <Tooltip text="Filter Success"/>
+                                    </tooltip>
+                                    <effect>
+                                        <Glow/>
+                                    </effect>
+                                </ToggleButton>
+                                <CheckBox fx:id="resBeh" text="Resizing Behavior" onAction="#resBehE" />
+                                <Pane opacity="0" prefHeight="20" HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="EventTotalText" minWidth="120.0" text="Event Total: "/>
+                                <StackPane>
+                                    <children>
+                                        <TextField fx:id="SearchField" onKeyReleased="#SearchKeyReleased"
+                                                   promptText="Search" StackPane.alignment="CENTER">
+                                            <padding>
+                                                <Insets bottom="2" left="2" right="18" top="2"/>
+                                            </padding>
+
+                                        </TextField>
+                                        <Button fx:id="ClearButton" mnemonicParsing="false" onAction="#Clear"
+                                                style="-fx-background-color: transparent; -fx-border-width: 0;" text="x"
+                                                textAlignment="CENTER" visible="false"
+                                                StackPane.alignment="CENTER_RIGHT"/>
+                                    </children>
+                                </StackPane>
+                            </items>
+                        </ToolBar>
+                        <TabPane fx:id="TabElement" tabClosingPolicy="ALL_TABS" GridPane.rowIndex="2"/>
+                    </children>
+                </GridPane>
+                <StackPane fx:id="LoadingScreen" opacity="0.62" style="-fx-background: black;" visible="false">
+                    <children>
+                        <VBox style="-fx-background-color: black;">
+                            <children>
+                                <ProgressIndicator prefHeight="200.0" style="-fx-background-color: black;">
+                                    <VBox.margin>
+                                        <Insets top="75.0"/>
+                                    </VBox.margin>
+                                </ProgressIndicator>
+                            </children>
+                        </VBox>
+                        <Label alignment="BOTTOM_CENTER" text="Loading File">
+                            <font>
+                                <Font size="39.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </StackPane>
+            </children>
+        </StackPane>
+    </children>
 </AnchorPane>

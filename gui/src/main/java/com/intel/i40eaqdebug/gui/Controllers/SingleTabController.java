@@ -27,8 +27,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
+import java.util.List;
 
 //TODO: format this file better. It's hard to readn and everything is all over the place.
 
@@ -117,40 +117,58 @@ public class SingleTabController {
             }
         });
 
+        Application.getMainStage().maximizedProperty().addListener((obs, oldv, newv) -> {
+            TabTable.refresh();
+        });
+
         InitializeTableView();
     }
 
-    @FXML
-    private void CopyRow() {
-        String row = TabTable.getSelectionModel().getSelectedItem().toString();
-
-        StringSelection stringSelection = new StringSelection(row);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection, stringSelection);
-    }
-
-    @FXML
-    private void CopyCell() {
-        TablePosition pos = TabTable.getSelectionModel().getSelectedCells().get(0);
-        TableModel item = TabTable.getItems().get(pos.getRow());
-        TableColumn col = pos.getTableColumn();
-
-        String cell = col.getCellObservableValue(item).getValue().toString();
-
-        StringSelection stringSelection = new StringSelection(cell);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection, stringSelection);
-    }
-
-    @FXML
-    private void KeyShortcuts(KeyEvent event) {
-        if (event.isControlDown() && event.getCode() == KeyCode.C) {
-            CopyRow();
-        }
-    }
-
     private void InitializeTableView() {
+        //TODO: disable horizontal scroll bar entierly.
+        TabTable.setColumnResizePolicy((StuffToResize) -> {
+            TableView<?> table = StuffToResize.getTable();
+            TableColumn<?,?> column = StuffToResize.getColumn();
+            Double delta = StuffToResize.getDelta();
 
+            Double tableWidth = TabTable.getWidth();
+
+
+            if( column != null) {
+                double newWidth = column.getWidth() + delta;
+                if ((newWidth < column.getMaxWidth()) && (newWidth > column.getMinWidth())) {
+                    ArrayList<TableColumn<?,?>> affectedCols = new ArrayList<TableColumn<?,?>>();
+
+                    int index = table.getColumns().indexOf(column);
+                    int lastIndex = table.getColumns().size() - 1;
+                    double newDelta = delta / (table.getColumns().size() - (index + 1));
+                    double totalWidth = 0;
+                    int i = 0;
+                    for (TableColumn c : table.getColumns()) {
+                        double newColWidth = c.getWidth() - newDelta;
+                        if (i++ > index && ((delta > 0 && newColWidth > c.getMinWidth()) || (delta < 0 && newColWidth < c.getMaxWidth())))
+                            affectedCols.add(c);
+
+                        totalWidth += c.getWidth();
+                    }
+                    totalWidth += delta;
+
+                    if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth)) {
+                        column.setPrefWidth(column.getWidth() + delta);
+                        System.out.println(affectedCols.size());
+
+
+                        if (delta > 0 && totalWidth >= tableWidth) {
+                            newDelta = delta / affectedCols.size();
+                            for (TableColumn c : affectedCols) {
+                                c.setPrefWidth(c.getWidth() - newDelta);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        });
 
         TabTable.setOnSort((SortEvent) -> {
             TableView<TableModel> target = (TableView<TableModel>) SortEvent.getTarget();
@@ -280,8 +298,39 @@ public class SingleTabController {
 
             return row;
         });
+
+        TabTable.refresh();
+
     }
 
+    @FXML
+    private void CopyRow() {
+        String row = TabTable.getSelectionModel().getSelectedItem().toString();
+
+        StringSelection stringSelection = new StringSelection(row);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+    }
+
+    @FXML
+    private void CopyCell() {
+        TablePosition pos = TabTable.getSelectionModel().getSelectedCells().get(0);
+        TableModel item = TabTable.getItems().get(pos.getRow());
+        TableColumn col = pos.getTableColumn();
+
+        String cell = col.getCellObservableValue(item).getValue().toString();
+
+        StringSelection stringSelection = new StringSelection(cell);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+    }
+
+    @FXML
+    private void KeyShortcuts(KeyEvent event) {
+        if (event.isControlDown() && event.getCode() == KeyCode.C) {
+            CopyRow();
+        }
+    }
 
     private void scrollTo(int index) {
         int first = virtualFlow.getFirstVisibleCell().getIndex();

@@ -9,7 +9,7 @@
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
         <TableView fx:id="TabTable" prefHeight="331.0" prefWidth="542.0" GridPane.rowIndex="0" onKeyPressed="#KeyShortcuts">
             <!-- TODO: temp solution. need better styling (ie: constrain size but diffrent starting sizes. -->
-            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <!--<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>-->
 
             <contextMenu>
                 <ContextMenu>
@@ -34,27 +34,27 @@
                         <PropertyValueFactory property="TimeStamp"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="numColumn" prefWidth="43" minWidth="5" text="Line Number">
+                <TableColumn fx:id="numColumn" prefWidth="40" minWidth="5" text="Line Number">
                     <cellValueFactory>
                         <PropertyValueFactory property="LineNumber"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="opColumn" prefWidth="3010" minWidth="5" text="Op Code">
+                <TableColumn fx:id="opColumn" prefWidth="300" minWidth="5" text="Op Code">
                     <cellValueFactory>
                         <PropertyValueFactory property="OpCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="flagColumn" prefWidth="169" minWidth="5" text="Flags">
+                <TableColumn fx:id="flagColumn" prefWidth="168" minWidth="5" text="Flags">
                     <cellValueFactory>
                         <PropertyValueFactory property="Flags"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="errColumn" prefWidth="394" minWidth="5" text="Error">
+                <TableColumn fx:id="errColumn" prefWidth="390" minWidth="5" text="Error">
                     <cellValueFactory>
                         <PropertyValueFactory property="ErrorCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="writeBackColumn" prefWidth="10" minWidth="5" text="WriteBack">
+                <TableColumn fx:id="writeBackColumn" prefWidth="20" minWidth="5" text="WriteBack">
                     <cellValueFactory>
                         <PropertyValueFactory property="IsWriteBack"/>
                     </cellValueFactory>
