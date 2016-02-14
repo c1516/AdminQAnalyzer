@@ -41,7 +41,7 @@ public class TableModel {
     public StringProperty getLineNumberProperty() {return LineNumber;}
     public void setLineNumber(String newLineNumber) {LineNumber.set(newLineNumber);}
 
-    public String getOpCode() {return OpCode.get() + " - " + OpCodeInt.get();}
+    public String getOpCode() {return OpCode.get() + " - 0x" + Integer.toHexString(OpCodeInt.get()).toUpperCase();}
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}
 
