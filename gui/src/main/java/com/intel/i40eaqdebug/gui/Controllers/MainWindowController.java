@@ -4,6 +4,7 @@ package com.intel.i40eaqdebug.gui.Controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 
 import javafx.event.Event;
@@ -44,6 +45,7 @@ public class MainWindowController {
 
     private List<SingleTabController> controllers = new LinkedList<SingleTabController>();
     private ArrayList<String> searchTerms = new ArrayList<String>();
+    private ArrayList<Integer> tabFilters = new ArrayList<>();
     private GUIMain Application;
 
     public MainWindowController(GUIMain app) {
@@ -64,75 +66,97 @@ public class MainWindowController {
                 SearchField.setText(searchTerms.get(index));
                 UpdateTotal(controllers.get(index).getEventTotal());
             }
+
+            //Restore filter state
+            if (tabFilters.size() > 0) {
+                int filterState = tabFilters.get(index);
+                if (filterState == 1)
+                    errorFilterClicked(true);
+                else if (filterState == 2)
+                    successFilterClicked(true);
+                else
+                    clearFilters();
+            }
         });
     }
 
 
     @FXML
-    public void filterClicked(MouseEvent event) {
+    public void clearFilters() {
+        int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
         if (TabElement.getTabs().size() > 0) {
-            String term = SearchField.getText();
-            ClearButton.setVisible(term.length() > 0);
-            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+            SuccessFilter.setSelected(false);
+            SuccessFilter.setStyle("-fx-background-color: limegreen;");
 
-            controllers.get(selectedTab).Search(term, true);
-            searchTerms.set(selectedTab, term);
-            UpdateTotal(controllers.get(selectedTab).getEventTotal());
+            ErrorFilter.setSelected(false);
+            ErrorFilter.setStyle("-fx-background-color: crimson;");
+            Clear();
         }
+        tabFilters.set(selectedTab, 0);
     }
 
 
     @FXML
-    public void errorFilterClicked(MouseEvent event) {
-        //Reset SuccessFilter's toggle state to unset
-        if(SuccessFilter.isSelected()) {
-            SuccessFilter.setSelected(false);
-            SuccessFilter.setStyle("-fx-background-color: limegreen;");
-        }
+    public void errorFilterClicked() {
+        errorFilterClicked(Boolean.FALSE);
+    }
+
+
+    @FXML
+    public void errorFilterClicked(Boolean restore) {
+        int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
         //If toggle is set
-        if ((TabElement.getTabs().size() > 0) && ErrorFilter.isSelected()) {
+        if (((TabElement.getTabs().size() > 0) && ErrorFilter.isSelected()) || restore) {
+            SuccessFilter.setSelected(false);
+            SuccessFilter.setStyle("-fx-background-color: limegreen;");
+            ErrorFilter.setSelected(true);
+
             ErrorFilter.setStyle("-fx-background-color: darkred;");
             String term = "I40E_AQ_RC_OK";
             ClearButton.setVisible(term.length() > 0);
-            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+            tabFilters.set(selectedTab, 1);
 
             controllers.get(selectedTab).Search(term, false);
             searchTerms.set(selectedTab, term);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
+
         //If toggle is unset
-        else {
-            Clear();
-            ErrorFilter.setStyle("-fx-background-color: crimson;");
-        }
+        else
+            clearFilters();
     }
 
 
     @FXML
-    public void successFilterClicked(MouseEvent event) {
-        //Reset ErrorFilter's toggle state to unset
-        if(ErrorFilter.isSelected()) {
-            ErrorFilter.setSelected(false);
-            ErrorFilter.setStyle("-fx-background-color: crimson;");
-        }
+    public void successFilterClicked() {
+        successFilterClicked(Boolean.FALSE);
+    }
+
+
+    @FXML
+    public void successFilterClicked(Boolean restore) {
+        int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
         //If toggle is set
-        if ((TabElement.getTabs().size() > 0) && SuccessFilter.isSelected()) {
+        if (((TabElement.getTabs().size() > 0) && SuccessFilter.isSelected()) || restore) {
+            ErrorFilter.setSelected(false);
+            ErrorFilter.setStyle("-fx-background-color: crimson;");
+            SuccessFilter.setSelected(true);
             SuccessFilter.setStyle("-fx-background-color: green;");
+
             String term = "I40E_AQ_RC_OK";
             ClearButton.setVisible(term.length() > 0);
-            int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+            tabFilters.set(selectedTab, 2);
 
             controllers.get(selectedTab).Search(term, true);
             searchTerms.set(selectedTab, term);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
+
         //If toggle is unset
-        else {
-            Clear();
-            SuccessFilter.setStyle("-fx-background-color: limegreen;");
-        }
+        else
+            clearFilters();
     }
 
 
@@ -188,6 +212,7 @@ public class MainWindowController {
                     });
                     //add a blank space to save search terms in for our new tab
                     searchTerms.add("");
+                    tabFilters.add(0);
                     TabElement.getTabs().add(newTab);
                     SearchBar.setDisable(false);
 
