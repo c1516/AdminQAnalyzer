@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 public class MainWindowController {
@@ -210,12 +212,13 @@ public class MainWindowController {
                     Tab newTab = new Tab(theFile.getName());
                     newTab.setContent(tabFXML.load());
 
-                    //If we close a tab, we want to remove it from controlelr list, search list
+                    //If we close a tab, we want to remove it from centraler list, search list
                     //And disable the bar if it's the last one
                     newTab.setOnCloseRequest((event) -> {
                         int index = TabElement.getTabs().indexOf((Tab)event.getSource());
                         controllers.remove(index);
                         searchTerms.remove(index);
+                        tabFilters.remove(index);
 
                         if (TabElement.getTabs().size() == 1)
                             SearchBar.setDisable(true);
@@ -230,7 +233,13 @@ public class MainWindowController {
                     UpdateTotal(controllers.get(selectedTab).getEventTotal());
 
                 } catch (IOException Ex) {
-                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + Ex.getStackTrace().toString(), true);
+                    StringWriter writer = new StringWriter();
+                    PrintWriter printWriter = new PrintWriter( writer );
+                    Ex.printStackTrace( printWriter );
+                    printWriter.flush();
+
+                    String stackTrace = writer.toString();
+                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + stackTrace, true);
                     //throw Ex;
                     //Platform.exit();
                 }
