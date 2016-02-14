@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class LogParser implements LogAdapter {
 
     Pattern BEGIN = Pattern.compile("desc and buffer (writeback)?");
-    Pattern JUNK_FILTER = Pattern.compile("\\[([0-9]+)\\.([0-9]+)] (i40e .+)");
+    Pattern JUNK_FILTER = Pattern.compile("(\\[([0-9]+)\\.([0-9]+)])? (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
         try {
@@ -95,9 +95,13 @@ public class LogParser implements LogAdapter {
             String logLine = lines[i];
             Matcher m = JUNK_FILTER.matcher(logLine);
             if (m.find()) {
-                String timesec = m.group(1);
-                String timenano = m.group(2);
-                String item = m.group(3);
+                String timesec = "-1";
+                String timenano = "-1";
+                if (m.group(1) != null) {
+                    timesec = m.group(1);
+                    timenano = m.group(2);
+                }
+                String item = m.group(4);
                 out.add(new EntryRaw(Long.valueOf(timesec), Long.valueOf(timenano), item));
             }
         }
