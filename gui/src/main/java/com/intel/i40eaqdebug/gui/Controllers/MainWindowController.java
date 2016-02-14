@@ -61,21 +61,31 @@ public class MainWindowController {
         //When we switch tabs, load whatever it is we where searching for in that one (this will alos eventually work with filtering)
         TabElement.getSelectionModel().selectedIndexProperty().addListener((obj, prev, next) -> {
             int index = (int)next;
-            if (controllers.size() > 0) {
-                controllers.get(index).Search(searchTerms.get(index), true);
-                SearchField.setText(searchTerms.get(index));
-                UpdateTotal(controllers.get(index).getEventTotal());
-            }
 
-            //Restore filter state
+            //Restore filter/search state
             if (tabFilters.size() > 0) {
                 int filterState = tabFilters.get(index);
-                if (filterState == 1)
+                if (filterState == 1) {
                     errorFilterClicked(true);
-                else if (filterState == 2)
+                    SearchField.setText("");
+                }
+                else if (filterState == 2) {
                     successFilterClicked(true);
-                else
-                    clearFilters();
+                    SearchField.setText("");
+                }
+                //Restore search state
+                else {
+                    if (controllers.size() > 0) {
+                        SuccessFilter.setSelected(false);
+                        SuccessFilter.setStyle("-fx-background-color: limegreen;");
+                        ErrorFilter.setSelected(false);
+                        ErrorFilter.setStyle("-fx-background-color: crimson;");
+
+                        controllers.get(index).Search(searchTerms.get(index), true);
+                        SearchField.setText(searchTerms.get(index));
+                        UpdateTotal(controllers.get(index).getEventTotal());
+                    }
+                }
             }
         });
     }
