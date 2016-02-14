@@ -65,6 +65,23 @@ public class HeaderParser {
             }
             String opcName = parse[0].replaceAll(" ", "");
             String structName = parse[1].replaceAll(" ", "");
+            CommandStruct struct = structs.get(structName);
+            if (struct == null) {
+                System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
+                continue;
+            } else {
+                int size = 0;
+                for (CommandField f : struct.getFields().values()) {
+                    size += (f.getEndPos() - f.getStartPos());
+                }
+                if (size > 16) {
+                    System.out.println("Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1]);
+                    continue;
+                } else if (size < 16) {
+                    System.out.println("Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1]);
+                    continue;
+                }
+            }
             ret.put(invert.get(opcName), structs.get(structName));
         }
         return ret;
