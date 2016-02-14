@@ -98,8 +98,8 @@ public class LogParser implements LogAdapter {
                 String timesec = "-1";
                 String timenano = "-1";
                 if (m.group(1) != null) {
-                    timesec = m.group(1);
-                    timenano = m.group(2);
+                    timesec = m.group(2);
+                    timenano = m.group(3);
                 }
                 String item = m.group(4);
                 out.add(new EntryRaw(Long.valueOf(timesec), Long.valueOf(timenano), item));
