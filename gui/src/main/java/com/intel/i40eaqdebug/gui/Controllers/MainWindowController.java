@@ -216,6 +216,7 @@ public class MainWindowController {
                         int index = TabElement.getTabs().indexOf((Tab)event.getSource());
                         controllers.remove(index);
                         searchTerms.remove(index);
+                        tabFilters.remove(index);
 
                         if (TabElement.getTabs().size() == 1)
                             SearchBar.setDisable(true);
