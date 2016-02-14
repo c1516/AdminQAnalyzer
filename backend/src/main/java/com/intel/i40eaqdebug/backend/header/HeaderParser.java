@@ -75,10 +75,10 @@ public class HeaderParser {
                     size += (f.getEndPos() - f.getStartPos());
                 }
                 if (size > 16) {
-                    System.out.println("Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1]);
+                    System.out.println("Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1] + " actual size: " + size);
                     continue;
                 } else if (size < 16) {
-                    System.out.println("Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1]);
+                    System.out.println("Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1] + " actual size: " + size);
                     continue;
                 }
             }
