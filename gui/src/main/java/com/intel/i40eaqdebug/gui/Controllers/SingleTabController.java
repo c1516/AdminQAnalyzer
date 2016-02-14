@@ -33,8 +33,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-//TODO: format this file better. It's hard to readn and everything is all over the place.
-
 public class SingleTabController {
     //region FXML properties.
     @FXML
@@ -53,13 +51,12 @@ public class SingleTabController {
     @FXML
     private TableColumn<TableModel, Boolean> writeBackColumn;
 
-    //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
-    private int EventTotal = 0;
-
     @FXML
     private Separator DraggbleSeparator;
 
     //endregion
+
+    private int EventTotal = 0;
     private int pixelPadding = 15;
     private GUIMain Application;
     private Queue<LogEntry> logLines;
@@ -94,43 +91,21 @@ public class SingleTabController {
      * * * * * * * * * * * * * * * * *
      */
 
+    /**
+     * Initializes a tab controller
+     * @param App Not null, the main application, can't be null
+     * @param logs A Queue contaning {@link LogEntry}
+     */
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
         Application = App;
         logLines = logs;
     }
 
-    public SingleTabController() {
-    }
+    //region FXML Functions
 
-    private void HideDetails() {
-        if (DetailsVisible) {
-            DetailsVisible = false;
-            HideablePane.setMaxHeight(0);
-        }
-    }
-
-    public void Search(String term, Boolean match) {
-        fillTable(term, match);
-        TabTable.sort();
-    }
-
-    //This function checks to see if a click happens inside or outside the details pane
-    //Used to decide weather to hide it or now.
-    private boolean clickInPane(double x, double y) {
-        double lx = BaseSplitPane.getLayoutX();
-        //TODO: The 80 pixel offset needs to be computed dynamically. (this corrects for the toolbar height).
-        double ly = BaseSplitPane.getLayoutY() + 80;
-        double height = BaseSplitPane.getLayoutBounds().getHeight();
-        double width = BaseSplitPane.getLayoutBounds().getWidth();
-
-        if ((x >= lx && x <= (lx + width)) && (y >= ly && y <= (ly + height))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
+    /**
+     * Initializes the tab.
+     */
     @FXML
     public void initialize() {
         HideablePane.setMaxHeight(0);
@@ -139,8 +114,7 @@ public class SingleTabController {
             TabTable.setMaxWidth((double) newWidth);
         });
 
-        //This sets up an listener on the main scene, watchig for mouse clicks.
-        //Used to hide the details pane when the user clicks off of it.
+        //This listener is used to hide the details pane, if we click out of our tab.
         Application.getMainStage().getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, (event) -> {
             Object src = event.getSource();
             if (!clickInPane(event.getSceneX(), event.getSceneY())) {
@@ -148,18 +122,25 @@ public class SingleTabController {
             }
         });
 
+        //This listener refreshes the table on maximization so the FlagViewers can fix themselves.
         Application.getMainStage().maximizedProperty().addListener((obs, oldv, newv) -> {
             TabTable.refresh();
         });
 
-        Application.getMainStage().getScene().widthProperty().addListener((obs, oldv, newv) -> {
+        //This listener resizes the columns by percentage when the table gets resized.
+        //IE: if one column took up 50% of the screen, when the window is resized (or maximized)
+        //it will still take up 50% of the screen (unless it hit it's max/min sizes).
+        TabTable.widthProperty().addListener((obs, oldv, newv) -> {
             double oldWidth = (double)oldv;
             double newWidth = (double)newv;
+
+            if (oldWidth == 0) return;
 
             TableColumn<?,?> biggest = TabTable.getColumns().get(0);
             double totalWidth = 0;
             for (TableColumn c: TabTable.getColumns()) {
                 if (c.getWidth() > biggest.getWidth()) biggest = c;
+
                 double newColWidth = ((c.getWidth() / oldWidth) * newWidth);
 
                 if (newColWidth < c.getMinWidth())
@@ -393,6 +374,37 @@ public class SingleTabController {
             CopyRow();
         }
     }
+
+    //endregion
+
+    public void Search(String term, Boolean match) {
+        fillTable(term, match);
+        TabTable.sort();
+    }
+
+    //This function checks to see if a click happens inside or outside the details pane
+    //Used to decide weather to hide it or now.
+    private boolean clickInPane(double x, double y) {
+        double lx = BaseSplitPane.getLayoutX();
+        //TODO: The 80 pixel offset needs to be computed dynamically. (this corrects for the toolbar height).
+        double ly = BaseSplitPane.getLayoutY() + 80;
+        double height = BaseSplitPane.getLayoutBounds().getHeight();
+        double width = BaseSplitPane.getLayoutBounds().getWidth();
+
+        if ((x >= lx && x <= (lx + width)) && (y >= ly && y <= (ly + height))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void HideDetails() {
+        if (DetailsVisible) {
+            DetailsVisible = false;
+            HideablePane.setMaxHeight(0);
+        }
+    }
+
 
     private void scrollTo(int index) {
         int first = virtualFlow.getFirstVisibleCell().getIndex();
