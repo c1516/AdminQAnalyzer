@@ -15,6 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
@@ -57,6 +60,7 @@ public class SingleTabController {
     private Separator DraggbleSeparator;
 
     //endregion
+    private int pixelPadding = 15;
     private GUIMain Application;
     private Queue<LogEntry> logLines;
     private boolean DetailsVisible = false;
@@ -76,8 +80,8 @@ public class SingleTabController {
             for (TableColumn c : TabTable.getColumns()) {
                 totalWidth += c.getWidth();
             }
-            if (totalWidth < TabTable.getWidth()) {
-                double delta = TabTable.getWidth() - totalWidth;
+            if (totalWidth < TabTable.getWidth() - pixelPadding) {
+                double delta = (TabTable.getWidth() - pixelPadding) - totalWidth;
                 TableColumn<?,?> last = TabTable.getColumns().get(TabTable.getColumns().size() - 1);
                 last.setPrefWidth(last.getWidth() + delta);
             }
@@ -148,17 +152,47 @@ public class SingleTabController {
             TabTable.refresh();
         });
 
+        Application.getMainStage().getScene().widthProperty().addListener((obs, oldv, newv) -> {
+            double oldWidth = (double)oldv;
+            double newWidth = (double)newv;
+
+            TableColumn<?,?> biggest = TabTable.getColumns().get(0);
+            double totalWidth = 0;
+            for (TableColumn c: TabTable.getColumns()) {
+                if (c.getWidth() > biggest.getWidth()) biggest = c;
+                double newColWidth = ((c.getWidth() / oldWidth) * newWidth);
+
+                if (newColWidth < c.getMinWidth())
+                    c.setPrefWidth(c.getMinWidth());
+                else if (newColWidth > c.getMaxWidth())
+                    c.setPrefWidth(c.getMaxWidth());
+                else
+                    c.setPrefWidth(newColWidth);
+
+                totalWidth += c.getWidth();
+            }
+            double tabWidth = TabTable.getWidth() - pixelPadding;
+            if (totalWidth > tabWidth)
+                biggest.setPrefWidth(biggest.getWidth() + (tabWidth - totalWidth));
+        });
+
         InitializeTableView();
     }
 
     private void InitializeTableView() {
-        //TODO: disable horizontal scroll bar entierly.
+        double totalColWidth = 0;
+        for (TableColumn c: TabTable.getColumns()) totalColWidth += c.getMinWidth();
+        //So.... I don't actually know why I need to multiply this by 2, but it works...
+        //......yeah, that's what I thought to......
+        totalColWidth += pixelPadding * 2;
+        Application.getMainStage().setMinWidth(totalColWidth);
+
         TabTable.setColumnResizePolicy((StuffToResize) -> {
             TableView<?> table = StuffToResize.getTable();
             TableColumn<?,?> column = StuffToResize.getColumn();
             Double delta = StuffToResize.getDelta();
 
-            Double tableWidth = TabTable.getWidth();
+            Double tableWidth = TabTable.getWidth() - pixelPadding;
 
 
             if( column != null) {
@@ -173,16 +207,16 @@ public class SingleTabController {
                     int i = 0;
                     for (TableColumn c : table.getColumns()) {
                         double newColWidth = c.getWidth() - newDelta;
-                        if (i++ > index && ((delta > 0 && newColWidth > c.getMinWidth()) || (delta < 0 && newColWidth < c.getMaxWidth())))
+                        if (i++ > index && ((delta > 0 && newColWidth >= c.getMinWidth()) || (delta < 0 && newColWidth <= c.getMaxWidth())))
                             affectedCols.add(c);
 
                         totalWidth += c.getWidth();
                     }
                     totalWidth += delta;
+                    //System.out.println("AffCol: " + affectedCols.size());
 
-                    if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth)) {
+                    if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth) || totalWidth < tableWidth) {
                         column.setPrefWidth(column.getWidth() + delta);
-                        System.out.println(affectedCols.size());
 
                         //TEMPORARY CODE: "beh || "
                         if (beh || (delta > 0 && totalWidth >= tableWidth)) {
@@ -196,6 +230,7 @@ public class SingleTabController {
             }
             return true;
         });
+
 
         TabTable.setOnSort((SortEvent) -> {
             TableView<TableModel> target = (TableView<TableModel>) SortEvent.getTarget();

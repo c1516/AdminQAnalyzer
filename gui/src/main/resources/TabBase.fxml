@@ -29,32 +29,32 @@
             </contextMenu>
 
             <columns>
-                <TableColumn fx:id="timeColumn" prefWidth="94" minWidth="5" text="Time Stamp">
+                <TableColumn fx:id="timeColumn" prefWidth="93" minWidth="20" text="Time Stamp">
                     <cellValueFactory>
                         <PropertyValueFactory property="TimeStamp"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="numColumn" prefWidth="40" minWidth="5" text="Line Number">
+                <TableColumn fx:id="numColumn" prefWidth="40" minWidth="20" text="Line Number">
                     <cellValueFactory>
                         <PropertyValueFactory property="LineNumber"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="opColumn" prefWidth="300" minWidth="5" text="Op Code">
+                <TableColumn fx:id="opColumn" prefWidth="300" minWidth="20" text="Op Code">
                     <cellValueFactory>
                         <PropertyValueFactory property="OpCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="flagColumn" prefWidth="168" minWidth="5" text="Flags">
+                <TableColumn fx:id="flagColumn" prefWidth="168" minWidth="20" text="Flags">
                     <cellValueFactory>
                         <PropertyValueFactory property="Flags"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="errColumn" prefWidth="390" minWidth="5" text="Error">
+                <TableColumn fx:id="errColumn" prefWidth="390" minWidth="20" text="Error">
                     <cellValueFactory>
                         <PropertyValueFactory property="ErrorCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="writeBackColumn" prefWidth="20" minWidth="5" text="WriteBack">
+                <TableColumn fx:id="writeBackColumn" prefWidth="20" minWidth="20" text="WriteBack">
                     <cellValueFactory>
                         <PropertyValueFactory property="IsWriteBack"/>
                     </cellValueFactory>
