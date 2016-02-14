@@ -68,6 +68,6 @@ public class TableModel {
     @Override
     public String toString() {
         return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString()
-                + ", " + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString();
+                + ", " + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
     }
 }

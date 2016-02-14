@@ -15,15 +15,7 @@
                 <ContextMenu>
                     <items>
                     <MenuItem text="Copy Row" onAction="#CopyRow" />
-                    <MenuItem text="Copy Cell" onAction="#CopyCell">
-                        <!--
-                        <MenuItem text="Time Stamp"  />
-                        <MenuItem text="Op Code" />
-                        <MenuItem text="Line Number" />
-                        <MenuItem text="Flags" />
-                        <MenuItem text="ErrorCode" />
-                        -->
-                    </MenuItem>
+                    <MenuItem text="Copy Cell" onAction="#CopyCell"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
