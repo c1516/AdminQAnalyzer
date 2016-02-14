@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class LogParser implements LogAdapter {
 
-    Pattern BEGIN = Pattern.compile("desc and buffer (writeback)?");
+    Pattern BEGIN = Pattern.compile("desc and buffer( writeback)?");
     Pattern JUNK_FILTER = Pattern.compile("(\\[([0-9]+)\\.([0-9]+)])? (i40e .+)");
 
     public Queue<LogEntry> getEntriesSequential(File f, int startIdx, int count) {
