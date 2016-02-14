@@ -3,7 +3,9 @@ package com.intel.i40eaqdebug.gui.Controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.CustomControls.CheckboxCell.CheckboxCell;
 import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
+import com.intel.i40eaqdebug.gui.CustomControls.TimeStampCell.TimeStampCell;
 import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
@@ -45,6 +47,8 @@ public class SingleTabController {
     private TableColumn<TableModel, String> numColumn;
     @FXML
     private TableColumn<TableModel, Integer> flagColumn;
+    @FXML
+    private TableColumn<TableModel, Boolean> writeBackColumn;
 
     //TODO Make sure initializing this to zero only happens upon tab creation, otherwise could cause problems
     private int EventTotal = 0;
@@ -146,11 +150,11 @@ public class SingleTabController {
     }
 
     private void InitializeTableView() {
-        //TabTable.getSelectionModel().setSelectionMode(SelectionMode.);
+
+
         TabTable.setOnSort((SortEvent) -> {
             TableView<TableModel> target = (TableView<TableModel>) SortEvent.getTarget();
             if (target.getSortOrder().size() == 0) {
-                //TODO: this needs to default to timestamp column once we have that
                 TableColumn<TableModel, ?> targetColumn = null;
                 for (int i = 0; i < target.getColumns().size(); i++) {
                     if (target.getColumns().get(i).getText().equals("Time Stamp")) {
@@ -167,8 +171,6 @@ public class SingleTabController {
 
         //This sets up an event listener on the tables selector. IE: if the current selection changes, we run this code.
         //There is probably a better way to declare this as a separate function and pass it in instead, hence the todo.
-        //TODO: there's gonna be a better way of handling this instead of this massive lambada.
-
         TabTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 DetailsVisible = true;
@@ -213,9 +215,7 @@ public class SingleTabController {
         });
         fillTable(null, true);
 
-        timeColumn.setCellValueFactory(CellData -> {
-            return CellData.getValue().getTimeStampProperty();
-        });
+
 
         numColumn.setComparator((value1, value2) -> {
             //Yeah I know this is inefficient, but at the same time I don't care
@@ -224,7 +224,6 @@ public class SingleTabController {
             return iv1 < iv2 ? -1 : (iv1 > iv2 ? 1 : 0);
         });
 
-        //timeColumn.setCellValueFactory(new PropertyValueFactory<TableModel, TimeStamp>("TimeStamp"));
         timeColumn.setComparator((value1, value2) -> {
             if (value1.getSeconds() > value2.getSeconds())
                 return 1;
@@ -239,19 +238,9 @@ public class SingleTabController {
                     return 0;
             }
         });
-        timeColumn.setCellFactory((ColumnData) -> {
-            TableCell<TableModel, TimeStamp> temp = new TableCell<TableModel, TimeStamp>();
-            temp.itemProperty().addListener((obs, oldv, newv) -> {
-                if (newv != null)
-                    temp.setText(newv.toString());
-                else
-                    temp.setText("");
-            });
 
-            return temp;
-        });
+        timeColumn.setCellFactory(ColumnData -> new TimeStampCell());
 
-        flagColumn.setCellValueFactory(CellData ->  CellData.getValue().getFlagsProperty().asObject());
         flagColumn.setCellFactory(ColumnData -> {
             FlagViewCell test = new FlagViewCell();
             //This is ugly, and it shouldn't be necessary, but because of how events are handled
@@ -262,6 +251,9 @@ public class SingleTabController {
             });
             return test;
         });
+
+        //writeBackColumn.setCellValueFactory(CellData ->  CellData.getValue().getIsWriteBackProperty().getValue());
+        writeBackColumn.setCellFactory(ColumnData -> new CheckboxCell());
 
         PseudoClass error = PseudoClass.getPseudoClass("error");
 
@@ -322,7 +314,7 @@ public class SingleTabController {
             String Error = APIEntryPoint.getErrorString(temp.getErr());
 
             TableModel tempModel = new TableModel(temp.getTimeStamp(),
-                    Integer.toString(temp.getStartLine()), (int) temp.getOpCode(), temp.getFlags(), Error);
+                    Integer.toString(temp.getStartLine()), (int) temp.getOpCode(), temp.getFlags(), Error, temp.isWriteback());
 
             //When wanting to display matched substring
             if (Match) {

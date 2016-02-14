@@ -29,29 +29,34 @@
             </contextMenu>
 
             <columns>
-                <TableColumn fx:id="timeColumn" prefWidth="100" text="Time Stamp">
+                <TableColumn fx:id="timeColumn" prefWidth="94" minWidth="5" text="Time Stamp">
                     <cellValueFactory>
                         <PropertyValueFactory property="TimeStamp"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="numColumn" prefWidth="30" text="Line Number">
+                <TableColumn fx:id="numColumn" prefWidth="43" minWidth="5" text="Line Number">
                     <cellValueFactory>
                         <PropertyValueFactory property="LineNumber"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="opColumn" prefWidth="200.0" text="Op Code">
+                <TableColumn fx:id="opColumn" prefWidth="3010" minWidth="5" text="Op Code">
                     <cellValueFactory>
                         <PropertyValueFactory property="OpCode"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="flagColumn" prefWidth="100.0" text="Flags">
+                <TableColumn fx:id="flagColumn" prefWidth="169" minWidth="5" text="Flags">
                     <cellValueFactory>
                         <PropertyValueFactory property="Flags"/>
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="errColumn" prefWidth="300.0" text="Error">
+                <TableColumn fx:id="errColumn" prefWidth="394" minWidth="5" text="Error">
                     <cellValueFactory>
                         <PropertyValueFactory property="ErrorCode"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="writeBackColumn" prefWidth="10" minWidth="5" text="WriteBack">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="IsWriteBack"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>

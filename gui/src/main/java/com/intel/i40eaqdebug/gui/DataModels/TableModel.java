@@ -12,16 +12,18 @@ public class TableModel {
     private final StringProperty ErrorCode;
     private final ObjectProperty<TimeStamp> TimeStamp;
     private final IntegerProperty OpCodeInt;
+    private final BooleanProperty IsWriteBack;
 
-    public TableModel() { this(null, null, 0, 0, null); }
+    public TableModel() { this(null, null, 0, 0, null, false); }
 
-    public TableModel( TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error) {
+    public TableModel( TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error, boolean IsWriteBack) {
         this.LineNumber = new SimpleStringProperty(LineNumber);
         this.OpCode = new SimpleStringProperty(APIEntryPoint.getCommandName(OpCode));
         this.OpCodeInt = new SimpleIntegerProperty(OpCode);
         this.Flags = new SimpleIntegerProperty(Flags);
         this.ErrorCode = new SimpleStringProperty(Error);
         this.TimeStamp = new SimpleObjectProperty<TimeStamp>(TheTime);
+        this.IsWriteBack = new SimpleBooleanProperty(IsWriteBack);
     }
 
     public boolean hasPartialValue(String val) {
@@ -39,7 +41,7 @@ public class TableModel {
     public StringProperty getLineNumberProperty() {return LineNumber;}
     public void setLineNumber(String newLineNumber) {LineNumber.set(newLineNumber);}
 
-    public String getOpCode() {return OpCode.get();}
+    public String getOpCode() {return OpCode.get() + " - " + OpCodeInt.get();}
     public StringProperty getOpCodeProperty() {return OpCode;}
     public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}
 
@@ -59,7 +61,10 @@ public class TableModel {
     private IntegerProperty getOpCodeIntProperty() {return OpCodeInt;}
     private int getOpCodeInt() {return OpCodeInt.get();}
 
-    //TODO: make this better.
+    public void setIsWriteBack(boolean newCallback) {IsWriteBack.set(newCallback);}
+    public BooleanProperty getIsWriteBackProperty() {return IsWriteBack;}
+    public Boolean getIsWriteBack() {return IsWriteBack.get();}
+
     @Override
     public String toString() {
         return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString()
