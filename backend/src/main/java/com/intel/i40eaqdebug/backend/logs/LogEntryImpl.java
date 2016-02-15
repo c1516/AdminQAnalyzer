@@ -49,7 +49,7 @@ public class LogEntryImpl implements LogEntry {
         for (String logInputLine : rawLogData) {
             Matcher isMainHeader = HEADER_PATTERN.matcher(logInputLine);
             if (isMainHeader.find()) {
-                opcode = (short) Long.parseLong(isMainHeader.group(1), 16);
+                opcode = (int) Long.parseLong(isMainHeader.group(1), 16);
                 flags = (short) Long.parseLong(isMainHeader.group(2), 16);
                 datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
                 retval = (short) Long.parseLong(isMainHeader.group(4), 16);
