@@ -73,37 +73,6 @@ public class HeaderParser {
                 if (struct1 == null || struct2 == null) {
                     System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
                     continue;
-                } else {
-                    int size1 = 0;
-                    for (CommandField f : struct1.getFields().values()) {
-                        size1 += (f.getEndPos() - f.getStartPos());
-                    }
-                    int size2 = 0;
-                    for (CommandField f : struct1.getFields().values()) {
-                        size2 += (f.getEndPos() - f.getStartPos());
-                    }
-                    if (size1 > 16) {
-                        System.out.println(
-                            "Invalid struct mapping (oversized): " + parse[0] + " to " + possibleStructNames[0]
-                                + " actual size: " + size1);
-                        continue;
-                    } else if (size1 < 16) {
-                        System.out.println(
-                            "Invalid struct mapping (undersized): " + parse[0] + " to " + possibleStructNames[0]
-                                + " actual size: " + size1);
-                        continue;
-                    }
-                    if (size2 > 16) {
-                        System.out.println(
-                            "Invalid struct mapping (oversized): " + parse[0] + " to " + possibleStructNames[1]
-                                + " actual size: " + size1);
-                        continue;
-                    } else if (size2 < 16) {
-                        System.out.println(
-                            "Invalid struct mapping (undersized): " + parse[0] + " to " + possibleStructNames[1]
-                                + " actual size: " + size1);
-                        continue;
-                    }
                 }
                 ret.put(invert.get(opcName),
                     new CommandStruct[] {structs.get(possibleStructNames[0]), structs.get(possibleStructNames[1])});
@@ -112,22 +81,6 @@ public class HeaderParser {
                 if (struct == null) {
                     System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
                     continue;
-                } else {
-                    int size = 0;
-                    for (CommandField f : struct.getFields().values()) {
-                        size += (f.getEndPos() - f.getStartPos());
-                    }
-                    if (size > 16) {
-                        System.out.println(
-                            "Invalid struct mapping (oversized): " + parse[0] + " to " + parse[1] + " actual size: "
-                                + size);
-                        continue;
-                    } else if (size < 16) {
-                        System.out.println(
-                            "Invalid struct mapping (undersized): " + parse[0] + " to " + parse[1] + " actual size: "
-                                + size);
-                        continue;
-                    }
                 }
                 ret.put(invert.get(opcName), new CommandStruct[] {structs.get(structName)});
             }
