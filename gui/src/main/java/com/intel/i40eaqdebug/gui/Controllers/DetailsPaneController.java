@@ -7,6 +7,7 @@ import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.DataModels.DetailTableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
+import com.sun.deploy.util.StringUtils;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
@@ -47,8 +48,32 @@ public class DetailsPaneController {
      */
     @FXML
     public void initialize() {
-        System.out.println(LogLine.getBuffer().length);
-        RawArea.setText(DatatypeConverter.printHexBinary(LogLine.getBuffer()));
+        int spacer = 0;
+        int line = 0;
+        String buffer = DatatypeConverter.printHexBinary(LogLine.getBuffer());
+        RawArea.setWrapText(true);
+        StringBuilder temp = new StringBuilder();
+        for (char c : buffer.toCharArray()) {
+
+            if (line % RawArea.getPrefColumnCount() == 0) {
+                if (line != 0)
+                    temp.append('\n');
+
+                String hex = Integer.toHexString(spacer).toUpperCase();
+                String format = "0x%1$6" + "s";
+                String finals = String.format(format, hex).replace(' ', '0') + "    ";
+
+                temp.append(finals);
+            }else if (spacer != 0 && spacer % 4 == 0)
+                temp.append(' ');
+
+            //if (line % )
+            temp.append(c);
+
+            line++;
+            spacer++;
+        }
+        RawArea.setText(temp.toString());
 
         ObservableList<DetailTableModel> rows =  DetailTable.getItems();
         String lineNumber = Integer.toString(LogLine.getStartLine());

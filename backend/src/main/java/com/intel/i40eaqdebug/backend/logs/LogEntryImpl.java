@@ -55,7 +55,7 @@ public class LogEntryImpl implements LogEntry {
                 retval = (short) Long.parseLong(isMainHeader.group(4), 16);
             }
             else {
-                Matcher m = ERR_RET.matcher(logInputLine);
+                Matcher m = ERRORCODE_PATTERN.matcher(logInputLine);
                 if (m.find()) {
                     err = Integer.valueOf(m.group(1), 16);
                 }
