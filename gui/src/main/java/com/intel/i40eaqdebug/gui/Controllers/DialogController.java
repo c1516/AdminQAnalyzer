@@ -37,6 +37,7 @@ public class DialogController {
             return;
         }
         stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
 
         stage.show();
     }

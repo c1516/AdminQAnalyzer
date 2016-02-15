@@ -67,6 +67,7 @@ public class SingleTabController {
     private boolean DetailsVisible = false;
     private double DetailsHeight = -1;
     private VirtualFlow<?> virtualFlow;
+    boolean noTimeStamp = false;
 
     /**
      * Initializes a tab controller
@@ -172,7 +173,8 @@ public class SingleTabController {
             if (target.getSortOrder().size() == 0) {
                 TableColumn<TableModel, ?> targetColumn = null;
                 for (int i = 0; i < target.getColumns().size(); i++) {
-                    if (target.getColumns().get(i).getText().equals("Time Stamp")) {
+                    if ((!noTimeStamp && target.getColumns().get(i).getText().equals("Time Stamp"))
+                            || (noTimeStamp && target.getColumns().get(i).getText().equals("Line Number"))) {
                         targetColumn = target.getColumns().get(i);
                         break;
                     }
@@ -484,9 +486,17 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<>(logLines);
 
+
+
         Integer Total = 0;
         while (test.size() > 0) {
             LogEntry temp = test.remove();
+            //removes timestamp column if it doesnt exist in file.
+            if (!noTimeStamp && temp.getTimeStamp().getSeconds() == -1 && temp.getTimeStamp().getNanos() == -1) {
+                noTimeStamp = true;
+                TabTable.getColumns().remove(0);
+            }
+
 
             String Error = APIEntryPoint.getErrorString(temp.getErr());
             String LineNumber = Integer.toString(temp.getStartLine());

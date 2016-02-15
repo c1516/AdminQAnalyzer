@@ -36,7 +36,9 @@
                                 <Menu text="File">
                                     <items>
                                         <MenuItem onAction="#OpenFile" text="Open"/>
+                                        <!-- untill we can get a better use for it, it's going
                                         <MenuItem onAction="#OpenOptions" text="Options"/>
+                                        -->
                                         <SeparatorMenuItem/>
                                         <MenuItem onAction="#Exit" text="Exit"/>
                                     </items>
