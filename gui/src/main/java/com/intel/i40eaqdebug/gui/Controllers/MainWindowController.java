@@ -1,9 +1,10 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
+import com.intel.i40eaqdebug.gui.controllers.SingleTabController;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 

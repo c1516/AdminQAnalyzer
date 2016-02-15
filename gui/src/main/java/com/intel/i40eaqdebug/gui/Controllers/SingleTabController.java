@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
@@ -6,7 +6,7 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.CustomControls.CheckboxCell.CheckboxCell;
 import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
 import com.intel.i40eaqdebug.gui.CustomControls.TimeStampCell.TimeStampCell;
-import com.intel.i40eaqdebug.gui.DataModels.TableModel;
+import com.intel.i40eaqdebug.gui.datamodels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
@@ -32,6 +32,8 @@ import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
 
@@ -99,11 +101,25 @@ public class SingleTabController {
 
         //This listener refreshes the table on maximization so the FlagViewers can fix themselves.
         Application.getMainStage().maximizedProperty().addListener((obs, oldv, newv) -> {
-            TabTable.refresh();
+            refresh(TabTable);
         });
 
 
         InitializeTableView();
+    }
+
+    private void refresh(TableView view) {
+        try {
+            Method refresh = TableView.class.getDeclaredMethod("refresh");
+            refresh.setAccessible(true);
+            refresh.invoke(view);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -242,7 +258,7 @@ public class SingleTabController {
         InitializeTableColumns();
 
         fillTable(null, true);
-        TabTable.refresh();
+        refresh(TabTable);
     }
 
     /**

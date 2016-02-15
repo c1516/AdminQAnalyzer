@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.DataModels;
+package com.intel.i40eaqdebug.gui.datamodels;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
