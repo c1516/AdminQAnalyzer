@@ -111,7 +111,7 @@
                     <children>
                         <VBox style="-fx-background-color: black;">
                             <children>
-                                <ProgressIndicator prefHeight="200.0" style="-fx-background-color: black;">
+                                <ProgressIndicator prefHeight="200.0" progress="-1.0" style="-fx-background-color: black;">
                                     <VBox.margin>
                                         <Insets top="75.0"/>
                                     </VBox.margin>

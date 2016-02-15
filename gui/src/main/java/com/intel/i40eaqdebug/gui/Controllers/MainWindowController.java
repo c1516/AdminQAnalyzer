@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -208,8 +209,7 @@ public class MainWindowController {
 
         LoadingScreen.setVisible(true);
 
-        Platform.runLater(runner);
-
+        new Thread(runner).start();
     }
 
 
@@ -222,53 +222,57 @@ public class MainWindowController {
             if (theFile != null) {
                 Queue<LogEntry> data = APIEntryPoint.getCommandLogQueue(theFile, 0, Integer.MAX_VALUE);
 
-                try {
-                    FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
+                Platform.runLater(() -> {
+                    try {
+                        FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/TabBase.fxml"));
 
-                    SingleTabController newTabController = new SingleTabController(Application, data);
-                    controllers.add(newTabController);
+                        SingleTabController newTabController = new SingleTabController(Application, data);
+                        controllers.add(newTabController);
 
-                    tabFXML.setController(newTabController);
-                    Tab newTab = new Tab(theFile.getName());
-                    newTab.setContent(tabFXML.load());
+                        tabFXML.setController(newTabController);
+                        Tab newTab = new Tab(theFile.getName());
+                        newTab.setContent(tabFXML.load());
 
-                    //If we close a tab, we want to remove it from centraler list, search list
-                    //And disable the bar if it's the last one
-                    newTab.setOnCloseRequest((event) -> {
-                        int index = TabElement.getTabs().indexOf((Tab)event.getSource());
-                        controllers.remove(index);
-                        searchTerms.remove(index);
-                        tabFilters.remove(index);
+                        //If we close a tab, we want to remove it from centraler list, search list
+                        //And disable the bar if it's the last one
+                        newTab.setOnCloseRequest((event) -> {
+                            int index = TabElement.getTabs().indexOf((Tab) event.getSource());
+                            controllers.remove(index);
+                            searchTerms.remove(index);
+                            tabFilters.remove(index);
 
-                        if (TabElement.getTabs().size() == 1)
-                            SearchBar.setDisable(true);
-                    });
-                    //add a blank space to save search terms in for our new tab
-                    searchTerms.add("");
-                    tabFilters.add(0);
-                    TabElement.getTabs().add(newTab);
-                    SearchBar.setDisable(false);
+                            if (TabElement.getTabs().size() == 1)
+                                SearchBar.setDisable(true);
+                        });
+                        //add a blank space to save search terms in for our new tab
+                        searchTerms.add("");
+                        tabFilters.add(0);
+                        TabElement.getTabs().add(newTab);
+                        SearchBar.setDisable(false);
 
-                    int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
-                    UpdateTotal(controllers.get(selectedTab).getEventTotal());
+                        int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
+                        UpdateTotal(controllers.get(selectedTab).getEventTotal());
 
-                } catch (IOException Ex) {
-                    StringWriter writer = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter( writer );
-                    Ex.printStackTrace( printWriter );
-                    printWriter.flush();
+                    } catch (IOException Ex) {
+                        StringWriter writer = new StringWriter();
+                        PrintWriter printWriter = new PrintWriter(writer);
+                        Ex.printStackTrace(printWriter);
+                        printWriter.flush();
 
-                    String stackTrace = writer.toString();
-                    DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + stackTrace, true);
-                    //throw Ex;
-                    //Platform.exit();
-                }
+                        String stackTrace = writer.toString();
+                        DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + stackTrace, true);
+                        //throw Ex;
+                        //Platform.exit();
+                    }
+                });
             }
-            LoadingScreen.setVisible(false);
+            Platform.runLater(() -> {
+                LoadingScreen.setVisible(false);
 
-            //Switch to newly opened tab
-            int newTabIndex = TabElement.getTabs().size() - 1;
-            TabElement.getSelectionModel().select(newTabIndex);
+                //Switch to newly opened tab
+                int newTabIndex = TabElement.getTabs().size() - 1;
+                TabElement.getSelectionModel().select(newTabIndex);
+            });
         }
     }
 

@@ -31,7 +31,8 @@ public class TableModel {
 
         if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val)
                 || ErrorCode.get().contains(val) || (TimeStamp.get()).toString().contains(val)
-                || Integer.toHexString(OpCodeInt.get()).toUpperCase().contains(val.toUpperCase()))
+                || Integer.toHexString(OpCodeInt.get()).toUpperCase().contains(val.toUpperCase())
+                || LineNumber.get().contains(val))
              return true;
         else
             return false;
