@@ -69,7 +69,7 @@ public class FlagViewerSkin extends SkinBase {
             Rectangle bit = (Rectangle)mainBox.getChildren().get(i);
             bit.setWidth(Width);
             bit.setHeight(Height);
-            Boolean isBitSet = ((1 << (15 - i)) & flag) != 0;
+            Boolean isBitSet = ((1 << i) & flag) != 0;
             if (i < 4 || i > 8)
                 bit.setFill(isBitSet ? normalColor : normalColorDis);
         }
