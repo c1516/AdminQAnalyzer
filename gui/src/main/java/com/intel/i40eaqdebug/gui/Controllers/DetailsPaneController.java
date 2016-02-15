@@ -8,11 +8,14 @@ import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.DataModels.DetailTableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.deploy.util.StringUtils;
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.*;
@@ -31,10 +34,10 @@ public class DetailsPaneController {
     private LogEntry LogLine;
 
 
-
     public DetailsPaneController(GUIMain App, LogEntry selectedRow) {
         Application = App;
         LogLine = selectedRow;
+
     }
 
     public DetailsPaneController() {
@@ -48,32 +51,11 @@ public class DetailsPaneController {
      */
     @FXML
     public void initialize() {
-        int spacer = 0;
-        int line = 0;
-        String buffer = DatatypeConverter.printHexBinary(LogLine.getBuffer());
-        RawArea.setWrapText(true);
-        StringBuilder temp = new StringBuilder();
-        for (char c : buffer.toCharArray()) {
-
-            if (line % RawArea.getPrefColumnCount() == 0) {
-                if (line != 0)
-                    temp.append('\n');
-
-                String hex = Integer.toHexString(spacer).toUpperCase();
-                String format = "0x%1$6" + "s";
-                String finals = String.format(format, hex).replace(' ', '0') + "    ";
-
-                temp.append(finals);
-            }else if (spacer != 0 && spacer % 4 == 0)
-                temp.append(' ');
-
-            //if (line % )
-            temp.append(c);
-
-            line++;
-            spacer++;
-        }
-        RawArea.setText(temp.toString());
+        //RefillTextArea();
+        //RawArea.setWrapText(true);
+        RawArea.widthProperty().addListener((obs, oldv, newv) -> {
+            RefillTextArea();
+        });
 
         ObservableList<DetailTableModel> rows =  DetailTable.getItems();
         String lineNumber = Integer.toString(LogLine.getStartLine());
@@ -107,6 +89,47 @@ public class DetailsPaneController {
 
             rows.add(tempModel);
         }
+    }
+
+    private void RefillTextArea() {
+        if (LogLine == null) return;
+        if (LogLine.getBuffer().length == 0) {
+            RawArea.setText("0x000000    No Data Buffer");
+            return;
+        }
+
+        FontMetrics fontMetrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(RawArea.getFont());
+        double WidthPerChar = fontMetrics.computeStringWidth("A");
+        int chars = ((Double)Math.floor(RawArea.getWidth() / WidthPerChar)).intValue() - 2;
+
+        int spacer = 0;
+        int line = 0;
+        String buffer = DatatypeConverter.printHexBinary(LogLine.getBuffer());
+        StringBuilder temp = new StringBuilder();
+        for (char c : buffer.toCharArray()) {
+            if (line == 0) {
+                String hex = Integer.toHexString(spacer).toUpperCase();
+                String format = "0x%1$6" + "s";
+                String finals = String.format(format, hex).replace(' ', '0') + "    ";
+
+                temp.append(finals);
+                line += finals.length();
+            } else if (spacer != 0 && spacer % 4 == 0) {
+                if (line + 4 >= chars || line + 3 >= chars || line + 2 >= chars || line + 1 >= chars || line >= chars) {
+                    temp.append('\n');
+                    line = 0;
+                    continue;
+                }
+
+                temp.append(' ');
+                line++;
+            }
+
+            temp.append(Character.toUpperCase(c));
+            line++;
+            spacer++;
+        }
+        RawArea.setText(temp.toString());
     }
 
 }

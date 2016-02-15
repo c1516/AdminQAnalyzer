@@ -67,33 +67,6 @@ public class SingleTabController {
     private VirtualFlow<?> virtualFlow;
 
     /**
-     * * * * * * * * * * * * * * * *
-     * TEMPORARY CODE FOR TESTING *
-     * * * * * * * * * * * * * * *
-     */
-    private boolean beh = false;
-    public void setResBeh(Boolean beh) {
-        this.beh = beh;
-        if (beh) {
-            double totalWidth = 0;
-            for (TableColumn c : TabTable.getColumns()) {
-                totalWidth += c.getWidth();
-            }
-            if (totalWidth < TabTable.getWidth() - pixelPadding) {
-                double delta = (TabTable.getWidth() - pixelPadding) - totalWidth;
-                TableColumn<?,?> last = TabTable.getColumns().get(TabTable.getColumns().size() - 1);
-                last.setPrefWidth(last.getWidth() + delta);
-            }
-        }
-
-    }
-    /**
-     * * * * * * * * * * * * * * * * * *
-     * END TEMPORARY CODE FOR TESTING *
-     * * * * * * * * * * * * * * * * *
-     */
-
-    /**
      * Initializes a tab controller
      * @param App Not null, the main application, can't be null
      * @param logs A Queue contaning {@link LogEntry}
@@ -314,13 +287,15 @@ public class SingleTabController {
                     if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth) || totalWidth < tableWidth) {
                         column.setPrefWidth(column.getWidth() + delta);
 
-                        //TEMPORARY CODE: "beh || "
-                        if (beh || (delta > 0 && totalWidth >= tableWidth)) {
+
+                        //Uncomment for another version of resizing. This way it wont resizing when collapsing our
+                        //column
+                        //if (delta > 0 && totalWidth >= tableWidth) {
                             newDelta = delta / affectedCols.size();
                             for (TableColumn c : affectedCols) {
                                 c.setPrefWidth(c.getWidth() - newDelta);
                             }
-                        }
+                        //}
                     }
                 }
             }

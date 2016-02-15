@@ -58,24 +58,6 @@ public class MainWindowController {
 
     public MainWindowController() { }
 
-    /**
-     * * * * * * * * * * * * * * * *
-     * TEMPORARY CODE FOR TESTING *
-     * * * * * * * * * * * * * * *
-     */
-    @FXML
-    public void resBehE(ActionEvent e) {
-        if (TabElement.getTabs().size() == 0) return;
-
-        int i = TabElement.getSelectionModel().getSelectedIndex();
-        controllers.get(i).setResBeh(((CheckBox)e.getSource()).isSelected());
-    }
-    /**
-     * * * * * * * * * * * * * * * * * *
-     * END TEMPORARY CODE FOR TESTING *
-     * * * * * * * * * * * * * * * * *
-     */
-
     @FXML
     public void initialize(){
         //Disable search bar when we start
