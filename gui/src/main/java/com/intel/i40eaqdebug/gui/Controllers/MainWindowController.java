@@ -7,6 +7,7 @@ import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,6 +56,24 @@ public class MainWindowController {
     }
 
     public MainWindowController() { }
+
+    /**
+     * * * * * * * * * * * * * * * *
+     * TEMPORARY CODE FOR TESTING *
+     * * * * * * * * * * * * * * *
+     */
+    @FXML
+    public void resBehE(ActionEvent e) {
+        if (TabElement.getTabs().size() == 0) return;
+
+        int i = TabElement.getSelectionModel().getSelectedIndex();
+        controllers.get(i).setResBeh(((CheckBox)e.getSource()).isSelected());
+    }
+    /**
+     * * * * * * * * * * * * * * * * * *
+     * END TEMPORARY CODE FOR TESTING *
+     * * * * * * * * * * * * * * * * *
+     */
 
     @FXML
     public void initialize(){
@@ -190,6 +209,7 @@ public class MainWindowController {
         LoadingScreen.setVisible(true);
 
         Platform.runLater(runner);
+
     }
 
 
@@ -245,6 +265,10 @@ public class MainWindowController {
                 }
             }
             LoadingScreen.setVisible(false);
+
+            //Switch to newly opened tab
+            int newTabIndex = TabElement.getTabs().size() - 1;
+            TabElement.getSelectionModel().select(newTabIndex);
         }
     }
 
@@ -264,7 +288,6 @@ public class MainWindowController {
         }
         tempStage.setScene(tempScene);
         tempStage.show();
-
     }
 
     @FXML
