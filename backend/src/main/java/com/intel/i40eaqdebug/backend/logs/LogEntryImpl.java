@@ -11,9 +11,10 @@ import java.io.ByteArrayOutputStream;
 
 public class LogEntryImpl implements LogEntry {
 
-    private static final Pattern BUFF_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+0x([0-9a-f]+)(\\s+[0-9a-f]+)+");
-    private static final Pattern HEADER_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-f]+),\\s+flags\\s+0x([0-9a-f]+),\\s+datalen\\s+0x([0-9a-f]+),\\s+retval\\s+0x([0-9a-f]+)");
-    private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)");
+    private static final Pattern BUFF_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+0x([0-9a-fA-F]+)((\\s+[0-9a-fA-F]+)+)");
+    private static final Pattern HEADER_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
+    private static final Pattern COOKIE_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
+    private static final Pattern ERRORCODE_PATTERN = Pattern.compile("Command completed with error 0x([0-9a-fA-F]+)");
 
     private int lineNum;
     private int cookie[] = {0, 0};
@@ -42,28 +43,28 @@ public class LogEntryImpl implements LogEntry {
         for (String logInputLine : rawLogData) {
             Matcher isMainHeader = HEADER_PATTERN.matcher(logInputLine);
             if (isMainHeader.find()) {
-                opcode = (short) Integer.parseInt(isMainHeader.group(1), 16);
-                flags = (short) Integer.parseInt(isMainHeader.group(2), 16);
-                datalen = (long) Integer.parseInt(isMainHeader.group(3), 16);
-                retval = (short) Integer.parseInt(isMainHeader.group(4), 16);
+                opcode = (short) Long.parseLong(isMainHeader.group(1), 16);
+                flags = (short) Long.parseLong(isMainHeader.group(2), 16);
+                datalen = (long) Long.parseLong(isMainHeader.group(3), 16);
+                retval = (short) Long.parseLong(isMainHeader.group(4), 16);
             }
             else {
                 Matcher isCookieLine = COOKIE_PATTERN.matcher(logInputLine);
                 if (isCookieLine.find()) {
-                    int a = Integer.parseInt(isCookieLine.group(2), 16);
-                    int b = Integer.parseInt(isCookieLine.group(3), 16);
+                    long a = Long.parseLong(isCookieLine.group(2), 16);
+                    long b = Long.parseLong(isCookieLine.group(3), 16);
 
                     if (isCookieLine.group(1).equals("cookie")) {
-                        cookie[0] = a;
-                        cookie[1] = b;
+                        cookie[0] = (int) a;
+                        cookie[1] = (int) b;
                     }
                     else if (isCookieLine.group(1).equals("param")) {
-                        param[0] = a;
-                        param[1] = b;
+                        param[0] = (int) a;
+                        param[1] = (int) b;
                     }
                     else if (isCookieLine.group(1).equals("addr")) {
-                        addr[0] = a;
-                        addr[1] = b;
+                        addr[0] = (int) a;
+                        addr[1] = (int) b;
                     }
                     // Otherwise, we just ignore this silently.
                 }
@@ -74,7 +75,14 @@ public class LogEntryImpl implements LogEntry {
                         // group 2 is a space-separated group of hex bytes (although they may be erroneously sign-extended
                         // to a larger integer value, which we will truncate back to 8 bits here)
                         for (String byteString : isBufferLine.group(2).split("\\s+")) {
-                            buff.write(Integer.parseInt(byteString, 16) & 0xff);
+                            if (byteString.length() > 0)
+                                buff.write((int)(Long.parseLong(byteString, 16) & 0xff));
+                        }
+                    }
+                    else {
+                        Matcher isErrorLine = ERRORCODE_PATTERN.matcher(logInputLine);
+                        if (isErrorLine.find()) {
+                            err = (byte) Integer.parseInt(isErrorLine.group(1), 16);
                         }
                     }
                 }
