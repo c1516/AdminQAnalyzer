@@ -3,21 +3,17 @@ package com.intel.i40eaqdebug.gui.controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.CustomControls.CheckboxCell.CheckboxCell;
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
-import com.intel.i40eaqdebug.gui.CustomControls.TimeStampCell.TimeStampCell;
+import com.intel.i40eaqdebug.gui.customcontrols.checkboxcell.CheckboxCell;
+import com.intel.i40eaqdebug.gui.customcontrols.flagviewcell.FlagViewCell;
+import com.intel.i40eaqdebug.gui.customcontrols.timestampcell.TimeStampCell;
 import com.intel.i40eaqdebug.gui.datamodels.TableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.*;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
@@ -27,7 +23,6 @@ import javafx.scene.layout.VBox;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,7 +30,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.List;
 
 public class SingleTabController {
     //region FXML properties.

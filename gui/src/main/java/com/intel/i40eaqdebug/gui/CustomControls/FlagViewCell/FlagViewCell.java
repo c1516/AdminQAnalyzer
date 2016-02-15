@@ -1,6 +1,6 @@
-package com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell;
+package com.intel.i40eaqdebug.gui.customcontrols.flagviewcell;
 
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewer.FlagViewer;
+import com.intel.i40eaqdebug.gui.customcontrols.flagviewer.FlagViewer;
 import com.intel.i40eaqdebug.gui.datamodels.TableModel;
 import javafx.scene.control.TableCell;
 

@@ -1,9 +1,8 @@
-package com.intel.i40eaqdebug.gui.CustomControls.FlagViewer;
+package com.intel.i40eaqdebug.gui.customcontrols.flagviewer;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;

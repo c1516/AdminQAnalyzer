@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.CustomControls.FlagViewer;
+package com.intel.i40eaqdebug.gui.customcontrols.flagviewer;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
