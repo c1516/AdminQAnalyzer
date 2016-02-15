@@ -85,6 +85,10 @@ public final class APIEntryPoint {
             return "UNKNOWN";
         }
 
+        @Override public int getSize() {
+            return 16;
+        }
+
         public LinkedHashMap<String, CommandField> getFields() {
             LinkedHashMap<String, CommandField> fieldMap = new LinkedHashMap<String, CommandField>();
             fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField());
