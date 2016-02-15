@@ -65,10 +65,10 @@ public class DetailsPaneController {
             return;
         }
         LinkedHashMap<String, CommandField> structContents = tempStruct.getFields();
-
-        for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
-            // Build the actual buffer for the command structure latter 16 bytes
-            byte[] structBuf = new byte[16];
+        // Build the actual buffer for the command structure latter 16 bytes
+        byte[] structBuf;
+        if (tempStruct.getSize() <= 16) {
+            structBuf = new byte[16];
             // TODO double check that the ordering is actually right
             int[] params = LogLine.getParams();
             int[] addr = LogLine.getAddr();
@@ -79,7 +79,10 @@ public class DetailsPaneController {
             System.arraycopy(paramsByte[1], 0, structBuf, 4, 4);
             System.arraycopy(addrByte[0], 0, structBuf, 8, 4);
             System.arraycopy(addrByte[1], 0, structBuf, 12, 4);
-
+        } else {
+            structBuf = LogLine.getBuffer();
+        }
+        for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
             DetailTableModel tempModel =
                 new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
 
