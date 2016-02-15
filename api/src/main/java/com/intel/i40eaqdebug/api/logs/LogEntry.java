@@ -9,7 +9,7 @@ public interface LogEntry {
     TimeStamp getTimeStamp();
     int getErr();
     short getFlags();
-    short getOpCode();
+    int getOpCode();
     short getRetVal();
     int getCookieHigh();
     int getCookieLow();

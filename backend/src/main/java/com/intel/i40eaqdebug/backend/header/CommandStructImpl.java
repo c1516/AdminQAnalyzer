@@ -21,6 +21,14 @@ public class CommandStructImpl implements CommandStruct {
         return name;
     }
 
+    @Override public int getSize() {
+        int size = 0;
+        for (CommandField f : fields.values()) {
+            size += f.getEndPos() - f.getStartPos();
+        }
+        return size;
+    }
+
     public LinkedHashMap<String, CommandField> getFields() {
         return fields;
     }

@@ -25,7 +25,7 @@ public class LogEntryImpl implements LogEntry {
     private int param[] = {0, 0};
     private int addr[] = {0, 0};
     private int err = 0;
-    private short opcode = 0;
+    private int opcode = 0;
     private short flags = 0;
     private long datalen = 0;
     private short retval = 0;
@@ -115,7 +115,7 @@ public class LogEntryImpl implements LogEntry {
 
     public int   getErr()        { return err;       }
     public short  getFlags()      { return flags;     }
-    public short  getOpCode()     { return opcode;    }
+    public int  getOpCode()     { return opcode;    }
     public short  getRetVal()     { return retval;    }
     public int    getCookieHigh() { return cookie[0]; }
     public int    getCookieLow()  { return cookie[1]; }

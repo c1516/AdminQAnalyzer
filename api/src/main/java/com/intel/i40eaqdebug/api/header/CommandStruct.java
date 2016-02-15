@@ -11,5 +11,7 @@ public interface CommandStruct {
     @Deprecated
     String getName();
 
+    int getSize();
+
     LinkedHashMap<String, CommandField> getFields();
 }

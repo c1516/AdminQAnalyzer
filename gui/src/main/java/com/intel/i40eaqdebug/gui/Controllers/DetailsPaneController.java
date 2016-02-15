@@ -65,7 +65,7 @@ public class DetailsPaneController {
         //rows.add(new DetailTableModel("Line Number", lineNumber));
         rows.add(new DetailTableModel("Cookie", cookie));
 
-        CommandStruct tempStruct = APIEntryPoint.getCommandStruct((int)LogLine.getOpCode(), LogLine.isWriteback());
+        CommandStruct tempStruct = APIEntryPoint.getCommandStruct(LogLine.getOpCode(), LogLine.isWriteback());
         if (tempStruct == null) {
             return;
         }
