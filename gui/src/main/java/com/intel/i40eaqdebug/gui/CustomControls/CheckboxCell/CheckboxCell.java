@@ -10,12 +10,11 @@ import javafx.scene.control.TableCell;
 public class CheckboxCell extends TableCell<TableModel, Boolean> {
     public CheckBox check = new CheckBox();
 
-    public CheckboxCell(){
+    public CheckboxCell() {
         check.setDisable(true);
     }
 
-    @Override
-    protected void updateItem(Boolean item, boolean empty) {
+    @Override protected void updateItem(Boolean item, boolean empty) {
         super.updateItem(item, empty);
         if (!empty) {
             check.setSelected(item);

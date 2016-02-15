@@ -5,9 +5,8 @@ import com.intel.i40eaqdebug.api.Util;
 import com.intel.i40eaqdebug.api.header.CommandField;
 import com.intel.i40eaqdebug.api.header.CommandStruct;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.datamodels.DetailTableModel;
 import com.intel.i40eaqdebug.gui.GUIMain;
-import com.sun.deploy.util.StringUtils;
+import com.intel.i40eaqdebug.gui.datamodels.DetailTableModel;
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 import javafx.collections.ObservableList;
@@ -15,20 +14,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
 
 import javax.xml.bind.DatatypeConverter;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class DetailsPaneController {
     //region FXML properties.
-    @FXML
-    public AnchorPane Pane;
-    @FXML
-    public TextArea RawArea;
-    @FXML
-    public TableView<DetailTableModel> DetailTable = new TableView<>();
+    @FXML public AnchorPane Pane;
+    @FXML public TextArea RawArea;
+    @FXML public TableView<DetailTableModel> DetailTable = new TableView<>();
     //endregion
     private GUIMain Application;
     private LogEntry LogLine;
@@ -49,18 +45,17 @@ public class DetailsPaneController {
     calling window, and display it's contetns (other then the stuff already
     displayed in the table) + use it's opcode to fetch it's command sturct and also display that.
      */
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
         //RefillTextArea();
         //RawArea.setWrapText(true);
         RawArea.widthProperty().addListener((obs, oldv, newv) -> {
             RefillTextArea();
         });
 
-        ObservableList<DetailTableModel> rows =  DetailTable.getItems();
+        ObservableList<DetailTableModel> rows = DetailTable.getItems();
         String lineNumber = Integer.toString(LogLine.getStartLine());
         //TODO: is this the right way to combine cookies
-        String cookie = Integer.toString((LogLine.getCookieHigh() << 16) |  LogLine.getCookieLow());
+        String cookie = Integer.toString((LogLine.getCookieHigh() << 16) | LogLine.getCookieLow());
 
         //rows.add(new DetailTableModel("Line Number", lineNumber));
         rows.add(new DetailTableModel("Cookie", cookie));
@@ -85,14 +80,16 @@ public class DetailsPaneController {
             System.arraycopy(addrByte[0], 0, structBuf, 8, 4);
             System.arraycopy(addrByte[1], 0, structBuf, 12, 4);
 
-            DetailTableModel tempModel = new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
+            DetailTableModel tempModel =
+                new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
 
             rows.add(tempModel);
         }
     }
 
     private void RefillTextArea() {
-        if (LogLine == null) return;
+        if (LogLine == null)
+            return;
         if (LogLine.getBuffer().length == 0) {
             RawArea.setText("0x000000    No Data Buffer");
             return;
@@ -100,7 +97,7 @@ public class DetailsPaneController {
 
         FontMetrics fontMetrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(RawArea.getFont());
         double WidthPerChar = fontMetrics.computeStringWidth("A");
-        int chars = ((Double)Math.floor(RawArea.getWidth() / WidthPerChar)).intValue() - 2;
+        int chars = ((Double) Math.floor(RawArea.getWidth() / WidthPerChar)).intValue() - 2;
 
         int spacer = 0;
         int line = 0;

@@ -3,11 +3,11 @@ package com.intel.i40eaqdebug.gui.controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.GUIMain;
 import com.intel.i40eaqdebug.gui.customcontrols.checkboxcell.CheckboxCell;
 import com.intel.i40eaqdebug.gui.customcontrols.flagviewcell.FlagViewCell;
 import com.intel.i40eaqdebug.gui.customcontrols.timestampcell.TimeStampCell;
 import com.intel.i40eaqdebug.gui.datamodels.TableModel;
-import com.intel.i40eaqdebug.gui.GUIMain;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ObservableList;
@@ -15,7 +15,6 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -29,31 +28,23 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class SingleTabController {
+    boolean noTimeStamp = false;
     //region FXML properties.
-    @FXML
-    private TableView<TableModel> TabTable;
-
-    @FXML
-    private VBox HideablePane;
-    @FXML
-    private SplitPane BaseSplitPane;
-    @FXML
-    private TableColumn<TableModel, TimeStamp> timeColumn;
-    @FXML
-    private TableColumn<TableModel, String> numColumn;
-    @FXML
-    private TableColumn<TableModel, Integer> flagColumn;
-    @FXML
-    private TableColumn<TableModel, Boolean> writeBackColumn;
-
-    @FXML
-    private Separator DraggbleSeparator;
+    @FXML private TableView<TableModel> TabTable;
+    @FXML private VBox HideablePane;
+    @FXML private SplitPane BaseSplitPane;
+    @FXML private TableColumn<TableModel, TimeStamp> timeColumn;
+    @FXML private TableColumn<TableModel, String> numColumn;
+    @FXML private TableColumn<TableModel, Integer> flagColumn;
+    @FXML private TableColumn<TableModel, Boolean> writeBackColumn;
 
     //endregion
-
+    @FXML private Separator DraggbleSeparator;
     private int EventTotal = 0;
     private int pixelPadding = 15;
     private GUIMain Application;
@@ -61,11 +52,11 @@ public class SingleTabController {
     private boolean DetailsVisible = false;
     private double DetailsHeight = -1;
     private VirtualFlow<?> virtualFlow;
-    boolean noTimeStamp = false;
 
     /**
      * Initializes a tab controller
-     * @param App Not null, the main application, can't be null
+     *
+     * @param App  Not null, the main application, can't be null
      * @param logs A Queue contaning {@link LogEntry}
      */
     public SingleTabController(GUIMain App, Queue<LogEntry> logs) {
@@ -78,8 +69,7 @@ public class SingleTabController {
     /**
      * Initializes the tab.
      */
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
         HideablePane.setMaxHeight(0);
 
         BaseSplitPane.widthProperty().addListener((obv, oldWidth, newWidth) -> {
@@ -122,7 +112,8 @@ public class SingleTabController {
      */
     private void InitializeTableView() {
         double totalColWidth = 0;
-        for (TableColumn c: TabTable.getColumns()) totalColWidth += c.getMinWidth();
+        for (TableColumn c : TabTable.getColumns())
+            totalColWidth += c.getMinWidth();
         //So.... I don't actually know why I need to multiply this by 2, but it works...
         //......yeah, that's what I thought to......
         totalColWidth += pixelPadding * 2;
@@ -132,15 +123,17 @@ public class SingleTabController {
         //IE: if one column took up 50% of the screen, when the window is resized (or maximized)
         //it will still take up 50% of the screen (unless it hit it's max/min sizes).
         TabTable.widthProperty().addListener((obs, oldv, newv) -> {
-            double oldWidth = (double)oldv;
-            double newWidth = (double)newv;
+            double oldWidth = (double) oldv;
+            double newWidth = (double) newv;
 
-            if (oldWidth == 0) return;
+            if (oldWidth == 0)
+                return;
 
-            TableColumn<?,?> biggest = TabTable.getColumns().get(0);
+            TableColumn<?, ?> biggest = TabTable.getColumns().get(0);
             double totalWidth = 0;
-            for (TableColumn c: TabTable.getColumns()) {
-                if (c.getWidth() > biggest.getWidth()) biggest = c;
+            for (TableColumn c : TabTable.getColumns()) {
+                if (c.getWidth() > biggest.getWidth())
+                    biggest = c;
 
                 double newColWidth = ((c.getWidth() / oldWidth) * newWidth);
 
@@ -167,8 +160,8 @@ public class SingleTabController {
             if (target.getSortOrder().size() == 0) {
                 TableColumn<TableModel, ?> targetColumn = null;
                 for (int i = 0; i < target.getColumns().size(); i++) {
-                    if ((!noTimeStamp && target.getColumns().get(i).getText().equals("Time Stamp"))
-                            || (noTimeStamp && target.getColumns().get(i).getText().equals("Line Number"))) {
+                    if ((!noTimeStamp && target.getColumns().get(i).getText().equals("Time Stamp")) || (noTimeStamp
+                        && target.getColumns().get(i).getText().equals("Line Number"))) {
                         targetColumn = target.getColumns().get(i);
                         break;
                     }
@@ -216,8 +209,8 @@ public class SingleTabController {
                     testPane = tabFXML.load();
                 } catch (IOException Ex) {
                     StringWriter writer = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter( writer );
-                    Ex.printStackTrace( printWriter );
+                    PrintWriter printWriter = new PrintWriter(writer);
+                    Ex.printStackTrace(printWriter);
                     printWriter.flush();
 
                     String stackTrace = writer.toString();
@@ -268,15 +261,15 @@ public class SingleTabController {
         //2) It automatically sizes columns to the right of the ones the user is resizing
         TabTable.setColumnResizePolicy((StuffToResize) -> {
             TableView<?> table = StuffToResize.getTable();
-            TableColumn<?,?> column = StuffToResize.getColumn();
+            TableColumn<?, ?> column = StuffToResize.getColumn();
             Double delta = StuffToResize.getDelta();
 
             Double tableWidth = TabTable.getWidth() - pixelPadding;
-            if(column != null) {
+            if (column != null) {
                 double newWidth = column.getWidth() + delta;
                 //We only want to resize if our column hasn't hit it's limits.
                 if ((newWidth < column.getMaxWidth()) && (newWidth > column.getMinWidth())) {
-                    ArrayList<TableColumn<?,?>> affectedCols = new ArrayList<>();
+                    ArrayList<TableColumn<?, ?>> affectedCols = new ArrayList<>();
 
                     int index = table.getColumns().indexOf(column);
                     int lastIndex = table.getColumns().size() - 1;
@@ -288,7 +281,8 @@ public class SingleTabController {
                     //by our column
                     for (TableColumn c : table.getColumns()) {
                         double newColWidth = c.getWidth() - newDelta;
-                        if (i++ > index && ((delta > 0 && newColWidth >= c.getMinWidth()) || (delta < 0 && newColWidth <= c.getMaxWidth())))
+                        if (i++ > index && ((delta > 0 && newColWidth >= c.getMinWidth()) || (delta < 0
+                            && newColWidth <= c.getMaxWidth())))
                             affectedCols.add(c);
 
                         totalWidth += c.getWidth();
@@ -296,17 +290,18 @@ public class SingleTabController {
                     totalWidth += delta;
 
                     //Here we determine if we should 1) actually resize our column 2) resize the rest of the affected ones.
-                    if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth) || totalWidth < tableWidth) {
+                    if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth)
+                        || totalWidth < tableWidth) {
                         column.setPrefWidth(column.getWidth() + delta);
 
 
                         //Uncomment for another version of resizing. This way it wont resizing when collapsing our
                         //column
                         //if (delta > 0 && totalWidth >= tableWidth) {
-                            newDelta = delta / affectedCols.size();
-                            for (TableColumn c : affectedCols) {
-                                c.setPrefWidth(c.getWidth() - newDelta);
-                            }
+                        newDelta = delta / affectedCols.size();
+                        for (TableColumn c : affectedCols) {
+                            c.setPrefWidth(c.getWidth() - newDelta);
+                        }
                         //}
                     }
                 }
@@ -351,7 +346,7 @@ public class SingleTabController {
             //This is ugly, and it shouldn't be necessary, but because of how events are handled
             //there's no other choice.
             test.flagViewer.setOnMousePressed(e -> {
-                TabTable.getSelectionModel().select((TableModel)test.getTableRow().getItem());
+                TabTable.getSelectionModel().select((TableModel) test.getTableRow().getItem());
                 TabTable.requestFocus();
             });
             return test;
@@ -361,8 +356,7 @@ public class SingleTabController {
     /**
      * This allows our context menu to copy the entier row as a string.
      */
-    @FXML
-    public void CopyRow() {
+    @FXML public void CopyRow() {
         String row = TabTable.getSelectionModel().getSelectedItem().toString();
 
         StringSelection stringSelection = new StringSelection(row);
@@ -375,8 +369,7 @@ public class SingleTabController {
      * Unfortunately since we're selecting an row at a time, this can be a little
      * in-accurate (due to having no visual indication of the selected cell).
      */
-    @FXML
-    public void CopyCell() {
+    @FXML public void CopyCell() {
         TablePosition pos = TabTable.getSelectionModel().getSelectedCells().get(0);
         TableModel item = TabTable.getItems().get(pos.getRow());
         TableColumn col = pos.getTableColumn();
@@ -390,10 +383,10 @@ public class SingleTabController {
 
     /**
      * This handles a keypress on a row, and lets you copy it if CTRL+C is pressed
+     *
      * @param event The Keyboard event.
      */
-    @FXML
-    public void KeyShortcuts(KeyEvent event) {
+    @FXML public void KeyShortcuts(KeyEvent event) {
         if (event.isControlDown() && event.getCode() == KeyCode.C) {
             CopyRow();
         }
@@ -403,6 +396,7 @@ public class SingleTabController {
 
     /**
      * Returns the total number of events currently visible
+     *
      * @return the total number of events currently visible
      */
     public int getEventTotal() {
@@ -412,7 +406,8 @@ public class SingleTabController {
     /**
      * This function searches the table by re-filling it with a filter
      * and then re-sorts it.
-     * @param term The search term, null clears the filter
+     *
+     * @param term  The search term, null clears the filter
      * @param match Weather to use the filter buttons.
      */
     public void Search(String term, Boolean match) {
@@ -423,6 +418,7 @@ public class SingleTabController {
 
     /**
      * This checks to see if a coordinate is within our tab. Used to hide the details pane if we click somewhere else.
+     *
      * @param x The X position of the click
      * @param y The Y position of the click
      * @return Weather the click is in the pane or not.
@@ -451,6 +447,7 @@ public class SingleTabController {
     /**
      * Sexily scrolls our Table to a specified index.
      * Stolen from StackOverflow but I already forgot from where.
+     *
      * @param index The index of the row to scroll to.
      */
     private void scrollTo(int index) {
@@ -471,8 +468,9 @@ public class SingleTabController {
      * This fills our table with data from the Queue of {@link LogEntry}s
      * If a filter exists, it will only add entries who contains that string
      * Match is used for filter buttons
+     *
      * @param Filter Used to include results, if null everything is displayed
-     * @param Match Used for filter buttons.
+     * @param Match  Used for filter buttons.
      */
     private void fillTable(String Filter, Boolean Match) {
         ObservableList<TableModel> data = TabTable.getItems();

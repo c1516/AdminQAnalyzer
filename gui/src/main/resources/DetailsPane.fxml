@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.cell.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-
-<SplitPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.GridPane?>
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
     <TableView fx:id="DetailTable" GridPane.columnIndex="0">
         <columns>
             <TableColumn prefWidth="150.0" text="Field Name">
-                <cellValueFactory><PropertyValueFactory property="Name"/></cellValueFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="Name"/>
+                </cellValueFactory>
             </TableColumn>
             <TableColumn prefWidth="150.0" text="Field Value">
-                <cellValueFactory><PropertyValueFactory property="Value"/></cellValueFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="Value"/>
+                </cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>
-    <TextArea fx:id="RawArea" editable="false" />
+    <TextArea fx:id="RawArea" editable="false"/>
 </SplitPane>

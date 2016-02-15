@@ -15,10 +15,15 @@ public class GUIMain extends Application {
 
     private Stage MainStage;
 
-    public Stage getMainStage() { return MainStage; }
+    public static void main(String... args) {
+        launch(args);
+    }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
+    public Stage getMainStage() {
+        return MainStage;
+    }
+
+    @Override public void start(Stage primaryStage) throws Exception {
         MainStage = primaryStage;
 
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
@@ -33,10 +38,5 @@ public class GUIMain extends Application {
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
-    }
-
-
-    public static void main(String... args) {
-        launch(args);
     }
 }

@@ -10,12 +10,11 @@ import javafx.scene.control.TableCell;
 public class FlagViewCell extends TableCell<TableModel, Integer> {
     public FlagViewer flagViewer = new FlagViewer();
 
-    public FlagViewCell(){
-          //flagViewer.setFlag(getItem());
+    public FlagViewCell() {
+        //flagViewer.setFlag(getItem());
     }
 
-    @Override
-    protected void updateItem(Integer item, boolean empty) {
+    @Override protected void updateItem(Integer item, boolean empty) {
         super.updateItem(item, empty);
         if (!empty) {
             flagViewer.setFlag(empty ? 0 : item.shortValue());

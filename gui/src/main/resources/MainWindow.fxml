@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <!-- fx:controller="com.intel.i40eaqdebug.gui.controllers.MainWindowController"-->
 
-<?import javafx.scene.shape.Rectangle?>
-
-<AnchorPane fx:id="RootPanel" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="RootPanel" prefHeight="600" prefWidth="800"
+            xmlns="http://javafx.com/javafx/8">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="0.0">
@@ -98,7 +93,8 @@
                     <children>
                         <VBox style="-fx-background-color: black;">
                             <children>
-                                <ProgressIndicator prefHeight="200.0" progress="-1.0" style="-fx-background-color: black;">
+                                <ProgressIndicator prefHeight="200.0" progress="-1.0"
+                                                   style="-fx-background-color: black;">
                                     <VBox.margin>
                                         <Insets top="75.0"/>
                                     </VBox.margin>

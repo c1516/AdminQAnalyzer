@@ -14,9 +14,11 @@ public class TableModel {
     private final IntegerProperty OpCodeInt;
     private final BooleanProperty IsWriteBack;
 
-    public TableModel() { this(null, null, 0, 0, null, false); }
+    public TableModel() {
+        this(null, null, 0, 0, null, false);
+    }
 
-    public TableModel( TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error, boolean IsWriteBack) {
+    public TableModel(TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error, boolean IsWriteBack) {
         this.LineNumber = new SimpleStringProperty(LineNumber);
         this.OpCode = new SimpleStringProperty(APIEntryPoint.getCommandName(OpCode));
         this.OpCodeInt = new SimpleIntegerProperty(OpCode);
@@ -27,48 +29,103 @@ public class TableModel {
     }
 
     public boolean hasPartialValue(String val) {
-        if (val == null) return false;
+        if (val == null)
+            return false;
 
-        if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val)
-                || ErrorCode.get().contains(val) || (TimeStamp.get()).toString().contains(val)
-                || Integer.toHexString(OpCodeInt.get()).toUpperCase().contains(val.toUpperCase())
-                || LineNumber.get().contains(val))
-             return true;
+        if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val) || ErrorCode.get()
+            .contains(val) || (TimeStamp.get()).toString().contains(val) || Integer.toHexString(OpCodeInt.get())
+            .toUpperCase().contains(val.toUpperCase()) || LineNumber.get().contains(val))
+            return true;
         else
             return false;
     }
-    
-    public String getLineNumber() {return LineNumber.get();}
-    public StringProperty getLineNumberProperty() {return LineNumber;}
-    public void setLineNumber(String newLineNumber) {LineNumber.set(newLineNumber);}
 
-    public String getOpCode() {return OpCode.get() + " - 0x" + Integer.toHexString(OpCodeInt.get()).toUpperCase();}
-    public StringProperty getOpCodeProperty() {return OpCode;}
-    public void setOpCode(String newOpCode) {OpCode.set(newOpCode);}
+    public String getLineNumber() {
+        return LineNumber.get();
+    }
 
-    public Integer getFlags() {return Flags.get();}
-    public IntegerProperty getFlagsProperty() {return Flags;}
-    public void setFlags(int newFlags) {Flags.set(newFlags);}
+    public void setLineNumber(String newLineNumber) {
+        LineNumber.set(newLineNumber);
+    }
 
-    public String getErrorCode() {return ErrorCode.get();}
-    public StringProperty getErrorCodeProperty() {return ErrorCode;}
-    public void setErrorCode(String newErrorCode) {ErrorCode.set(newErrorCode);}
+    public StringProperty getLineNumberProperty() {
+        return LineNumber;
+    }
 
-    public TimeStamp getTimeStamp() {return TimeStamp.get();}
-    public ObjectProperty<TimeStamp> getTimeStampProperty() {return TimeStamp;}
-    public void setTimeStamp(TimeStamp newTimeStamp) {TimeStamp.set(newTimeStamp);}
+    public String getOpCode() {
+        return OpCode.get() + " - 0x" + Integer.toHexString(OpCodeInt.get()).toUpperCase();
+    }
 
-    private void setOpCodeInt(int newOpCode) {OpCodeInt.set(newOpCode);}
-    private IntegerProperty getOpCodeIntProperty() {return OpCodeInt;}
-    private int getOpCodeInt() {return OpCodeInt.get();}
+    public void setOpCode(String newOpCode) {
+        OpCode.set(newOpCode);
+    }
 
-    public void setIsWriteBack(boolean newCallback) {IsWriteBack.set(newCallback);}
-    public BooleanProperty getIsWriteBackProperty() {return IsWriteBack;}
-    public Boolean getIsWriteBack() {return IsWriteBack.get();}
+    public StringProperty getOpCodeProperty() {
+        return OpCode;
+    }
 
-    @Override
-    public String toString() {
-        return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString()
-                + ", " + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
+    public Integer getFlags() {
+        return Flags.get();
+    }
+
+    public void setFlags(int newFlags) {
+        Flags.set(newFlags);
+    }
+
+    public IntegerProperty getFlagsProperty() {
+        return Flags;
+    }
+
+    public String getErrorCode() {
+        return ErrorCode.get();
+    }
+
+    public void setErrorCode(String newErrorCode) {
+        ErrorCode.set(newErrorCode);
+    }
+
+    public StringProperty getErrorCodeProperty() {
+        return ErrorCode;
+    }
+
+    public TimeStamp getTimeStamp() {
+        return TimeStamp.get();
+    }
+
+    public void setTimeStamp(TimeStamp newTimeStamp) {
+        TimeStamp.set(newTimeStamp);
+    }
+
+    public ObjectProperty<TimeStamp> getTimeStampProperty() {
+        return TimeStamp;
+    }
+
+    private IntegerProperty getOpCodeIntProperty() {
+        return OpCodeInt;
+    }
+
+    private int getOpCodeInt() {
+        return OpCodeInt.get();
+    }
+
+    private void setOpCodeInt(int newOpCode) {
+        OpCodeInt.set(newOpCode);
+    }
+
+    public BooleanProperty getIsWriteBackProperty() {
+        return IsWriteBack;
+    }
+
+    public Boolean getIsWriteBack() {
+        return IsWriteBack.get();
+    }
+
+    public void setIsWriteBack(boolean newCallback) {
+        IsWriteBack.set(newCallback);
+    }
+
+    @Override public String toString() {
+        return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString() + ", "
+            + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
     }
 }

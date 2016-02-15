@@ -3,14 +3,15 @@ package com.intel.i40eaqdebug.backend.logs;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.backend.logs.LogEntryImpl;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
-
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,7 +107,7 @@ public class LogParser implements LogAdapter {
             }
         }
 
-        EntryRaw raw  = out.getFirst();
+        EntryRaw raw = out.getFirst();
 
         TimeStamp stamp = new TimeStamp(raw.timestampSec, raw.timestampNano);
         String[] entraw = new String[out.size()];

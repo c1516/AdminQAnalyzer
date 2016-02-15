@@ -9,10 +9,10 @@ import javafx.scene.control.TableCell;
  */
 public class TimeStampCell extends TableCell<TableModel, TimeStamp> {
 
-    public TimeStampCell(){}
+    public TimeStampCell() {
+    }
 
-    @Override
-    protected void updateItem(TimeStamp item, boolean empty) {
+    @Override protected void updateItem(TimeStamp item, boolean empty) {
         super.updateItem(item, empty);
         if (!empty) {
             setText(item.toString());

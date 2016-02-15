@@ -22,11 +22,27 @@ public class DetailTableModel {
     }
 
 
-    public String getName() {return Name.get();}
-    public StringProperty getNameProperty() {return Name;}
-    public void setName(String newOpCode) {Name.set(newOpCode);}
+    public String getName() {
+        return Name.get();
+    }
 
-    public String getValue() {return Value.get();}
-    public StringProperty getValueProperty() {return Value;}
-    public void setValue(String newFlags) {Value.set(newFlags);}
+    public void setName(String newOpCode) {
+        Name.set(newOpCode);
+    }
+
+    public StringProperty getNameProperty() {
+        return Name;
+    }
+
+    public String getValue() {
+        return Value.get();
+    }
+
+    public void setValue(String newFlags) {
+        Value.set(newFlags);
+    }
+
+    public StringProperty getValueProperty() {
+        return Value;
+    }
 }

@@ -24,7 +24,7 @@ public class CommandFieldImpl implements CommandField {
         boolean reverse = endianness.equals(EndianState.LITTLE);
         byte[] specific = Arrays.copyOfRange(buf, start, end);
         if (reverse) {
-            for(int i = 0; i < specific.length / 2; i++) {
+            for (int i = 0; i < specific.length / 2; i++) {
                 byte temp = specific[i];
                 specific[i] = specific[specific.length - i - 1];
                 specific[specific.length - i - 1] = temp;

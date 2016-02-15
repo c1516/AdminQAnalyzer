@@ -12,12 +12,12 @@ public class TimeStamp {
     public long getSeconds() {
         return seconds;
     }
+
     public long getNanos() {
         return nanos;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return Long.toString(seconds) + "." + Long.toString(nanos);
     }
 }

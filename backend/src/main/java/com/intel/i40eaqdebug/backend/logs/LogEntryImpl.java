@@ -3,19 +3,20 @@ package com.intel.i40eaqdebug.backend.logs;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
-import java.math.BigInteger;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class LogEntryImpl implements LogEntry {
 
-    private static final Pattern BUFF_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+0x([0-9a-fA-F]+)((\\s+[0-9a-fA-F]+)+)");
-    private static final Pattern HEADER_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
-    private static final Pattern COOKIE_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
+    private static final Pattern BUFF_PATTERN =
+        Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+0x([0-9a-fA-F]+)((\\s+[0-9a-fA-F]+)+)");
+    private static final Pattern HEADER_PATTERN = Pattern.compile(
+        "[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
+    private static final Pattern COOKIE_PATTERN = Pattern.compile(
+        "[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
     private static final Pattern ERRORCODE_PATTERN = Pattern.compile("Command completed with error 0x([0-9a-fA-F]+)");
 
     private boolean iswriteback;
@@ -40,7 +41,8 @@ public class LogEntryImpl implements LogEntry {
     //    addr (h,l) 0x999 0x999
     // 0x9999 99 99 99 99 99 ...   <- bytes may have garbage sign extension but are 8 bit values
 
-    public LogEntryImpl(TimeStamp stamp, boolean writeback, int startLine, String[] rawLogData) throws java.io.IOException {
+    public LogEntryImpl(TimeStamp stamp, boolean writeback, int startLine, String[] rawLogData)
+        throws java.io.IOException {
         time = stamp;
         lineNum = startLine;
         iswriteback = writeback;
@@ -53,8 +55,7 @@ public class LogEntryImpl implements LogEntry {
                 flags = (short) Long.parseLong(isMainHeader.group(2), 16);
                 datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
                 retval = (short) Long.parseLong(isMainHeader.group(4), 16);
-            }
-            else {
+            } else {
                 Matcher m = ERRORCODE_PATTERN.matcher(logInputLine);
                 if (m.find()) {
                     err = Integer.valueOf(m.group(1), 16);
@@ -67,18 +68,15 @@ public class LogEntryImpl implements LogEntry {
                     if (isCookieLine.group(1).equals("cookie")) {
                         cookie[0] = (int) a;
                         cookie[1] = (int) b;
-                    }
-                    else if (isCookieLine.group(1).equals("param")) {
+                    } else if (isCookieLine.group(1).equals("param")) {
                         param[0] = (int) a;
                         param[1] = (int) b;
-                    }
-                    else if (isCookieLine.group(1).equals("addr")) {
+                    } else if (isCookieLine.group(1).equals("addr")) {
                         addr[0] = (int) a;
                         addr[1] = (int) b;
                     }
                     // Otherwise, we just ignore this silently.
-                }
-                else {
+                } else {
                     Matcher isBufferLine = BUFF_PATTERN.matcher(logInputLine);
                     if (isBufferLine.find()) {
                         // group 1 is the address, which we will ignore here for simplicity
@@ -86,10 +84,9 @@ public class LogEntryImpl implements LogEntry {
                         // to a larger integer value, which we will truncate back to 8 bits here)
                         for (String byteString : isBufferLine.group(2).split("\\s+")) {
                             if (byteString.length() > 0)
-                                buff.write((int)(Long.parseLong(byteString, 16) & 0xff));
+                                buff.write((int) (Long.parseLong(byteString, 16) & 0xff));
                         }
-                    }
-                    else {
+                    } else {
                         Matcher isErrorLine = ERRORCODE_PATTERN.matcher(logInputLine);
                         if (isErrorLine.find()) {
                             err = (byte) Integer.parseInt(isErrorLine.group(1), 16);
@@ -113,12 +110,29 @@ public class LogEntryImpl implements LogEntry {
         return time;
     }
 
-    public int   getErr()        { return err;       }
-    public short  getFlags()      { return flags;     }
-    public int  getOpCode()     { return opcode;    }
-    public short  getRetVal()     { return retval;    }
-    public int    getCookieHigh() { return cookie[0]; }
-    public int    getCookieLow()  { return cookie[1]; }
+    public int getErr() {
+        return err;
+    }
+
+    public short getFlags() {
+        return flags;
+    }
+
+    public int getOpCode() {
+        return opcode;
+    }
+
+    public short getRetVal() {
+        return retval;
+    }
+
+    public int getCookieHigh() {
+        return cookie[0];
+    }
+
+    public int getCookieLow() {
+        return cookie[1];
+    }
 
     public int[] getParams() {
         return param;
@@ -128,5 +142,7 @@ public class LogEntryImpl implements LogEntry {
         return addr;
     }
 
-    public byte[] getBuffer()     { return buffer;    }
+    public byte[] getBuffer() {
+        return buffer;
+    }
 }
