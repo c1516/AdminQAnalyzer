@@ -1,5 +1,7 @@
 package com.intel.i40eaqdebug.backend.header;
 
+import com.intel.i40eaqdebug.api.APIEntryPoint;
+import com.intel.i40eaqdebug.api.Util;
 import com.intel.i40eaqdebug.api.header.CommandField;
 import com.intel.i40eaqdebug.api.header.CommandStruct;
 
@@ -7,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,6 +24,9 @@ public class HeaderParser {
         "(/\\*(?:[\\w\\s+=;\\n])+\\*/)|(#define\\s+([\\w\\d]+)\\s+([\\w\\d]+))|(([\\w\\d]+)\\s+([\\w\\d]+)(?:\\[(\\d+)\\])?);");
     // Can't match #defines with shifted values, might look into implementations of that (perhaps by building a value table?)
 
+    private static final GenericCommandStruct GENERIC_COMMAND_STRUCT;
+
+
     static Map<String, Integer> TYPETOSIZE;
     static Map<String, CommandField.EndianState> TYPETOENDIAN;
 
@@ -34,6 +40,7 @@ public class HeaderParser {
         TYPETOENDIAN.put("u8", CommandField.EndianState.BIG);
         TYPETOENDIAN.put("__le16", CommandField.EndianState.LITTLE);
         TYPETOENDIAN.put("__le32", CommandField.EndianState.LITTLE);
+        GENERIC_COMMAND_STRUCT = new GenericCommandStruct();
     }
 
 
@@ -77,12 +84,16 @@ public class HeaderParser {
                 ret.put(invert.get(opcName),
                     new CommandStruct[] {structs.get(possibleStructNames[0]), structs.get(possibleStructNames[1])});
             } else {
-                CommandStruct struct = structs.get(structName);
-                if (struct == null) {
-                    System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
-                    continue;
+                if (structName.equals("i40e_aq_desc")) { // generic
+                    ret.put(invert.get(opcName), new CommandStruct[] {GENERIC_COMMAND_STRUCT});
+                } else {
+                    CommandStruct struct = structs.get(structName);
+                    if (struct == null) {
+                        System.out.println("Unknown struct mapping: " + parse[0] + " to " + parse[1]);
+                        continue;
+                    }
+                    ret.put(invert.get(opcName), new CommandStruct[] {structs.get(structName)});
                 }
-                ret.put(invert.get(opcName), new CommandStruct[] {structs.get(structName)});
             }
         }
         return ret;
@@ -166,4 +177,57 @@ public class HeaderParser {
         String hFile = hFileBuilder.toString();
         return hFile;
     }
+
+    private static class GenericCommandStruct implements CommandStruct {
+
+        private LinkedHashMap<String, CommandField> fields;
+
+        public GenericCommandStruct() {
+            fields = new LinkedHashMap<>();
+            fields.put("param0", new GenericCommandField(0, 4));
+            fields.put("param1", new GenericCommandField(4, 4));
+            fields.put("addr0", new GenericCommandField(4, 4));
+            fields.put("addr1", new GenericCommandField(4, 4));
+        }
+
+        @Override public String getName() {
+            return "GENERIC";
+        }
+
+        @Override public int getSize() {
+            return 16;
+        }
+
+        @Override public LinkedHashMap<String, CommandField> getFields() {
+            return fields;
+        }
+    }
+
+    private static class GenericCommandField implements CommandField {
+
+        private int offset;
+        private int length;
+
+        public GenericCommandField(int offset, int length) {
+            this.offset = offset;
+            this.length = length;
+        }
+
+        @Override public String getValueAsString(byte[] raw) {
+            return Util.bytesToHex(Arrays.copyOfRange(raw, offset, offset + length));
+        }
+
+        @Override public int getStartPos() {
+            return offset;
+        }
+
+        @Override public int getEndPos() {
+            return offset + length;
+        }
+
+        @Override public EndianState getEndianness() {
+            return EndianState.BIG;
+        }
+    }
+
 }
