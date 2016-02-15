@@ -13,10 +13,17 @@ import java.io.ByteArrayOutputStream;
 
 public class LogEntryImpl implements LogEntry {
 
+<<<<<<< .merge_file_a07048
+    private static final Pattern BUFF_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+:\\s+0x([0-9a-f]+)(\\s+[0-9a-f]+)+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern HEADER_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-f]+),\\s+flags\\s+0x([0-9a-f]+),\\s+datalen\\s+0x([0-9a-f]+),\\s+retval\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern COOKIE_PATTERN = Pattern.compile("i40e\\s+[0-9a-f:]*[0-9a-f]+\\.[0-9a-f]+\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-f]+)\\s+0x([0-9a-f]+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ERR_RET = Pattern.compile("completed with error 0x([0-9]+)");
+=======
     private static final Pattern BUFF_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+0x([0-9a-fA-F]+)((\\s+[0-9a-fA-F]+)+)");
     private static final Pattern HEADER_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
     private static final Pattern COOKIE_PATTERN = Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
     private static final Pattern ERRORCODE_PATTERN = Pattern.compile("Command completed with error 0x([0-9a-fA-F]+)");
+>>>>>>> .merge_file_a00676
 
     private boolean iswriteback;
     private TimeStamp time;
@@ -49,10 +56,17 @@ public class LogEntryImpl implements LogEntry {
         for (String logInputLine : rawLogData) {
             Matcher isMainHeader = HEADER_PATTERN.matcher(logInputLine);
             if (isMainHeader.find()) {
+<<<<<<< .merge_file_a07048
+                opcode = (short) Integer.parseInt(isMainHeader.group(1), 16);
+                flags = (short) Integer.parseInt(isMainHeader.group(2), 16);
+                datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
+                retval = (short) Integer.parseInt(isMainHeader.group(4), 16);
+=======
                 opcode = (short) Long.parseLong(isMainHeader.group(1), 16);
                 flags = (short) Long.parseLong(isMainHeader.group(2), 16);
-                datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
+                datalen = (long) Long.parseLong(isMainHeader.group(3), 16);
                 retval = (short) Long.parseLong(isMainHeader.group(4), 16);
+>>>>>>> .merge_file_a00676
             }
             else {
                 Matcher m = ERR_RET.matcher(logInputLine);
@@ -61,8 +75,13 @@ public class LogEntryImpl implements LogEntry {
                 }
                 Matcher isCookieLine = COOKIE_PATTERN.matcher(logInputLine);
                 if (isCookieLine.find()) {
+<<<<<<< .merge_file_a07048
                     int a = new BigInteger(isCookieLine.group(2), 16).intValue();
                     int b = new BigInteger(isCookieLine.group(3), 16).intValue();
+=======
+                    long a = Long.parseLong(isCookieLine.group(2), 16);
+                    long b = Long.parseLong(isCookieLine.group(3), 16);
+>>>>>>> .merge_file_a00676
 
                     if (isCookieLine.group(1).equals("cookie")) {
                         cookie[0] = (int) a;
