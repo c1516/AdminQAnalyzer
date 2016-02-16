@@ -11,7 +11,7 @@
         <!--<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>-->
 
         <contextMenu>
-            <ContextMenu>
+            <ContextMenu fx:id="TabContext" >
                 <items>
                     <MenuItem text="Copy Row" onAction="#CopyRow"/>
                     <MenuItem text="Copy Cell" onAction="#CopyCell"/>
@@ -40,12 +40,12 @@
                     <PropertyValueFactory property="Flags"/>
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="errColumn" prefWidth="390" minWidth="20" text="Error">
+            <TableColumn fx:id="errColumn" prefWidth="350" minWidth="20" text="Error">
                 <cellValueFactory>
                     <PropertyValueFactory property="ErrorCode"/>
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="writeBackColumn" prefWidth="20" minWidth="20" text="WriteBack">
+            <TableColumn fx:id="writeBackColumn" prefWidth="60" minWidth="20" text="WriteBack">
                 <cellValueFactory>
                     <PropertyValueFactory property="IsWriteBack"/>
                 </cellValueFactory>

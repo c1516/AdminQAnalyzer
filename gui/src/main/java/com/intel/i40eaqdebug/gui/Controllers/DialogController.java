@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.controllers;
+package com.intel.i40eaqdebug.gui.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

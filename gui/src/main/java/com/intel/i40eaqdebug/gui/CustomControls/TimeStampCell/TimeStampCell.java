@@ -1,7 +1,7 @@
-package com.intel.i40eaqdebug.gui.customcontrols.timestampcell;
+package com.intel.i40eaqdebug.gui.CustomControls.TimeStampCell;
 
 import com.intel.i40eaqdebug.api.header.TimeStamp;
-import com.intel.i40eaqdebug.gui.datamodels.TableModel;
+import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import javafx.scene.control.TableCell;
 
 /**
