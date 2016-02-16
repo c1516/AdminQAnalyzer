@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -42,9 +43,9 @@ public class SingleTabController {
     @FXML private TableColumn<TableModel, String> numColumn;
     @FXML private TableColumn<TableModel, Integer> flagColumn;
     @FXML private TableColumn<TableModel, Boolean> writeBackColumn;
+    @FXML private ContextMenu TabContext;
 
     //endregion
-    @FXML private Separator DraggbleSeparator;
     private int EventTotal = 0;
     private int pixelPadding = 15;
     private GUIMain Application;
@@ -89,6 +90,11 @@ public class SingleTabController {
             refresh(TabTable);
         });
 
+        TabContext.setOnShown((windowEvent) -> {
+            if (TabTable.getItems().size() == 0 || TabTable.getSelectionModel().getSelectedItem() == null) {
+                TabContext.hide();
+            }
+        });
 
         InitializeTableView();
     }
@@ -207,6 +213,9 @@ public class SingleTabController {
 
                 try {
                     testPane = tabFXML.load();
+
+                    HideablePane.getChildren().add(testPane);
+                    HideablePane.setVisible(true);
                 } catch (IOException Ex) {
                     StringWriter writer = new StringWriter();
                     PrintWriter printWriter = new PrintWriter(writer);
@@ -217,8 +226,6 @@ public class SingleTabController {
                     DialogController.CreateDialog("An error occured!", Ex.getMessage() + "\n" + stackTrace, true);
                 }
 
-                HideablePane.getChildren().add(testPane);
-                HideablePane.setVisible(true);
             }
         });
 
@@ -478,8 +485,6 @@ public class SingleTabController {
 
         Queue<LogEntry> test = new LinkedList<>(logLines);
 
-
-
         Integer Total = 0;
         while (test.size() > 0) {
             LogEntry temp = test.remove();
@@ -517,6 +522,19 @@ public class SingleTabController {
         }
 
         EventTotal = Total;
+        if (noTimeStamp)
+            ResizeColumsAfterRemoval();
+
+    }
+
+    private void ResizeColumsAfterRemoval() {
+        double totalSize = 0;
+        double tabSize = TabTable.getWidth() - pixelPadding;
+        for (TableColumn c : TabTable.getColumns()) {
+            totalSize += c.getPrefWidth();
+        }
+        TableColumn lastCol = TabTable.getColumns().get(TabTable.getColumns().size() - 1);
+        lastCol.setPrefWidth(lastCol.getPrefWidth() + (tabSize - totalSize));
     }
 
 }

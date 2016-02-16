@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.DataModels;
+package com.intel.i40eaqdebug.gui.datamodels;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;

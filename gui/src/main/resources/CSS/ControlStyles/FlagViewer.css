@@ -1,5 +1,5 @@
 .flagviewer-control {
-    -fx-skin: "com.intel.i40eaqdebug.gui.CustomControls.FlagViewer.FlagViewerSkin";
+    -fx-skin: "com.intel.i40eaqdebug.gui.customcontrols.flagviewer.FlagViewerSkin";
     -fx-background-color: #808080;
     -fx-border-color: black;
     -fx-border-width: 1px;

@@ -38,6 +38,7 @@ public class MainWindowController {
     private ArrayList<String> searchTerms = new ArrayList<String>();
     private ArrayList<Integer> tabFilters = new ArrayList<>();
     private GUIMain Application;
+    private final int MaxTextLength = 255;
 
     public MainWindowController(GUIMain app) {
         Application = app;
@@ -77,6 +78,12 @@ public class MainWindowController {
                     }
                 }
             }
+        });
+
+        SearchField.textProperty().addListener((obs, oldv, newv) -> {
+            String text = SearchField.getText();
+            if (text.length() > MaxTextLength)
+                SearchField.setText(text.substring(0, MaxTextLength));
         });
     }
 
@@ -250,8 +257,10 @@ public class MainWindowController {
                             searchTerms.remove(index);
                             tabFilters.remove(index);
 
-                            if (TabElement.getTabs().size() == 1)
+                            if (TabElement.getTabs().size() == 1) {
+                                UpdateTotal(0);
                                 SearchBar.setDisable(true);
+                            }
                         });
                         //add a blank space to save search terms in for our new tab
                         searchTerms.add("");
