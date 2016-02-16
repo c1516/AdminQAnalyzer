@@ -1,6 +1,6 @@
-package com.intel.i40eaqdebug.gui.customcontrols.checkboxcell;
+package com.intel.i40eaqdebug.gui.CustomControls.CheckboxCell;
 
-import com.intel.i40eaqdebug.gui.datamodels.TableModel;
+import com.intel.i40eaqdebug.gui.DataModels.TableModel;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 
