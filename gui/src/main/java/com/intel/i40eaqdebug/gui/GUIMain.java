@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -28,10 +29,12 @@ public class GUIMain extends Application {
 
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         root.setController(new MainWindowController(this));
-        primaryStage.setTitle("Admin Que Log Analyzer");
+        primaryStage.setTitle("Admin Queue Log Analyzer");
         primaryStage.setScene(new Scene((Parent) root.load(), 1024, 768));
         primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
+        //primaryStage.getIcons().add(new Image(GUIMain.class.getResourceAsStream("icon.ico")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
         //How to load External CSS files.
         //We should load all of them here.
