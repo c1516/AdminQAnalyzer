@@ -29,7 +29,7 @@ public class GUIMain extends Application {
 
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         root.setController(new MainWindowController(this));
-        primaryStage.setTitle("Admin Queue Log Analyzer");
+        primaryStage.setTitle("AdminQ Viewer");
         primaryStage.setScene(new Scene((Parent) root.load(), 1024, 768));
         primaryStage.setMaximized(false);
         primaryStage.setResizable(true);

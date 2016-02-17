@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="RootPanel" prefHeight="600" prefWidth="800"
-            xmlns="http://javafx.com/javafx/8">
+            xmlns="http://javafx.com/javafx/8" onDragDropped="#fileDragDropped" onDragOver="#fileDragDetected">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="0.0">
@@ -30,7 +30,7 @@
                             <menus>
                                 <Menu text="File">
                                     <items>
-                                        <MenuItem onAction="#OpenFile" text="Open"/>
+                                        <MenuItem onAction="#OpenFileUI" text="Open"/>
                                         <!-- untill we can get a better use for it, it's going
                                         <MenuItem onAction="#OpenOptions" text="Options"/>
                                         -->
