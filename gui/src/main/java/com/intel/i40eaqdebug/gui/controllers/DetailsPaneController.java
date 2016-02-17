@@ -82,9 +82,9 @@ public class DetailsPaneController {
         } else {
             structBuf = LogLine.getBuffer();
         }
-
         for (Map.Entry<String, CommandField> entry : structContents.entrySet()) {
-            DetailTableModel tempModel = new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
+            DetailTableModel tempModel =
+                new DetailTableModel(entry.getKey(), entry.getValue().getValueAsString(structBuf));
 
             rows.add(tempModel);
         }
@@ -98,31 +98,35 @@ public class DetailsPaneController {
             return;
         }
 
-        byte[] bytes = LogLine.getBuffer();
-
         FontMetrics fontMetrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(RawArea.getFont());
         double WidthPerChar = fontMetrics.computeStringWidth("A");
         int chars = ((Double) Math.floor(RawArea.getWidth() / WidthPerChar)).intValue() - 2;
 
-        int max = 32;
-        if (chars >= 94)
-            max = 64;
-
         int spacer = 0;
-        String buffer = DatatypeConverter.printHexBinary(bytes);
+        int line = 0;
+        String buffer = DatatypeConverter.printHexBinary(LogLine.getBuffer());
         StringBuilder temp = new StringBuilder();
-        temp.append("DataLen: " + bytes.length + "\n");
         for (char c : buffer.toCharArray()) {
-            if (spacer % max == 0) {
+            if (line == 0) {
                 String hex = Integer.toHexString(spacer).toUpperCase();
-                String format = "\n0x%1$6" + "s";
+                String format = "0x%1$6" + "s";
                 String finals = String.format(format, hex).replace(' ', '0') + "    ";
 
                 temp.append(finals);
-            } else if (spacer != 0 && spacer % 4 == 0)
+                line += finals.length();
+            } else if (spacer != 0 && spacer % 4 == 0) {
+                if (line + 4 >= chars || line + 3 >= chars || line + 2 >= chars || line + 1 >= chars || line >= chars) {
+                    temp.append('\n');
+                    line = 0;
+                    continue;
+                }
+
                 temp.append(' ');
+                line++;
+            }
 
             temp.append(Character.toUpperCase(c));
+            line++;
             spacer++;
         }
         RawArea.setText(temp.toString());
