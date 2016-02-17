@@ -3,6 +3,7 @@ package com.intel.i40eaqdebug.gui.controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
+import com.intel.i40eaqdebug.gui.customcontrols.opcodecell.OpCodeCell;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.intel.i40eaqdebug.gui.customcontrols.checkboxcell.CheckboxCell;
 import com.intel.i40eaqdebug.gui.customcontrols.flagviewcell.FlagViewCell;
@@ -43,6 +44,7 @@ public class SingleTabController {
     @FXML private TableColumn<TableModel, String> numColumn;
     @FXML private TableColumn<TableModel, Integer> flagColumn;
     @FXML private TableColumn<TableModel, Boolean> writeBackColumn;
+    @FXML private TableColumn<TableModel, Integer> opCodeColumn;
     @FXML private ContextMenu TabContext;
 
     //endregion
@@ -167,7 +169,7 @@ public class SingleTabController {
                 TableColumn<TableModel, ?> targetColumn = null;
                 for (int i = 0; i < target.getColumns().size(); i++) {
                     if ((!noTimeStamp && target.getColumns().get(i).getText().equals("Time Stamp")) || (noTimeStamp
-                        && target.getColumns().get(i).getText().equals("Line Number"))) {
+                            && target.getColumns().get(i).getText().equals("Line Number"))) {
                         targetColumn = target.getColumns().get(i);
                         break;
                     }
@@ -185,6 +187,9 @@ public class SingleTabController {
                 DetailsVisible = true;
                 HideablePane.getChildren().clear();
                 HideablePane.setMaxHeight(Double.POSITIVE_INFINITY);
+                int selectedRow = TabTable.getSelectionModel().getSelectedIndex();
+                TableModel theRow = TabTable.getSelectionModel().getSelectedItem();
+
 
                 //This initialization code need to only runs once, when the panel is first made.
                 //It adds a divider to the base split panel and sets it's height to 60% of the screen.
@@ -196,7 +201,7 @@ public class SingleTabController {
                     BaseSplitPane.getDividers().get(0).positionProperty().addListener((obj, oldVal, newVal) -> {
                         if (DetailsVisible) {
                             DetailsHeight = newVal.doubleValue();
-                            scrollTo(TabTable.getSelectionModel().getSelectedIndex());
+                            scrollTo(selectedRow);
                         }
                     });
                     BaseSplitPane.setDividerPosition(0, 0.6);
@@ -204,8 +209,7 @@ public class SingleTabController {
                     BaseSplitPane.setDividerPosition(0, DetailsHeight);
 
                 //Retrieve the row number of the selected entry, retrieve that log entry and pass it to the detail window
-                int selectedRow = TabTable.getSelectionModel().getSelectedIndex();
-                LogEntry tempLogEntry = (LogEntry) ((LinkedList) logLines).get(selectedRow);
+                LogEntry tempLogEntry = theRow.logLine;//(LogEntry) ((LinkedList) logLines).get(selectedRow);
 
                 FXMLLoader tabFXML = new FXMLLoader(getClass().getResource("/DetailsPane.fxml"));
                 tabFXML.setController(new DetailsPaneController(Application, tempLogEntry));
@@ -289,7 +293,7 @@ public class SingleTabController {
                     for (TableColumn c : table.getColumns()) {
                         double newColWidth = c.getWidth() - newDelta;
                         if (i++ > index && ((delta > 0 && newColWidth >= c.getMinWidth()) || (delta < 0
-                            && newColWidth <= c.getMaxWidth())))
+                                && newColWidth <= c.getMaxWidth())))
                             affectedCols.add(c);
 
                         totalWidth += c.getWidth();
@@ -298,7 +302,7 @@ public class SingleTabController {
 
                     //Here we determine if we should 1) actually resize our column 2) resize the rest of the affected ones.
                     if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth)
-                        || totalWidth < tableWidth) {
+                            || totalWidth < tableWidth) {
                         column.setPrefWidth(column.getWidth() + delta);
 
 
@@ -339,6 +343,9 @@ public class SingleTabController {
                     return 0;
             }
         });
+
+        opCodeColumn.setCellFactory(ColumnData -> new OpCodeCell());
+        opCodeColumn.setComparator((v1, v2) -> (v1 > v2 ? 1 : (v1 < v2 ? -1 : 0)));
 
         //This makes sure the TimeStamp column uses TimeStamp cells, not normal ones
         timeColumn.setCellFactory(ColumnData -> new TimeStampCell());
@@ -503,6 +510,7 @@ public class SingleTabController {
             boolean IsWriteBack = temp.isWriteback();
 
             TableModel tempModel = new TableModel(Time, LineNumber, OpCode, Flags, Error, IsWriteBack);
+            tempModel.logLine = temp;
 
             //When wanting to display matched substring
             if (Match) {

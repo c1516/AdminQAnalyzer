@@ -36,9 +36,9 @@ public class GUIMain extends Application {
         //primaryStage.getIcons().add(new Image(GUIMain.class.getResourceAsStream("icon.ico")));
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
-        //How to load External CSS files.
+        //How to load External css files.
         //We should load all of them here.
-        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/css/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
     }

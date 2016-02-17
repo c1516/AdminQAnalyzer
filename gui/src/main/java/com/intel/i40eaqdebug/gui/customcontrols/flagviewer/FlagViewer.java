@@ -33,6 +33,6 @@ public class FlagViewer extends Control {
     }
 
     @Override public String getUserAgentStylesheet() {
-        return FlagViewer.class.getResource("/CSS/ControlStyles/FlagViewer.css").toExternalForm();
+        return FlagViewer.class.getResource("/css/controlstyles/FlagViewer.css").toExternalForm();
     }
 }
