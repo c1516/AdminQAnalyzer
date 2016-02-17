@@ -189,7 +189,7 @@ public class SingleTabController {
                     }
                 }
                 if (targetColumn != null) {
-                    targetColumn.setSortType(TableColumn.SortType.ASCENDING);
+                    targetColumn.setSortType(TableColumn.SortType.DESCENDING);
                     target.getSortOrder().add(targetColumn);
                 }
             }
@@ -350,6 +350,8 @@ public class SingleTabController {
                     return 0;
             }
         });
+        timeColumn.setComparator(timeColumn.getComparator().reversed());
+        timeColumn.getSortType();
 
         //This makes sure the TimeStamp column uses TimeStamp cells, not normal ones
         timeColumn.setCellFactory(ColumnData -> new TimeStampCell());
