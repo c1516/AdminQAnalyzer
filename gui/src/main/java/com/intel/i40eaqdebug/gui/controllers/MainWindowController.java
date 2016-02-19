@@ -1,11 +1,10 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

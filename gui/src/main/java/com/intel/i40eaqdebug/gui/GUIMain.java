@@ -1,6 +1,6 @@
 package com.intel.i40eaqdebug.gui;
 
-import com.intel.i40eaqdebug.gui.Controllers.MainWindowController;
+import com.intel.i40eaqdebug.gui.controllers.MainWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +38,7 @@ public class GUIMain extends Application {
 
         //How to load External CSS files.
         //We should load all of them here.
-        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/css/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
     }

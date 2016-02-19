@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.CustomControls.FlagViewer;
+package com.intel.i40eaqdebug.gui.customcontrols.flagviewer;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -33,6 +33,6 @@ public class FlagViewer extends Control {
     }
 
     @Override public String getUserAgentStylesheet() {
-        return FlagViewer.class.getResource("/CSS/ControlStyles/FlagViewer.css").toExternalForm();
+        return FlagViewer.class.getResource("/css/controlstyles/FlagViewer.css").toExternalForm();
     }
 }

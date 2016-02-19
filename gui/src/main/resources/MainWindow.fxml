@@ -42,7 +42,7 @@
                         </MenuBar>
                         <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
                             <items>
-                                <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
+                                <!-- This is what a filter button should look like. css should be in sepearate css file and set with a class -->
                                 <ToggleButton fx:id="ErrorFilter" contentDisplay="CENTER" maxHeight="70.0"
                                               maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false"
                                               onMouseClicked="#errorFilterClicked" prefHeight="20.0" prefWidth="85.0"

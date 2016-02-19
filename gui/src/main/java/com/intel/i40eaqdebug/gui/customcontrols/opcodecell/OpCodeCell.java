@@ -1,10 +1,8 @@
-package com.intel.i40eaqdebug.gui.CustomControls.OpCodeCell;
+package com.intel.i40eaqdebug.gui.customcontrols.opcodecell;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewer.FlagViewer;
-import com.intel.i40eaqdebug.gui.DataModels.TableModel;
+import com.intel.i40eaqdebug.gui.datamodels.TableModel;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableView;
 
 /**
  * Created by andrey on 2/11/2016.

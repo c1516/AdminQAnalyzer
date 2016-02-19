@@ -1,14 +1,14 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.CustomControls.OpCodeCell.OpCodeCell;
+import com.intel.i40eaqdebug.gui.customcontrols.opcodecell.OpCodeCell;
 import com.intel.i40eaqdebug.gui.GUIMain;
-import com.intel.i40eaqdebug.gui.CustomControls.CheckboxCell.CheckboxCell;
-import com.intel.i40eaqdebug.gui.CustomControls.FlagViewCell.FlagViewCell;
-import com.intel.i40eaqdebug.gui.CustomControls.TimeStampCell.TimeStampCell;
-import com.intel.i40eaqdebug.gui.DataModels.TableModel;
+import com.intel.i40eaqdebug.gui.customcontrols.checkboxcell.CheckboxCell;
+import com.intel.i40eaqdebug.gui.customcontrols.flagviewcell.FlagViewCell;
+import com.intel.i40eaqdebug.gui.customcontrols.timestampcell.TimeStampCell;
+import com.intel.i40eaqdebug.gui.datamodels.TableModel;
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ObservableList;
@@ -24,7 +24,6 @@ import javafx.scene.layout.VBox;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
