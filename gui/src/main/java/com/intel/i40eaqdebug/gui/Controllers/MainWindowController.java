@@ -143,7 +143,6 @@ public class MainWindowController {
             tabFilters.set(selectedTab, 1);
 
             controllers.get(selectedTab).Search(term, filter, false);
-            searchTerms.set(selectedTab, filter);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
 
@@ -176,7 +175,6 @@ public class MainWindowController {
             tabFilters.set(selectedTab, 2);
 
             controllers.get(selectedTab).Search(term, filter, true);
-            searchTerms.set(selectedTab, filter);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
 
