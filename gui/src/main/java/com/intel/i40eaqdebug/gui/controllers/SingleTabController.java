@@ -3,7 +3,7 @@ package com.intel.i40eaqdebug.gui.controllers;
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.header.TimeStamp;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
-import com.intel.i40eaqdebug.gui.customcontrols.opcodecell.OpCodeCell;
+import com.intel.i40eaqdebug.gui.customcontrols.OpCodeCell.OpCodeCell;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import com.intel.i40eaqdebug.gui.customcontrols.checkboxcell.CheckboxCell;
 import com.intel.i40eaqdebug.gui.customcontrols.flagviewcell.FlagViewCell;
@@ -169,7 +169,7 @@ public class SingleTabController {
                 TableColumn<TableModel, ?> targetColumn = null;
                 for (int i = 0; i < target.getColumns().size(); i++) {
                     if ((!noTimeStamp && target.getColumns().get(i).getText().equals("Time Stamp")) || (noTimeStamp
-                            && target.getColumns().get(i).getText().equals("Line Number"))) {
+                        && target.getColumns().get(i).getText().equals("Line Number"))) {
                         targetColumn = target.getColumns().get(i);
                         break;
                     }
@@ -293,7 +293,7 @@ public class SingleTabController {
                     for (TableColumn c : table.getColumns()) {
                         double newColWidth = c.getWidth() - newDelta;
                         if (i++ > index && ((delta > 0 && newColWidth >= c.getMinWidth()) || (delta < 0
-                                && newColWidth <= c.getMaxWidth())))
+                            && newColWidth <= c.getMaxWidth())))
                             affectedCols.add(c);
 
                         totalWidth += c.getWidth();
@@ -302,7 +302,7 @@ public class SingleTabController {
 
                     //Here we determine if we should 1) actually resize our column 2) resize the rest of the affected ones.
                     if (affectedCols.size() != 0 || (index == lastIndex && totalWidth < tableWidth)
-                            || totalWidth < tableWidth) {
+                        || totalWidth < tableWidth) {
                         column.setPrefWidth(column.getWidth() + delta);
 
 

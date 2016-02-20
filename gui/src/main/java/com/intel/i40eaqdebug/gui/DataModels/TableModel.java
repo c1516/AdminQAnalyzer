@@ -42,7 +42,7 @@ public class TableModel {
             return false;
 
         if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val) || ErrorCode.get()
-            .contains(val) || (TimeStamp.get()).toString().contains(val) || HexOpCode.contains(val.toUpperCase())
+                .contains(val) || (TimeStamp.get()).toString().contains(val) || HexOpCode.contains(val.toUpperCase())
                 || LineNumber.get().contains(val))
             return true;
         else
@@ -119,6 +119,6 @@ public class TableModel {
 
     @Override public String toString() {
         return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString() + ", "
-            + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
+                + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
     }
 }

@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.Controllers;
+package com.intel.i40eaqdebug.gui.controllers;
 
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
