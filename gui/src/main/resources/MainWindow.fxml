@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- fx:controller="com.intel.i40eaqdebug.gui.controllers.MainWindowController"-->
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="RootPanel" prefHeight="600" prefWidth="800"
-            xmlns="http://javafx.com/javafx/8">
+            xmlns="http://javafx.com/javafx/8" onDragOver="#fileDragDetected" onDragDropped="#fileDragDropped">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="0.0">
@@ -30,7 +29,7 @@
                             <menus>
                                 <Menu text="File">
                                     <items>
-                                        <MenuItem onAction="#OpenFile" text="Open"/>
+                                        <MenuItem onAction="#OpenFileUI" text="Open"/>
                                         <!-- untill we can get a better use for it, it's going
                                         <MenuItem onAction="#OpenOptions" text="Options"/>
                                         -->
@@ -42,7 +41,7 @@
                         </MenuBar>
                         <ToolBar fx:id="SearchBar" maxHeight="30.0" minHeight="30.0" GridPane.rowIndex="1">
                             <items>
-                                <!-- This is what a filter button should look like. CSS should be in sepearate CSS file and set with a class -->
+                                <!-- This is what a filter button should look like. css should be in sepearate css file and set with a class -->
                                 <ToggleButton fx:id="ErrorFilter" contentDisplay="CENTER" maxHeight="70.0"
                                               maxWidth="130.0" minHeight="20.0" minWidth="85.0" mnemonicParsing="false"
                                               onMouseClicked="#errorFilterClicked" prefHeight="20.0" prefWidth="85.0"

@@ -29,16 +29,16 @@ public class GUIMain extends Application {
 
         FXMLLoader root = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         root.setController(new MainWindowController(this));
-        primaryStage.setTitle("Admin Queue Log Analyzer");
+        primaryStage.setTitle("AdminQ Viewer");
         primaryStage.setScene(new Scene((Parent) root.load(), 1024, 768));
         primaryStage.setMaximized(false);
         primaryStage.setResizable(true);
         //primaryStage.getIcons().add(new Image(GUIMain.class.getResourceAsStream("icon.ico")));
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
-        //How to load External CSS files.
+        //How to load External css files.
         //We should load all of them here.
-        primaryStage.getScene().getStylesheets().add(getClass().getResource("/CSS/PrimaryStyle.css").toExternalForm());
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/css/PrimaryStyle.css").toExternalForm());
 
         primaryStage.show();
     }

@@ -5,11 +5,15 @@ import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -39,6 +43,7 @@ public class MainWindowController {
     private ArrayList<Integer> tabFilters = new ArrayList<>();
     private GUIMain Application;
     private final int MaxTextLength = 255;
+    private String rootFolder = null;
 
     public MainWindowController(GUIMain app) {
         Application = app;
@@ -162,21 +167,33 @@ public class MainWindowController {
     }
 
 
-    @FXML public void OpenFile() throws IOException {
+    @FXML public void OpenFileUI() throws IOException {
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        if (rootFolder == null)
+            chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        else
+            chooser.setInitialDirectory(new File(rootFolder));
+
         chooser.setTitle("Select Log File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Log Files", "*.log"),
             new FileChooser.ExtensionFilter("All Files", "*.*"));
         File theFile = chooser.showOpenDialog(RootPanel.getScene().getWindow());
 
-        LogRetriver runner = new LogRetriver();
-        runner.theFile = theFile;
-        runner.LoadingScreen = LoadingScreen;
+        OpenFile(theFile);
+    }
 
-        LoadingScreen.setVisible(true);
+    private void OpenFile(File theFile) throws IOException {
+        if (theFile != null) {
+            rootFolder = theFile.getParent();
 
-        new Thread(runner).start();
+            LogRetriver runner = new LogRetriver();
+            runner.theFile = theFile;
+            runner.LoadingScreen = LoadingScreen;
+
+            LoadingScreen.setVisible(true);
+
+            new Thread(runner).start();
+        }
     }
 
     @FXML public void OpenOptions() {
@@ -227,6 +244,44 @@ public class MainWindowController {
 
     @FXML public void Exit() {
         Platform.exit();
+    }
+
+    //TODO: add background progress indicator
+    @FXML
+    public void fileDragDropped(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        LinkedList<String> failed = new LinkedList<>();
+        if (db.hasFiles()) {
+            success = true;
+            String filePath = null;
+            for (File file: db.getFiles()) {
+                try {
+                    OpenFile(file);
+                } catch (Exception E) {
+                    failed.add(file.getName());
+                }
+            }
+        }
+
+        if (failed.size() != 0) {
+            StringBuilder builder = new StringBuilder();
+            for (String s : failed)
+                builder.append(s).append('\n');
+
+            DialogController.CreateDialog("Failed to open files", builder.toString(), true);
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+
+    @FXML
+    public void fileDragDetected(DragEvent event) {
+        if (event.getDragboard().hasFiles()) {
+            event.acceptTransferModes(TransferMode.ANY);
+        } else {
+            event.consume();
+        }
     }
 
 
