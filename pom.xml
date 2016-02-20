@@ -11,7 +11,7 @@
 
     <modules>
         <module>api</module>
-        <module>gui</module>
+        <module>frontend</module>
         <module>backend</module>
         <module>wrapper</module>
     </modules>
