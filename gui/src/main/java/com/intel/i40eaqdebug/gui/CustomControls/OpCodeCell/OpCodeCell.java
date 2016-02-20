@@ -1,4 +1,4 @@
-package com.intel.i40eaqdebug.gui.customcontrols.opcodecell;
+package com.intel.i40eaqdebug.gui.customcontrols.OpCodeCell;
 
 import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.gui.datamodels.TableModel;
