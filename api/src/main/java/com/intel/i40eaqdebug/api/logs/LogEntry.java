@@ -4,6 +4,8 @@ import com.intel.i40eaqdebug.api.header.TimeStamp;
 
 public interface LogEntry {
 
+    boolean isAsync();
+
     boolean isWriteback();
 
     int getStartLine();

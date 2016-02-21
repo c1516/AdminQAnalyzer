@@ -19,6 +19,7 @@ public class LogEntryImpl implements LogEntry {
         "[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
     private static final Pattern ERRORCODE_PATTERN = Pattern.compile("Command completed with error 0x([0-9a-fA-F]+)");
 
+    private boolean isasync;
     private boolean iswriteback;
     private TimeStamp time;
     private int lineNum;
@@ -41,11 +42,12 @@ public class LogEntryImpl implements LogEntry {
     //    addr (h,l) 0x999 0x999
     // 0x9999 99 99 99 99 99 ...   <- bytes may have garbage sign extension but are 8 bit values
 
-    public LogEntryImpl(TimeStamp stamp, boolean writeback, int startLine, String[] rawLogData)
+    public LogEntryImpl(TimeStamp stamp, boolean async, boolean writeback, int startLine, String[] rawLogData)
         throws java.io.IOException {
         time = stamp;
         lineNum = startLine;
         iswriteback = writeback;
+        isasync = async;
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
         for (String logInputLine : rawLogData) {
@@ -144,5 +146,9 @@ public class LogEntryImpl implements LogEntry {
 
     public byte[] getBuffer() {
         return buffer;
+    }
+
+    public boolean isAsync() {
+        return isasync;
     }
 }
