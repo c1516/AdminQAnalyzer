@@ -5,7 +5,6 @@ import com.intel.i40eaqdebug.api.APIEntryPoint;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 import com.intel.i40eaqdebug.gui.GUIMain;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -61,27 +60,40 @@ public class MainWindowController {
 
             //Restore filter/search state
             if (tabFilters.size() > 0) {
-                int filterState = tabFilters.get(index);
-                if (filterState == 1) {
-                    errorFilterClicked(true);
-                    SearchField.setText("");
-                } else if (filterState == 2) {
-                    successFilterClicked(true);
-                    SearchField.setText("");
-                }
-                //Restore search state
-                else {
-                    if (controllers.size() > 0) {
-                        SuccessFilter.setSelected(false);
-                        SuccessFilter.setStyle("-fx-background-color: limegreen;");
-                        ErrorFilter.setSelected(false);
-                        ErrorFilter.setStyle("-fx-background-color: crimson;");
+                String filter = "I40E_AQ_RC_OK";
+                Boolean match = Boolean.TRUE;
 
-                        controllers.get(index).Search(searchTerms.get(index), true);
-                        SearchField.setText(searchTerms.get(index));
-                        UpdateTotal(controllers.get(index).getEventTotal());
-                    }
+                int filterState = tabFilters.get(index);
+                //Filter for errors
+                if (filterState == 1) {
+                    SuccessFilter.setSelected(false);
+                    SuccessFilter.setStyle("-fx-background-color: limegreen;");
+                    ErrorFilter.setSelected(true);
+                    ErrorFilter.setStyle("-fx-background-color: darkred;");
+
+                    match = Boolean.FALSE;
                 }
+                //Filter for success
+                else if (filterState == 2) {
+                    SuccessFilter.setSelected(true);
+                    SuccessFilter.setStyle("-fx-background-color: green;");
+                    ErrorFilter.setSelected(false);
+                    ErrorFilter.setStyle("-fx-background-color: crimson;");
+                }
+
+                //No filters
+                else {
+                    SuccessFilter.setSelected(false);
+                    SuccessFilter.setStyle("-fx-background-color: limegreen;");
+                    ErrorFilter.setSelected(false);
+                    ErrorFilter.setStyle("-fx-background-color: crimson;");
+                    filter = "";
+                }
+
+                //Restore search / filters
+                controllers.get(index).Search(searchTerms.get(index), filter, match);
+                SearchField.setText(searchTerms.get(index));
+                UpdateTotal(controllers.get(index).getEventTotal());
             }
         });
 
@@ -101,7 +113,7 @@ public class MainWindowController {
 
             ErrorFilter.setSelected(false);
             ErrorFilter.setStyle("-fx-background-color: crimson;");
-            Clear();
+            controllers.get(selectedTab).Search(SearchField.getText(), "", true);
         }
         tabFilters.set(selectedTab, 0);
     }
@@ -115,19 +127,21 @@ public class MainWindowController {
     @FXML public void errorFilterClicked(Boolean restore) {
         int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
+        String term = SearchField.getText();
+        ClearButton.setVisible(term.length() > 0);
+
         //If toggle is set
         if (((TabElement.getTabs().size() > 0) && ErrorFilter.isSelected()) || restore) {
             SuccessFilter.setSelected(false);
             SuccessFilter.setStyle("-fx-background-color: limegreen;");
             ErrorFilter.setSelected(true);
-
             ErrorFilter.setStyle("-fx-background-color: darkred;");
-            String term = "I40E_AQ_RC_OK";
-            ClearButton.setVisible(term.length() > 0);
+
+            String filter = "I40E_AQ_RC_OK";
+            ClearButton.setVisible(filter.length() > 0);
             tabFilters.set(selectedTab, 1);
 
-            controllers.get(selectedTab).Search(term, false);
-            searchTerms.set(selectedTab, term);
+            controllers.get(selectedTab).Search(term, filter, false);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
 
@@ -145,6 +159,9 @@ public class MainWindowController {
     @FXML public void successFilterClicked(Boolean restore) {
         int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
+        String term = SearchField.getText();
+        ClearButton.setVisible(term.length() > 0);
+
         //If toggle is set
         if (((TabElement.getTabs().size() > 0) && SuccessFilter.isSelected()) || restore) {
             ErrorFilter.setSelected(false);
@@ -152,12 +169,11 @@ public class MainWindowController {
             SuccessFilter.setSelected(true);
             SuccessFilter.setStyle("-fx-background-color: green;");
 
-            String term = "I40E_AQ_RC_OK";
-            ClearButton.setVisible(term.length() > 0);
+            String filter = "I40E_AQ_RC_OK";
+            ClearButton.setVisible(filter.length() > 0);
             tabFilters.set(selectedTab, 2);
 
-            controllers.get(selectedTab).Search(term, true);
-            searchTerms.set(selectedTab, term);
+            controllers.get(selectedTab).Search(term, filter, true);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
 
@@ -176,7 +192,7 @@ public class MainWindowController {
 
         chooser.setTitle("Select Log File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Log Files", "*.log"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+            new FileChooser.ExtensionFilter("All Files", "*.*"));
         File theFile = chooser.showOpenDialog(RootPanel.getScene().getWindow());
 
         OpenFile(theFile);
@@ -219,7 +235,11 @@ public class MainWindowController {
             ClearButton.setVisible(term.length() > 0);
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-            controllers.get(selectedTab).Search(term, true);
+            String filter = "";
+            if(SuccessFilter.isSelected() || ErrorFilter.isSelected())
+                filter = "I40E_AQ_RC_OK";
+
+            controllers.get(selectedTab).Search(term, filter, SuccessFilter.isSelected());
             searchTerms.set(selectedTab, term);
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }
@@ -236,7 +256,7 @@ public class MainWindowController {
             SearchField.setText("");
             int selectedTab = TabElement.getSelectionModel().getSelectedIndex();
 
-            controllers.get(selectedTab).Search("", true);
+            controllers.get(selectedTab).Search("", "", true);
             searchTerms.set(selectedTab, "");
             UpdateTotal(controllers.get(selectedTab).getEventTotal());
         }

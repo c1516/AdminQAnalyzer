@@ -37,6 +37,11 @@
                     <PropertyValueFactory property="Flags"/>
                 </cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="deviceIDColumn" prefWidth="200" minWidth="20" text="Device ID">
+                <cellValueFactory>
+                    <PropertyValueFactory property="DeviceID"/>
+                </cellValueFactory>
+            </TableColumn>
             <TableColumn fx:id="errColumn" prefWidth="350" minWidth="20" text="Error">
                 <cellValueFactory>
                     <PropertyValueFactory property="ErrorCode"/>
