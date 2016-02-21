@@ -6,6 +6,8 @@ public interface LogEntry {
 
     boolean isAsync();
 
+    String getDeviceId();
+
     boolean isWriteback();
 
     int getStartLine();

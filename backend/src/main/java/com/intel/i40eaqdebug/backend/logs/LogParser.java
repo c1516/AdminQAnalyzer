@@ -120,6 +120,7 @@ public class LogParser implements LogAdapter {
         }
         LogEntry ent = new LogEntryImpl(stamp, isAsync, isWriteback, lineNum, entraw);
         System.out.println("Opcode: " + ent.getOpCode());
+        System.out.println("DeviceID: " + ent.getDeviceId());
         return ent;
     }
 

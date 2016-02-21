@@ -14,11 +14,12 @@ public class LogEntryImpl implements LogEntry {
     private static final Pattern BUFF_PATTERN =
         Pattern.compile("[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+0x([0-9a-fA-F]+)((\\s+[0-9a-fA-F]+)+)");
     private static final Pattern HEADER_PATTERN = Pattern.compile(
-        "[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
+        "([0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+):?\\s+AQ\\s+CMD:\\s+opcode\\s+0x([0-9a-fA-F]+),\\s+flags\\s+0x([0-9a-fA-F]+),\\s+datalen\\s+0x([0-9a-fA-F]+),\\s+retval\\s+0x([0-9a-fA-F]+)");
     private static final Pattern COOKIE_PATTERN = Pattern.compile(
         "[0-9a-fA-F:]*[0-9a-fA-F]+\\.[0-9a-fA-F]+:?\\s+(cookie|param|addr)\\s+\\(.,.\\)\\s+0x([0-9a-fA-F]+)\\s+0x([0-9a-fA-F]+)");
     private static final Pattern ERRORCODE_PATTERN = Pattern.compile("Command completed with error 0x([0-9a-fA-F]+)");
 
+    private String deviceId;
     private boolean isasync;
     private boolean iswriteback;
     private TimeStamp time;
@@ -53,10 +54,11 @@ public class LogEntryImpl implements LogEntry {
         for (String logInputLine : rawLogData) {
             Matcher isMainHeader = HEADER_PATTERN.matcher(logInputLine);
             if (isMainHeader.find()) {
-                opcode = (int) Long.parseLong(isMainHeader.group(1), 16);
-                flags = (short) Long.parseLong(isMainHeader.group(2), 16);
-                datalen = new BigInteger(isMainHeader.group(3), 16).longValue();
-                retval = (short) Long.parseLong(isMainHeader.group(4), 16);
+                deviceId = isMainHeader.group(1);
+                opcode = (int) Long.parseLong(isMainHeader.group(2), 16);
+                flags = (short) Long.parseLong(isMainHeader.group(3), 16);
+                datalen = new BigInteger(isMainHeader.group(4), 16).longValue();
+                retval = (short) Long.parseLong(isMainHeader.group(5), 16);
             } else {
                 Matcher m = ERRORCODE_PATTERN.matcher(logInputLine);
                 if (m.find()) {
@@ -151,4 +153,9 @@ public class LogEntryImpl implements LogEntry {
     public boolean isAsync() {
         return isasync;
     }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
 }
