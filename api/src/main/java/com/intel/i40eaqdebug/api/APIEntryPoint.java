@@ -7,6 +7,7 @@ import com.intel.i40eaqdebug.api.logs.LogAdapter;
 import com.intel.i40eaqdebug.api.logs.LogEntry;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -82,7 +83,17 @@ public final class APIEntryPoint {
 
     private static class UnknownCommandStruct implements CommandStruct {
 
-        public String getName() {
+        private LinkedHashMap<String, CommandField> fields;
+
+        public UnknownCommandStruct() {
+            fields = new LinkedHashMap<>();
+            fields.put("param0", new GenericCommandField(0, 4));
+            fields.put("param1", new GenericCommandField(4, 4));
+            fields.put("addr0", new GenericCommandField(4, 4));
+            fields.put("addr1", new GenericCommandField(4, 4));
+        }
+
+        @Override public String getName() {
             return "UNKNOWN";
         }
 
@@ -90,32 +101,34 @@ public final class APIEntryPoint {
             return 16;
         }
 
-        public LinkedHashMap<String, CommandField> getFields() {
-            LinkedHashMap<String, CommandField> fieldMap = new LinkedHashMap<String, CommandField>();
-            fieldMap.put("UNKNOWN_FIELD", new UnknownCommandField());
-            return fieldMap;
+        @Override public LinkedHashMap<String, CommandField> getFields() {
+            return fields;
         }
     }
 
+    private static class GenericCommandField implements CommandField {
 
-    private static class UnknownCommandField implements CommandField {
+        private int offset;
+        private int length;
 
-        public UnknownCommandField() {
+        public GenericCommandField(int offset, int length) {
+            this.offset = offset;
+            this.length = length;
         }
 
-        public String getValueAsString(byte[] buf) {
-            return Util.bytesToHex(buf);
+        @Override public String getValueAsString(byte[] raw) {
+            return Util.bytesToHex(Arrays.copyOfRange(raw, offset, offset + length));
         }
 
-        public int getStartPos() {
-            return 0;
+        @Override public int getStartPos() {
+            return offset;
         }
 
-        public int getEndPos() {
-            return Integer.MAX_VALUE;
-        } // Impossible to know length here
+        @Override public int getEndPos() {
+            return offset + length;
+        }
 
-        public EndianState getEndianness() {
+        @Override public EndianState getEndianness() {
             return EndianState.BIG;
         }
     }
