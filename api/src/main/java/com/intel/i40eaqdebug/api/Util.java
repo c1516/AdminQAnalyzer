@@ -45,5 +45,11 @@ public final class Util {
         return sB.toString();
     }
 
-
+    public static long repackBytesNumeric(byte[] bytes) {
+        long value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            value = (value << 8) + (bytes[i] & 0xFF);
+        }
+        return value;
+    }
 }

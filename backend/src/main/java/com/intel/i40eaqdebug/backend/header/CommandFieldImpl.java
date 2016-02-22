@@ -12,8 +12,10 @@ public class CommandFieldImpl implements CommandField {
     private final int end;
     private final EndianState endianness;
     private final Map<Integer, String> definedValues;
+    private final String type;
 
-    public CommandFieldImpl(int start, int end, EndianState endianness, Map<Integer, String> definedValues) {
+    public CommandFieldImpl(String type, int start, int end, EndianState endianness, Map<Integer, String> definedValues) {
+        this.type = type;
         this.start = start;
         this.end = end;
         this.endianness = endianness;
@@ -29,6 +31,9 @@ public class CommandFieldImpl implements CommandField {
                 specific[i] = specific[specific.length - i - 1];
                 specific[specific.length - i - 1] = temp;
             }
+        }
+        if (type.equalsIgnoreCase("__le32") || type.equalsIgnoreCase("__le16")) {
+            return Util.repackBytesNumeric(specific) + " (HEX: " + Util.bytesToHex(specific) + ")";
         }
         return Util.bytesToHex(specific); // TODO get from defined values for second release
     }

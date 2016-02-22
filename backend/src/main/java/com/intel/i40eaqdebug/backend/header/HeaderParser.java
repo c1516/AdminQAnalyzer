@@ -149,7 +149,7 @@ public class HeaderParser {
                 start = offset;
                 end = start + size * mult; // Exclusive
                 offset = end; // Update for next iteration
-                CommandField field = new CommandFieldImpl(start, end, endianness, definedValues);
+                CommandField field = new CommandFieldImpl(type, start, end, endianness, definedValues);
                 fieldsByName.put(name, field);
                 definedValues = null; // Reset defined values to null
             } else {
