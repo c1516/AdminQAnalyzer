@@ -504,6 +504,8 @@ public class SingleTabController {
 
             boolean IsAsync = temp.isAsync();
             String DeviceID = temp.getDeviceId();
+            if (DeviceID == null)
+                DeviceID = "";
             String Error = APIEntryPoint.getErrorString(temp.getErr());
             String LineNumber = Integer.toString(temp.getStartLine());
             TimeStamp Time = temp.getTimeStamp();
