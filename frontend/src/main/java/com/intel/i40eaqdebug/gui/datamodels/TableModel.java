@@ -47,7 +47,7 @@ public class TableModel {
 
         if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val) || ErrorCode.get()
                 .contains(val) || (TimeStamp.get()).toString().contains(val) || HexOpCode.contains(val.toUpperCase())
-                || LineNumber.get().contains(val) || DeviceID.get().contains(val))
+                || LineNumber.get().contains(val) || Boolean.toString(IsAsync.get()).contains(val) || DeviceID.get().contains(val))
             return true;
         else
             return false;
