@@ -43,6 +43,7 @@ public class SingleTabController {
     @FXML private TableColumn<TableModel, String> numColumn;
     @FXML private TableColumn<TableModel, Integer> flagColumn;
     @FXML private TableColumn<TableModel, Boolean> writeBackColumn;
+    @FXML private TableColumn<TableModel, Boolean> asyncColumn;
     @FXML private TableColumn<TableModel, Integer> opCodeColumn;
     @FXML private ContextMenu TabContext;
 
@@ -501,7 +502,8 @@ public class SingleTabController {
                 TabTable.getColumns().remove(0);
             }
 
-
+            boolean IsAsync = temp.isAsync();
+            String DeviceID = temp.getDeviceId();
             String Error = APIEntryPoint.getErrorString(temp.getErr());
             String LineNumber = Integer.toString(temp.getStartLine());
             TimeStamp Time = temp.getTimeStamp();
@@ -509,7 +511,7 @@ public class SingleTabController {
             short Flags = temp.getFlags();
             boolean IsWriteBack = temp.isWriteback();
 
-            TableModel tempModel = new TableModel(Time, LineNumber, OpCode, Flags, Error, IsWriteBack);
+            TableModel tempModel = new TableModel(Time, LineNumber, OpCode, Flags, DeviceID, Error, IsAsync, IsWriteBack);
             tempModel.logLine = temp;
 
             //Using search term

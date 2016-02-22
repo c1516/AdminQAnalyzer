@@ -13,15 +13,17 @@ public class TableModel {
     private final StringProperty ErrorCode;
     private final ObjectProperty<TimeStamp> TimeStamp;
     private final IntegerProperty OpCodeInt;
+    private final StringProperty DeviceID;
+    private final BooleanProperty IsAsync;
     private final BooleanProperty IsWriteBack;
     private String HexOpCode;
     public LogEntry logLine;
 
     public TableModel() {
-        this(null, null, 0, 0, null, false);
+        this(null, null, 0, 0, null, null, false, false);
     }
 
-    public TableModel(TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String Error, boolean IsWriteBack) {
+    public TableModel(TimeStamp TheTime, String LineNumber, int OpCode, int Flags, String DeviceID, String Error, boolean IsAsync, boolean IsWriteBack) {
         this.LineNumber = new SimpleStringProperty(LineNumber);
 
         String hex = Integer.toHexString(OpCode).toUpperCase();
@@ -34,7 +36,9 @@ public class TableModel {
         this.Flags = new SimpleIntegerProperty(Flags);
         this.ErrorCode = new SimpleStringProperty(Error);
         this.TimeStamp = new SimpleObjectProperty<TimeStamp>(TheTime);
+        this.DeviceID = new SimpleStringProperty(DeviceID);
         this.IsWriteBack = new SimpleBooleanProperty(IsWriteBack);
+        this.IsAsync = new SimpleBooleanProperty(IsAsync);
     }
 
     public boolean hasPartialValue(String val) {
@@ -43,7 +47,7 @@ public class TableModel {
 
         if (OpCode.get().contains(val) || Integer.toHexString(Flags.get()).contains(val) || ErrorCode.get()
                 .contains(val) || (TimeStamp.get()).toString().contains(val) || HexOpCode.contains(val.toUpperCase())
-                || LineNumber.get().contains(val))
+                || LineNumber.get().contains(val) || DeviceID.get().contains(val))
             return true;
         else
             return false;
@@ -87,6 +91,16 @@ public class TableModel {
         return ErrorCode;
     }
 
+    public String getDeviceID() {
+        return DeviceID.get();
+    }
+    public void setDeviceID(String newDeviceID) {
+        DeviceID.set(newDeviceID);
+    }
+    public StringProperty getDeviceIDProperty() {
+        return DeviceID;
+    }
+
     public TimeStamp getTimeStamp() {
         return TimeStamp.get();
     }
@@ -107,6 +121,16 @@ public class TableModel {
         OpCodeInt.set(newOpCode);
     }
 
+    public BooleanProperty getIsAsyncProperty() {
+        return IsAsync;
+    }
+    public Boolean getIsAsync() {
+        return IsAsync.get();
+    }
+    public void setIsAsync(boolean newCallback) {
+        IsAsync.set(newCallback);
+    }
+
     public BooleanProperty getIsWriteBackProperty() {
         return IsWriteBack;
     }
@@ -119,6 +143,7 @@ public class TableModel {
 
     @Override public String toString() {
         return TimeStamp.get().toString() + ", " + LineNumber.get().toString() + ", " + OpCode.get().toString() + ", "
-                + Integer.toHexString(Flags.get()) + ", " + ErrorCode.get().toString() + ", " + IsWriteBack.get();
+                + Integer.toHexString(Flags.get()) + ", " + DeviceID.get().toString() + ", " + ErrorCode.get().toString()
+                + ", " + IsWriteBack.get() + ", " + IsAsync.get();
     }
 }

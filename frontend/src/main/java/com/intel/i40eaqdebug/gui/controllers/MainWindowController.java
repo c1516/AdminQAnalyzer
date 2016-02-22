@@ -192,7 +192,7 @@ public class MainWindowController {
 
         chooser.setTitle("Select Log File");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Log Files", "*.log"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+            new FileChooser.ExtensionFilter("All Files", "*.*"));
         File theFile = chooser.showOpenDialog(RootPanel.getScene().getWindow());
 
         OpenFile(theFile);

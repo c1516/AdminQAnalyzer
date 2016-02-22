@@ -37,9 +37,19 @@
                     <PropertyValueFactory property="Flags"/>
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="errColumn" prefWidth="350" minWidth="20" text="Error">
+            <TableColumn fx:id="deviceIDColumn" prefWidth="80" minWidth="20" text="Device ID">
+                <cellValueFactory>
+                    <PropertyValueFactory property="DeviceID"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="errColumn" prefWidth="200" minWidth="20" text="Error">
                 <cellValueFactory>
                     <PropertyValueFactory property="ErrorCode"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="asyncColumn" prefWidth="60" minWidth="20" text="Async">
+                <cellValueFactory>
+                    <PropertyValueFactory property="IsAsync"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn fx:id="writeBackColumn" prefWidth="60" minWidth="20" text="WriteBack">
