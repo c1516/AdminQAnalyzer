@@ -24,7 +24,6 @@ import javafx.scene.layout.VBox;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -257,7 +256,7 @@ public class SingleTabController {
 
         InitializeTableColumns();
 
-        fillTable(null, true);
+        fillTable("", "", true);
         refresh(TabTable);
     }
 
@@ -421,11 +420,11 @@ public class SingleTabController {
      * This function searches the table by re-filling it with a filter
      * and then re-sorts it.
      *
-     * @param term  The search term, null clears the filter
+     * @param search  The search term, null clears the filter
      * @param match Weather to use the filter buttons.
      */
-    public void Search(String term, Boolean match) {
-        fillTable(term, match);
+    public void Search(String search, String filter, Boolean match) {
+        fillTable(search, filter, match);
         TabTable.sort();
     }
 
@@ -483,10 +482,11 @@ public class SingleTabController {
      * If a filter exists, it will only add entries who contains that string
      * Match is used for filter buttons
      *
-     * @param Filter Used to include results, if null everything is displayed
+     * @param Search Used to include results, if null everything is displayed
+     * @param Filter Used to
      * @param Match  Used for filter buttons.
      */
-    private void fillTable(String Filter, Boolean Match) {
+    private void fillTable(String Search, String Filter, Boolean Match) {
         ObservableList<TableModel> data = TabTable.getItems();
         data.clear();
 
@@ -512,20 +512,48 @@ public class SingleTabController {
             TableModel tempModel = new TableModel(Time, LineNumber, OpCode, Flags, Error, IsWriteBack);
             tempModel.logLine = temp;
 
-            //When wanting to display matched substring
-            if (Match) {
-                if (Filter == null || tempModel.hasPartialValue(Filter)) {
+            //Using search term
+            if (!Search.equals("") && Filter.equals("")) {
+                if (tempModel.hasPartialValue(Search)) {
                     data.add(tempModel);
                     Total++;
                 }
             }
 
-            //When wanting to not display matched substring
-            if (!Match) {
-                if (Filter == null || !tempModel.hasPartialValue(Filter)) {
+            //Using filter
+            else if (Search.equals("") && !Filter.equals("")) {
+                //When wanting to display matched filter
+                if (Match && tempModel.hasPartialValue(Filter)) {
+                        data.add(tempModel);
+                        Total++;
+                }
+
+                //When wanting to not display matched filter
+                else if (!Match && !tempModel.hasPartialValue(Filter)) {
+                        data.add(tempModel);
+                        Total++;
+                }
+            }
+
+            //Using search term and filter
+            else if (!Search.equals("") && !Filter.equals("")) {
+                //When wanting to display matched filter
+                if (tempModel.hasPartialValue(Search) && Match && tempModel.hasPartialValue(Filter)) {
                     data.add(tempModel);
                     Total++;
                 }
+
+                //When wanting to not display matched filter
+                else if (tempModel.hasPartialValue(Search) && !Match && !tempModel.hasPartialValue(Filter)) {
+                    data.add(tempModel);
+                    Total++;
+                }
+            }
+
+            //Using neither filter or search term
+            else {
+                data.add(tempModel);
+                Total++;
             }
         }
 
