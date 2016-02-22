@@ -114,7 +114,7 @@ public class DetailsPaneController {
         temp.append("DataLen: " + bytes.length + "\n");
         for (char c : buffer.toCharArray()) {
             if (spacer % max == 0) {
-                String hex = Integer.toHexString(spacer).toUpperCase();
+                String hex = Integer.toHexString(spacer/2).toUpperCase();
                 String format = "\n0x%1$6" + "s";
                 String finals = String.format(format, hex).replace(' ', '0') + "    ";
 
